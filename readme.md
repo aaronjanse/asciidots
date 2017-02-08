@@ -41,9 +41,6 @@ Think as these two paths as mirrors:<br>
 `@` sets the address to the value after it following the direction of the line<br>
 `#` does the same except it sets the value
 
-Example: <br>
-Output `3` to the console:<br>
-
 ### Interactive Console
 `$` is the output console. If there are quotation marks (`"`), it outputs the text after it until there are closing quotation marks. `#` and `@` are substituted with the dot's value and address, respectively<br>
 `?` is input from the console. It prompts the user for a value, and pauses until a value is entered in. It only runs after a `#` or `@` symbol<br>
