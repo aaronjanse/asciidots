@@ -819,13 +819,19 @@ class dot:
                 # print(self.stack)
                 return
 
-            if char == ':' and self.data['value'] == 0:
-                self.is_dead = True
-                return
+            if char == ':':
+                if self.data['value'] == 0:
+                    self.is_dead = True
+                    return
 
-            if char == ';' and self.data['value'] == 1:
-                self.is_dead = True
-                return
+                continue
+
+            if char == ';':
+                if self.data['value'] == 1:
+                    self.is_dead = True
+                    return
+
+                continue
 
             if char in enc_opers_square:
                 self.handle_oper_square(char)
