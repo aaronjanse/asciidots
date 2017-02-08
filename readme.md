@@ -44,12 +44,12 @@ Semi-compact factorial calculator:
 
 ```
 
-Code-golfed counter (20 bytes):
+Code-golfed counter (19 bytes):
 
 ```
-/$#\
+.>$#\
 [+]>1#)
-\-*<.
+ \-*/
 ```
 
 ## Program Syntax
