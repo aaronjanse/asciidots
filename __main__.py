@@ -2,6 +2,8 @@
 
 from time import sleep
 
+from decimal import Decimal
+
 
 import signal
 import sys
@@ -674,16 +676,16 @@ class dot:
                 self.waiting_for = 0
 
                 if self.selected is None or self.selected == "value":
-                    a_val = str(float(self.data['value']))
+                    a_val = str(Decimal(self.data['value']))
                     dest = "value"
                 else:
-                    a_val = str(float(self.data['address']))
+                    a_val = str(Decimal(self.data['address']))
                     dest = "address"
 
 
                 a_val = a_val.rstrip('0').rstrip('.') if '.' in a_val else a_val
 
-                b_val = str(float(canidate_par))
+                b_val = str(Decimal(canidate_par))
                 b_val = b_val.rstrip('0').rstrip('.') if '.' in b_val else b_val
 
                 oper = operators_eval[enc_opers_square.index(char)]
@@ -741,15 +743,15 @@ class dot:
                 self.waiting_for = 0
 
                 if self.selected is None or self.selected == "value":
-                    a_val = str(float(self.data['value']))
+                    a_val = str(Decimal(self.data['value']))
                     dest = "value"
                 else:
-                    a_val = str(float(self.data['address']))
+                    a_val = str(Decimal(self.data['address']))
                     dest = "address"
 
                 a_val = a_val.rstrip('0').rstrip('.') if '.' in a_val else a_val
 
-                b_val = str(float(canidate_par))
+                b_val = str(Decimal(canidate_par))
                 b_val = b_val.rstrip('0').rstrip('.') if '.' in b_val else b_val
 
                 oper = operators_eval[enc_opers_curly.index(char)]
