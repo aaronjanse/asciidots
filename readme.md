@@ -99,7 +99,6 @@ Think as these two paths as mirrors:<br>
 
 ```
 
-<br>
 
 ```
 
@@ -261,7 +260,7 @@ Due to the fact that dots may be moving backwards down a line, if a number or sy
 ### Ending the program
 Interpretation of a dots program ends when a dot passes over an `&`
 
-### Defining custom dots and prompts (***Depreciated***)
+### Defining custom dots and prompts (***Obsolete***)
 At the beginning of the program, the priority of the dots at the beginning of runtime can be
 defined at the beginning of the program by writing `%.` followed by the list of letters that represent dots with the letter with the highest priority first.<br>
 
@@ -269,7 +268,6 @@ defined at the beginning of the program by writing `%.` followed by the list of 
 '' Print to the console if the input equals 0
 '' Note that the 'A' dot moves before the 'B' dot
 
-%.AB
 
         #
         $
@@ -297,17 +295,18 @@ Hello, World!<br>
 Test if 2 input values are equal:<br>
 
 ```
-%.AB
+
        /-$"Equal"
        |
-A-#?-*-~-$"Not equal"
+.-#?-*-~-$"Not equal"
      | |
      \[=]
        |
        ?
        #
        |
-       B
+       .
+       
 ```
 
 ---
@@ -315,9 +314,8 @@ A-#?-*-~-$"Not equal"
 Counter:
 
 ```
-%.AB
 
-     /1#-A
+     /1#-.
      |
    /-+-$#\
    | |   |
@@ -328,7 +326,8 @@ Counter:
       0
       #
       |
-      B
+      .
+      
 ```
 
 ---
@@ -336,7 +335,6 @@ Counter:
 Fibonacci Sequence Calculator:<br>
 
 ```
-%.AB
 
 /--#$--\
 |      |
@@ -346,6 +344,7 @@ Fibonacci Sequence Calculator:<br>
 #  #
 |  1
 |  |
-|  A
-B
+|  .
+.
+
 ```
