@@ -257,19 +257,19 @@ class dot:
 
         if _dir is None:
             if self.x > 0:
-                if(world[self.y][self.x - 1] in ('-', '/', '\\')):
+                if(world[self.y][self.x - 1] in ('-', '/', '\\', '>', '<')):
                     self.dir = [-1, 0]
 
             if self.x + 1 < len(world[self.y]):
-                if(world[self.y][self.x + 1] in ('-', '/', '\\')):
+                if(world[self.y][self.x + 1] in ('-', '/', '\\', '>', '<')):
                     self.dir = [+1, 0]
 
             if self.y > 0 and self.x < len(world[self.y - 1]):
-                if(world[self.y - 1][self.x] in ('|', '/', '\\')):
+                if(world[self.y - 1][self.x] in ('|', '/', '\\', '>', '<')):
                     self.dir = [0, -1]
 
             if self.y + 1 < len(world) and self.x < len(world[self.y + 1]):
-                if(world[self.y + 1][self.x] in ('|', '/', '\\')):
+                if(world[self.y + 1][self.x] in ('|', '/', '\\', '>', '<')):
                     self.dir = [0, +1]
         else:
             self.dir = _dir
