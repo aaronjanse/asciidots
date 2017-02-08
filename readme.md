@@ -1,14 +1,20 @@
-# Dots
+# Dots - Esoteric Language Specs
+##### Language By Aaron Janse
 
-## Esoteric Language Specs
-
-#### Language By Aaron Janse
 ---
+
+## Samples
+
+Hello world:
+
+```
+ .-$"Hello, World!"
+```
 
 ## Program Syntax
 
 ### Basics
-`.` or `•` signifies a dot, the core of the language. This carries information. A dot is initialized with both an [address and value](#addresses-and-values) of `0`
+`.`, or `•`, signifies a dot, the core of the language. This carries information. Each dot is initialized with both an [address and value](#addresses-and-values) of `0`
 
 Everything after ``` '' ``` (two apostrophes) is a comment and is ignored
 
