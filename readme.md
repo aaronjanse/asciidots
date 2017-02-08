@@ -11,6 +11,47 @@ Hello world:
  .-$"Hello, World!"
 ```
 
+Counter:
+
+```
+
+     /1#-.
+     |
+   /-+-$#\
+   | |   |
+  [+]<1#-*
+   |     |
+   \--<--/
+      |
+      0
+      #
+      |
+      .
+```
+
+Semi-compact factorial calculator:
+
+```
+'' Compact Factorial Calculator
+
+ /---------*--~-$#-&
+ | /--;---\| [!]-\
+ | *------++--*#1/
+ | | /1#\ ||
+[*]*{-}-*~<+*?#-.
+ *-------+-</
+ \-#0----/
+
+```
+
+Code-golfed counter (20 bytes):
+
+```
+/$#\
+[+]>1#)
+\-*<.
+```
+
 ## Program Syntax
 
 ### Basics
