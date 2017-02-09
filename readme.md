@@ -32,7 +32,6 @@ Counter:
 Semi-compact factorial calculator:
 
 ```
-'' Compact Factorial Calculator
 
  /---------*--~-$#-&
  | /--;---\| [!]-\
@@ -306,7 +305,7 @@ Test if 2 input values are equal:<br>
        #
        |
        .
-       
+
 ```
 
 ---
@@ -327,7 +326,7 @@ Counter:
       #
       |
       .
-      
+
 ```
 
 ---
