@@ -7,7 +7,7 @@
 }
 
 @test "use for in range library" {
-  run python3 . ./tests/cuse_for_in_range.fry
+  run python3 . ./tests/use_for_in_range.fry
   [ "$status" -eq 0 ]
   [ "$output" = "$(seq 10)" ]
 }
