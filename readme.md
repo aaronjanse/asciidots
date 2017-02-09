@@ -14,7 +14,6 @@ Hello world:
 Counter:
 
 ```
-
      /1#-.
      |
    /-+-$#\
@@ -32,7 +31,6 @@ Counter:
 Semi-compact factorial calculator:
 
 ```
-
  /---------*--~-$#-&
  | /--;---\| [!]-\
  | *------++--*#1/
@@ -40,7 +38,6 @@ Semi-compact factorial calculator:
 [*]*{-}-*~<+*?#-.
  *-------+-</
  \-#0----/
-
 ```
 
 Code-golfed counter (19 bytes):
@@ -86,7 +83,6 @@ Think as these two paths as mirrors:<br>
 `?` is input from the console. It prompts the user for a value, and pauses until a value is entered in. It only runs after a `#` or `@` symbol<br>
 
 ```
-
   . '' This dot is the data carrier
   | '' Travel along these vertical paths
   # '' Set the value...
@@ -94,13 +90,10 @@ Think as these two paths as mirrors:<br>
   | '' Continue down the path
   $ '' Output to the console...
   # ''   ... the dot's value
-
-
 ```
 
 
 ```
-
   .
   |
   # '' Get ready to set the value
@@ -108,7 +101,6 @@ Think as these two paths as mirrors:<br>
   |
   $
   # '' Print that value to the console
-
 ```
 
 ### Control Flow
@@ -174,7 +166,6 @@ Example:
 .-#9-A '' Create a dot, set its value to 9, then warp it
 
 A-$#   '' Print the dot's value (9)
-
 ```
 
 ## Libraries
@@ -212,7 +203,6 @@ Here is an example of outputting all the numbers between `1` and `100` to the co
   \-#100-+-/
          |
          &
-
 ```
 
 #### Creating Libraries
@@ -243,10 +233,10 @@ Here's the code for a library that accepts a dot coming from the left, sets its 
 %+A_B_
 
 '' Set address to zero, then add the value to the address (which is 0)
+
 A-*-@0-@{+}-B
   |      |
   \------/
-
 ```
 
 
@@ -266,7 +256,6 @@ defined at the beginning of the program by writing `%.` followed by the list of 
 ```
 '' Print to the console if the input equals 0
 '' Note that the 'A' dot moves before the 'B' dot
-
 
         #
         $
@@ -294,7 +283,6 @@ Hello, World!<br>
 Test if 2 input values are equal:<br>
 
 ```
-
        /-$"Equal"
        |
 .-#?-*-~-$"Not equal"
@@ -305,7 +293,6 @@ Test if 2 input values are equal:<br>
        #
        |
        .
-
 ```
 
 ---
@@ -313,7 +300,6 @@ Test if 2 input values are equal:<br>
 Counter:
 
 ```
-
      /1#-.
      |
    /-+-$#\
@@ -326,7 +312,6 @@ Counter:
       #
       |
       .
-
 ```
 
 ---
@@ -334,7 +319,6 @@ Counter:
 Fibonacci Sequence Calculator:<br>
 
 ```
-
 /--#$--\
 |      |
 >-*>{+}/
@@ -345,5 +329,4 @@ Fibonacci Sequence Calculator:<br>
 |  |
 |  .
 .
-
 ```
