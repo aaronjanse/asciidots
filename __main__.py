@@ -32,8 +32,12 @@ new_dots = []
 
 teleporters = []
 
-debug = '-d' in sys.argv[1:] or '-md' in sys.argv[1:]
+compat_debug = '-w' in sys.argv[1:]
+
+debug = '-d' in sys.argv[1:] or '-md' in sys.argv[1:] or compat_debug
 step_manual = debug
+
+
 
 silent_output = '-s' in sys.argv[1:]
 
@@ -51,7 +55,7 @@ cycle_max_limit = None
 if '-c' in sys.argv[1:]:
     cycle_max_limit = int(sys.argv[sys.argv.index('-c') + 1])
 
-if debug:
+if debug and not compat_debug:
     import curses
     stdscr = curses.initscr()
 
@@ -75,7 +79,7 @@ def log_output(string="", newline=True):
     if silent_output:
         return
 
-    if debug:
+    if debug and not compat_debug:
         global logging_loc
         global logging_x
 
@@ -135,7 +139,7 @@ enc_opers_curly = []
 dot_synonyms = []
 
 def exit_progam(exit_code=0):
-    if debug:
+    if debug and not compat_debug:
         curses.nocbreak()
         stdscr.keypad(False)
         curses.echo()
@@ -169,7 +173,8 @@ def curses_input(stdscr, r, c, prompt_string):
 
 def render():
 
-    # os.system('clear')
+    if compat_debug:
+        os.system('cls' if os.name == 'nt' else 'clear')
 
     d_l = []
     for idx in reversed(range(len(dots))):
@@ -189,7 +194,17 @@ def render():
         for x in range(len(world_raw[y])):
             char = world_raw[y][x]
 
+            if compat_debug:
+                char_selected = (x, y) in d_l
+                if char_selected:
+                    sys.stdout.write("\033[91m")
 
+                sys.stdout.write(char)
+
+                if char_selected:
+                    sys.stdout.write("\033[0;0m")
+
+                continue
 
             if char in lib_alias_chars:
                 char = "§"
@@ -218,9 +233,11 @@ def render():
 
             # sys.stdout.write(char)
             # sys.stdout.write("\033[0;0m")
-        # sys.stdout.write("\n")
+        if compat_debug:
+            sys.stdout.write("\n")
 
-    win_program.refresh()
+    if not compat_debug:
+        win_program.refresh()
 
     # sys.stdout.flush()
 
@@ -437,7 +454,7 @@ class dot:
 
     def handle_question(self):
         if self.selected is not None:
-            if debug:
+            if debug and not compat_debug:
                 user_in = int(curses_input(stdscr, curses.LINES - 2, 2, "Please input an {0}: ".format(self.selected)))
                 self.data[self.selected] = user_in
             else:
@@ -770,7 +787,10 @@ class dot:
                 render()
                 if step_manual:
                     try:
-                        stdscr.getch()
+                        if compat_debug:
+                            input("")
+                        else:
+                            stdscr.getch()
                     except SyntaxError:
                         pass
                 elif step_speed != 0:
