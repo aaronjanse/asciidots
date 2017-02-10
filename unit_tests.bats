@@ -17,3 +17,9 @@
   [ "$status" -eq 0 ]
   [ "$output" = "3" ]
 }
+
+@test "three" {
+  run python3 . ./tests/three.fry
+  [ "$status" -eq 0 ]
+  [ "$output" = "3" ]
+}
