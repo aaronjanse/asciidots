@@ -34,7 +34,7 @@ teleporters = []
 
 compat_debug = '-w' in sys.argv[1:]
 
-debug = '-d' in sys.argv[1:] or '-md' in sys.argv[1:] or compat_debug
+debug = '-d' in sys.argv[1:] or compat_debug
 step_manual = debug
 
 
