@@ -59,7 +59,7 @@ The interpreter for this language is the `__main__.py` file. It requires Python 
 
 Here's an example of running the counter sample program (the working directory is the dots repo folder):
 
-``` bash
+```bash
 $ python __main__.py ./samples/counter.fry
 ```
 
@@ -77,6 +77,12 @@ Some extra flags when debugging:
 -a [delay]        Step the program automatically, using the specified delay in seconds. Decimal numbers are permitted, and so is 0.
 
 -w                Run the program without using ncurses. This can fix problems related to Windows.
+```
+
+This is how one might debug a program for 300 cycles while running it automatically:
+
+```bash
+$ python __main__.py ./samples/counter.fry -c 300 -d -a 0.05
 ```
 
 ## Program Syntax
