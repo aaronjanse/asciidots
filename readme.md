@@ -67,11 +67,9 @@ Here is the list if available flags:
 
 ```
 -c [cycles]       Run the program for a specified number of cycles
-
 -t [ticks]        Run the program for a specified number of ticks
 
 -s                Run without printing ANYTHING to the console. Useful for benchmarking
-
 
 -d                Run the program in debug mode. It shows the program and highlights the dots with red. Press enter to step the program once.
 
