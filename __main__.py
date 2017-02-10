@@ -158,18 +158,12 @@ def curses_input(stdscr, r, c, prompt_string):
     curses.echo()
     stdscr.addstr(r, c, str(prompt_string), curses.A_REVERSE)
     stdscr.refresh()
-    # while True:
-    #     try:
     input = ""
 
     while len(input) <= 0:
         input = stdscr.getstr(r + 1, c, 20)
-            # break
-        # except:
-        #     pass
 
-
-    return input  #       ^^^^  reading input at next line
+    return input
 
 def render():
 
@@ -181,9 +175,6 @@ def render():
         d = dots[idx]
         if not d.is_dead:
             d_l.append((d.x, d.y))
-
-    # effect = curses.color_pair(1)
-    # effect = curses.A_STANDOUT
 
     special_char = False
 
@@ -208,31 +199,14 @@ def render():
 
             if char in lib_alias_chars:
                 char = "§"
-                # special_char = True
-                # effect = curses.A_STANDOUT
             elif ord(char) > 127:
                 char = "◊"
-                # special_char = True
-                # effect = curses.A_STANDOUT
 
             if (x, y) in d_l:
-                # if special_char:
-                #     win_program.addch(y, x, ord(char), curses.A_STANDOUT)
-                # else:
                 win_program.addch(y, x, ord(char), curses.color_pair(1))
-
-                # special_char = False
-
-                # win_program.addch(y, x, ord(char), curses.A_STANDOUT)
-
-                # effect = curses.color_pair(1)
             else:
                 win_program.addch(y, x, char)
 
-
-
-            # sys.stdout.write(char)
-            # sys.stdout.write("\033[0;0m")
         if compat_debug:
             sys.stdout.write("\n")
 
@@ -246,7 +220,6 @@ def exists(x, y):
 
 
 class dot:
-    # @profile
     def __init__(self, _x, _y, _dir=None, _data=None):
         self.map_handlers()
 
@@ -365,7 +338,6 @@ class dot:
                     log_output(self.data['address'], newline=False)
                 else:
                     log_output(char, newline=False)
-
             return True
         else:
             if char == '#':
@@ -496,11 +468,7 @@ class dot:
 
         goto_idx = ([1, 0], [0, -1], [-1, 0], [0, 1],).index(self.dir)
 
-        # print(goto_idx)
-
         dest_char = lib_alias_chars[char]['goto_chars'][goto_idx]
-
-        # print(lib_alias_chars[char]['goto_chars'])
 
         for y in range(len(world)):
             if world[y][0] == '%':
@@ -686,8 +654,6 @@ class dot:
                 else:
                     canidate_par = canidate.data.copy()['address']
 
-                # self.dir = canidate.dir[:]
-
                 self.waiting = False
 
                 self.waiting_for = 0
@@ -752,8 +718,6 @@ class dot:
                     canidate_par = canidate.data.copy()['value']
                 else:
                     canidate_par = canidate.data.copy()['address']
-
-                # self.dir = canidate.dir[:]
 
                 self.waiting = False
 
@@ -836,7 +800,6 @@ class dot:
 
             if char in lib_alias_chars:
                 self.handle_alias_char(char)
-                # print(self.stack)
                 return
 
             if char == ':':
@@ -884,27 +847,8 @@ class dot:
                 lib_gotos = lib_alias_chars[lib_main_alias]['goto_chars']
 
                 if char in lib_gotos:
-
                     (self.x, self.y) = self.stack.pop()
                     return
-
-                    for y in range(len(world)):
-                        if world[y][0] == '%':
-                            continue
-
-                        for x in range(len(world[y])):
-                            if "''" in world[y][:x]:
-                                break;
-
-                            if x == self.x and y == self.y:
-                                continue
-
-                            cell = world[y][x]
-
-                            if cell == lib_main_alias:
-                                self.x = x
-                                self.y = y
-                                return
 
             if self.char_handler_dict[char]():
                 return
@@ -955,8 +899,6 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
                 interpreter_dir = os.path.dirname(os.path.realpath(__file__))
                 new_path = os.path.join(interpreter_dir, "libs", file_name)
 
-            # print(file_name)
-
             with open(new_path.split('%', 1)[0], 'r') as lib_file:
                 next_lines = lib_file.readlines()
 
@@ -969,8 +911,6 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
             for line in next_lines:
                 if line[:2] == '%+':
                     tp_chars = list(line[2:].rstrip())
-                    # print('tp_chars found')
-                    # print(tp_chars)
                     break
 
             lib_alias_chars[alias_char] = {"file": file_name, "goto_chars": []}
@@ -998,7 +938,6 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
         else:
             libs[this_file_name] = [li.replace(include_aliases[idx], libs[file_name]['alias']) for li in libs[this_file_name]]
 
-# @profile
 def main(args):
     global dots
     global teleporters
@@ -1022,9 +961,6 @@ def main(args):
 
     for library_file in libs:
         main_lines.extend(libs[library_file]['lines'])
-
-    # print(json.dumps(lib_alias_chars))
-    # print(libs)
 
     lines = main_lines
 
@@ -1050,10 +986,6 @@ def main(args):
             data = data.replace(rc, teleporters[idx])
 
         for idx, oper in enumerate(operators):
-            # data = data.replace("[{0}]".format(
-            #     oper), "-{0}-".format(chr(128 + idx)))
-            # data = data.replace(
-            #     "{" + oper + "}", "-{0}-".format(chr(128 + idx + len(operators) + 1)))
             data = data.replace("[{0}]".format(
                 oper), "[{0}]".format(chr(128 + idx)))
             data = data.replace(
@@ -1119,17 +1051,9 @@ def main(args):
 
         new_dots = []
 
-        # if step_manual:
-        #     try:
-        #         input("")
-        #     except SyntaxError:
-        #         pass
-
         cycle_cnt += 1
         if cycle_max_limit is not None and cycle_cnt > cycle_max_limit:
             return  # Tick limit exceeded, so return/exit
-
-        # dots = list(set(dots[:]))
 
         new_list = []
 
