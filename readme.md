@@ -3,6 +3,12 @@
 
 ---
 
+##### Table of Contents  
+[Samples](#samples)<br>
+[Using the Interpreter](#using-the-interpreter)<br>
+[Program Syntax](#program-syntax)<br>
+[More Examples](#examples)
+
 ## Samples
 
 Hello world:
