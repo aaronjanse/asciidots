@@ -48,6 +48,33 @@ Code-golfed counter (19 bytes):
  \-*/
 ```
 
+## Using the Interpreter
+The interpreter for this language is the `__main__.py` file. It requires Python 3, and can be run from the terminal using the `python` command (or `python3` if necessary). The first argument is the `dots` file that you wish the interpreter to run.
+
+Here's an example of running the counter sample program (the working directory is the dots repo folder):
+
+``` bash
+$ python __main__.py ./samples/counter.fry
+```
+
+Here is the list if available flags:
+
+```
+-c [cycles]       Run the program for a specified number of cycles
+
+-t [ticks]        Run the program for a specified number of ticks
+
+-s                Run without printing ANYTHING to the console. Useful for benchmarking
+
+
+-d                Run the program in debug mode. It shows the program and highlights the dots with red. Press enter to step the program once.
+
+Some extra flags when debugging:
+-a [delay]        Step the program automatically, using the specified delay in seconds. Decimal numbers are permitted, and so is 0.
+
+-w                Run the program without using ncurses. This can fix problems related to Windows.
+```
+
 ## Program Syntax
 
 ### Basics
