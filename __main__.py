@@ -225,7 +225,7 @@ def render():
     # sys.stdout.flush()
 
 def exists(x, y):
-    return x >= 0 and y >= 0 and x < len(world[y]) and y < len(world)
+    return x >= 0 and y >= 0 and y < len(world)and x < len(world[y])
 
 
 class dot:
