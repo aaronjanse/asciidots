@@ -223,6 +223,12 @@ class dot:
     def __init__(self, _x, _y, _dir=None, _data=None):
         self.map_handlers()
 
+        self.print_as_ascii = False
+
+        self.newline = True
+
+        self.single_quotes = False
+
         self.stack = []
 
         self.x = _x
@@ -327,33 +333,67 @@ class dot:
 
     def handle_printing(self, char):
         if self.in_quotes:
-            if char == '"':
-                log_output()
+            if (not self.single_quotes and char == '"') or (self.single_quotes and char == "'"):
+                # print("done")
+                if self.newline:
+                    log_output()
+
+                self.newline = True
+
                 self.in_quotes = False
+                self.single_quotes = False
                 self.is_printing = False
             else:
-                if char == '#':
-                    log_output(self.data['value'], newline=False)
-                elif char == '@':
-                    log_output(self.data['address'], newline=False)
-                else:
-                    log_output(char, newline=False)
+                # print("char: "+char)
+                # if char == '#':
+                #     log_output(self.data['value'], newline=False)
+                # elif char == '@':
+                #     log_output(self.data['address'], newline=False)
+                # else:
+                log_output(char, newline=False)
             return True
         else:
-            if char == '#':
-                log_output(self.data['value'], newline=True)
+            if char == '_':
+                self.newline = False
+
+                return True
+            elif char == 'a':
+                self.print_as_ascii = True
+
+                return True
+            elif char == '#':
+                dat = self.data['value']
+                if self.print_as_ascii:
+                    dat = chr(dat)
+                log_output(dat, newline=self.newline)
                 return True
             elif char == '@':
-                log_output(self.data['address'], newline=True)
+                dat = self.data['address']
+                if self.print_as_ascii:
+                    dat = chr(dat)
+                log_output(dat, newline=self.newline)
                 return True
             elif char == '"':
                 self.in_quotes = True
+                self.single_quotes = False
+
+                self.print_as_ascii = False
+                return True
+            elif char == "'":
+                self.in_quotes = True
+                self.single_quotes = True
+
+                self.print_as_ascii = False
                 return True
             elif char == ' ':
                 self.is_dead = True
                 return True
             else:
                 self.is_printing = False
+
+                self.print_as_ascii = False
+
+                self.newline = True
                 return False
 
     def handle_digit(self, number):
@@ -778,7 +818,7 @@ class dot:
 
             char = world[self.y][self.x]
 
-            if char == '$':
+            if char == '$' and not self.is_printing:
                 self.is_printing = True
                 continue
 
@@ -850,8 +890,11 @@ class dot:
                     (self.x, self.y) = self.stack.pop()
                     return
 
-            if self.char_handler_dict[char]():
-                return
+            try:
+                if self.char_handler_dict[char]():
+                    return
+            except KeyError:
+                pass
 
 
 raw_chars = []

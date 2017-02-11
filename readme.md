@@ -17,6 +17,12 @@ Hello world:
  .-$"Hello, World!"
 ```
 
+[Quine](https://en.wikipedia.org/wiki/Quine_(computing):
+
+```
+ ($'.-#40-$_a#-#35-$_a#-#39-$_a#)
+```
+
 Counter:
 
 ```
@@ -116,7 +122,22 @@ Think as these two paths as mirrors:<br>
 `#` does the same except it sets the value
 
 ### Interactive Console
-`$` is the output console. If there are quotation marks (`"`), it outputs the text after it until there are closing quotation marks. `#` and `@` are substituted with the dot's value and address, respectively<br>
+`$` is the output console. If there are single/double quotation marks (`'` or `"`), it outputs the text after it until there are closing quotation marks. `#` and `@` are substituted with the dot's value and address, respectively<br>
+&nbsp;&nbsp;&nbsp;&nbsp;When `_` follows a `$`, the program does not end printing with a newline.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;When not in quotes, if a `a` comes before a `#` or `@` symbol, the value is converted to ascii before it is printed
+
+Example (prints '%'):
+
+```
+.-#37-$a#
+```
+
+Here's how to print 'a' without a newline:
+
+```
+.-$_"a"
+```
+
 `?` is input from the console. It prompts the user for a value, and pauses until a value is entered in. It only runs after a `#` or `@` symbol<br>
 
 ```
