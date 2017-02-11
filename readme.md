@@ -112,7 +112,9 @@ Think as these two paths as mirrors:<br>
 `+` is the crossing of paths (they do not interact)
 
 `>` acts like a regular, 2-way, horizontal, path, except dots can be inserted into the path from the bottom or the top. Those dots will go to the right<br>
-`<` does likewise except new dots go to the left
+`<` does likewise except new dots go to the left<br>
+`^` (caret) does this but upwards<br>
+`v` (the letter 'v') does likewise but downwards
 
 `(` reflects a dot backwards along its original path. It accepts dot coming from the left.<br>
 `)` does likewise but for the opposite direction

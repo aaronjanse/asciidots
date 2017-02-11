@@ -110,7 +110,7 @@ operators = (
     '^',
     '!',
     '&',
-    'v',
+    'o',
     '=',
     '<',
     '>',
@@ -147,6 +147,8 @@ def exit_progam(exit_code=0):
         curses.echo()
 
         curses.endwin()
+
+    quit_curses()
 
     sys.exit(exit_code)
 
@@ -512,12 +514,23 @@ class dot:
         return False
 
     def handle_lt_symbol(self):
-        if self.dir[0] == 0:
+        if self.dir[1] != 0:
             self.dir = [-1, 0]
         else:
             self.dir = self.dir[:]
 
         self.selected = None
+        return False
+
+    def handle_up(self):
+        if self.dir[0] != 0:
+            self.dir = [0, -1]
+        else:
+            self.dir = self.dir[:]
+
+        self.selected = None
+        return False
+
         return False
 
     def handle_alias_char(self, char):
