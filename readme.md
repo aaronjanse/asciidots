@@ -17,7 +17,7 @@ Hello world:
  .-$"Hello, World!"
 ```
 
-[Quine](https://en.wikipedia.org/wiki/Quine_(computing):
+[Quine](https://en.wikipedia.org/wiki/Quine_(computing)):
 
 ```
  ($'.-#40-$_a#-#35-$_a#-#39-$_a#)
