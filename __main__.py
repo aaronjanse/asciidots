@@ -37,7 +37,9 @@ compat_debug = '-w' in sys.argv[1:]
 debug = '-d' in sys.argv[1:] or compat_debug
 step_manual = debug
 
-
+debug_lines = 40
+if '-l' in sys.argv[1:]:
+    debug_lines = int(sys.argv[sys.argv[1:].index('-l')+2])
 
 silent_output = '-s' in sys.argv[1:]
 
@@ -67,7 +69,7 @@ if debug and not compat_debug:
 
     curses.curs_set(False)
 
-    win_program = curses.newwin(40, curses.COLS - 1, 0, 0)
+    win_program = curses.newwin(debug_lines, curses.COLS - 1, 0, 0)
 
     logging_pad = curses.newpad(1000, curses.COLS - 1)
 
@@ -84,7 +86,7 @@ def log_output(string="", newline=True):
         global logging_x
 
         logging_pad.addstr(logging_loc, logging_x, str(string))
-        logging_pad.refresh( logging_loc-min(logging_loc, curses.LINES - 41),0, 40,0, curses.LINES - 1,curses.COLS - 1)
+        logging_pad.refresh( logging_loc-min(logging_loc, curses.LINES - debug_lines - 1),0, debug_lines,0, curses.LINES - 1,curses.COLS - 1)
 
         if newline:
             logging_x = 1
@@ -178,9 +180,22 @@ def render():
 
     special_char = False
 
+    # y = -1
+    last_blank = False
+
+    display_y = 0
+
     for y in range(len(world_raw)):
-        if y > 40-1:
+        if display_y > debug_lines-1:
             break
+
+        if len(''.join(world_raw[y]).rstrip()) < 1:
+            if last_blank:
+                continue
+            else:
+                last_blank = True
+        else:
+            last_blank = False
 
         for x in range(len(world_raw[y])):
             char = world_raw[y][x]
@@ -203,12 +218,14 @@ def render():
                 char = "◊"
 
             if (x, y) in d_l:
-                win_program.addch(y, x, ord(char), curses.color_pair(1))
+                win_program.addch(display_y, x, ord(char), curses.color_pair(1))
             else:
-                win_program.addch(y, x, char)
+                win_program.addch(display_y, x, char)
 
         if compat_debug:
             sys.stdout.write("\n")
+
+        display_y += 1
 
     if not compat_debug:
         win_program.refresh()

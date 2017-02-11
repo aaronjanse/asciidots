@@ -83,6 +83,8 @@ Some extra flags when debugging:
 -a [delay]        Step the program automatically, using the specified delay in seconds. Decimal numbers are permitted, and so is 0.
 
 -w                Run the program without using ncurses. This can fix problems related to Windows.
+
+-l [line-count]   When not in compatibility mode, reserve the specified number of the lines for displaying the program
 ```
 
 This is how one might debug a program for 300 cycles while running it automatically:
