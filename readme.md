@@ -183,7 +183,7 @@ Other operations work similarly but with a different symbol in the middle. This 
 `^`: exponent<br>
 `&`: boolean AND<br>
 `!`: boolean NOT<br>
-`v`: boolean OR (the 'v' is from the symbol for Logical Disjunction)<br>
+`o`: boolean OR<br>
 `>`: greater than<br>
 `≥`: greater than or equal to<br>
 `<`: less than<br>
