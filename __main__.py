@@ -117,6 +117,7 @@ operators = (
     '≤',
     '≥',
     '~',
+    'x'
 )
 operators_eval = (
     '+',
@@ -124,7 +125,7 @@ operators_eval = (
     '*',
     '/',
     '%',
-    '^',
+    '**',
     '!=',
     '&',
     '|',
@@ -134,6 +135,7 @@ operators_eval = (
     '<=',
     '>=',
     '~',
+    '^'
 )
 enc_opers_square = []
 enc_opers_curly = []
