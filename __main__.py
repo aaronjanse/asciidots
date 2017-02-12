@@ -142,7 +142,7 @@ enc_opers_curly = []
 
 dot_synonyms = []
 
-def quit_curses():
+def exit_progam(exit_code=0):
     if debug and not compat_debug:
         curses.nocbreak()
         stdscr.keypad(False)
@@ -150,7 +150,6 @@ def quit_curses():
 
         curses.endwin()
 
-def exit_progam(exit_code=0):
     quit_curses()
 
     sys.exit(exit_code)
@@ -350,9 +349,7 @@ class dot:
             '>': self.handle_gt_symbol,
             '<': self.handle_lt_symbol,
             '*': self.handle_asterisk,
-            '~': self.handle_tilde,
-            '^': self.handle_up,
-            'v': self.handle_down
+            '~': self.handle_tilde
         }
 
     def handle_printing(self, char):
@@ -510,7 +507,7 @@ class dot:
         return False
 
     def handle_gt_symbol(self):
-        if self.dir[1] != 0:
+        if self.dir[0] == 0:
             self.dir = [1, 0]
         else:
             self.dir = self.dir[:]
@@ -536,13 +533,6 @@ class dot:
         self.selected = None
         return False
 
-    def handle_down(self):
-        if self.dir[0] != 0:
-            self.dir = [0, 1]
-        else:
-            self.dir = self.dir[:]
-
-        self.selected = None
         return False
 
     def handle_alias_char(self, char):
@@ -597,10 +587,7 @@ class dot:
             '}',
             '{',
             '[',
-            ']',
-            '*',
-            '^',
-            'v']
+            ']']
 
         char_list.extend(enc_opers_square)
         char_list.extend(enc_opers_curly)
@@ -876,7 +863,7 @@ class dot:
             if char == '"':
                 continue
 
-            if char in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
+            if char.isdigit():
                 self.handle_digit(int(char))
                 self.last_char_int = True
                 continue
@@ -950,7 +937,7 @@ lib_alias_chars = {}
 
 program_dir = ""
 
-offset = (128 + len(operators)*2 + 1) + 10
+offset = (128 + len(operators)*2 + 1) + 1
 
 main_lines = []
 
@@ -964,50 +951,36 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
     global offset
     global lib_alias_chars
     global main_lines
-    global libs
-    # global include_aliases
 
     include_files = []
     include_aliases = []
 
     lines = []
-
-    # print(raw_lines)
     for line in raw_lines:
-        # if len(line.rstrip(' ')) < 1:
-        #     continue
+        if line[0] == '%':
+            if line[1] == '!':
+                pieces = line[2:].split()
 
-        if line[:2] == '%!':
-            pieces = line[2:].split()
-
-            include_files.append(pieces[0])
-            include_aliases.append(pieces[1])
+                include_files.append(pieces[0])
+                include_aliases.append(pieces[1])
         else:
             lines.append(line)
 
-    # print(include_files)
-
     for idx, file_name in enumerate(include_files):
-        # print(idx)
         if file_name not in libs:
-            # print(file_name)
             if os.path.isfile(os.path.join(program_dir, file_name)):
                 new_path = os.path.join(program_dir, file_name)
             else:
                 interpreter_dir = os.path.dirname(os.path.realpath(__file__))
                 new_path = os.path.join(interpreter_dir, "libs", file_name)
 
-            # print(new_path.split('%', 1)[0])
             with open(new_path.split('%', 1)[0], 'r') as lib_file:
                 next_lines = lib_file.readlines()
-
-            # next_lines = [li if li[:2] != '%!' else '   ' for li in next_lines]
 
             alias_char = chr(offset)
 
             libs[file_name] = {'id': lib_id_counter, 'alias': alias_char}
 
-            # print(libs)
             # Find all the library tp chars
             tp_chars = []
             for line in next_lines:
@@ -1030,17 +1003,15 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
             lib_id_counter += 5
 
             offset += 5
-            # print(file_name)
-            find_and_process_libs(next_lines, False, this_file_name=file_name)
+
+            find_and_process_libs(next_lines, False, file_name)
 
 
         # Replace all alias chars with their universal counterparts
         if is_main:
-            # print("modding: {0}".format(libs))
-            # print(file_name)
-            main_lines = [li.replace(include_aliases[idx], libs[file_name]['alias']) if li[0] != '%' else li for li in main_lines]
+            main_lines = [li.replace(include_aliases[idx], libs[file_name]['alias']) for li in main_lines]
         else:
-            libs[this_file_name]['lines'] = [li.replace(include_aliases[idx], libs[file_name]['alias']) for li in libs[this_file_name]['lines']]
+            libs[this_file_name] = [li.replace(include_aliases[idx], libs[file_name]['alias']) for li in libs[this_file_name]]
 
 def main(args):
     global dots
@@ -1053,6 +1024,7 @@ def main(args):
     global offset
     global main_lines
 
+
     file_path = args[0]
 
     program_dir = os.path.dirname(os.path.abspath(file_path))
@@ -1060,14 +1032,7 @@ def main(args):
     with open(file_path, 'r') as file:
         main_lines = file.readlines()
 
-    # print(main_lines[0])
-
     find_and_process_libs(main_lines, True)
-
-    # print(libs)
-    # print(lib_alias_chars)
-    #
-    # print(main_lines)
 
     for library_file in libs:
         main_lines.extend(libs[library_file]['lines'])
@@ -1112,24 +1077,6 @@ def main(args):
     for idx, line in reversed(list(enumerate(world))):
         world[idx] += (' ' * (longest_line - len(line) + 1))
         world_raw[idx] += (' ' * (longest_line - len(line) + 1))
-
-    # filtered_world = []
-    #
-    # last_blank = False
-
-    # for li in world_raw:
-    #     if len(''.join(li).rstrip()) < 1:
-    #         if last_blank:
-    #             continue
-    #         else:
-    #             last_blank = True
-    #     else:
-    #         last_blank = False
-    #
-    #     filtered_world.append(li)
-    #
-    #
-    # world_raw = filtered_world
 
     try:
         special_dots = [[]] * len(dot_synonyms)
@@ -1195,8 +1142,4 @@ def main(args):
     return 0
 
 if __name__ == '__main__':
-    try:
-        exit_progam(main(sys.argv[1:]))
-    except Exception:
-        quit_curses()
-        raise
+    exit_progam(main(sys.argv[1:]))
