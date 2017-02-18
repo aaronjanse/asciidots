@@ -4,22 +4,21 @@ from time import sleep
 
 from decimal import Decimal
 
-
-import signal
-import sys
-def signal_handler(signal, frame):
-        # print('You pressed Ctrl+C!')
-        exit_progam(0)
-signal.signal(signal.SIGINT, signal_handler)
-# print('Press Ctrl+C')
-# signal.pause()
-
 import sys
 import json
 from itertools import chain
 
+import signal
+
 # TODO: import this only when needed (i.e. when debugging is enabled)
 import os
+
+
+def signal_handler(signal, frame):
+        exit_progam(0)
+
+
+signal.signal(signal.SIGINT, signal_handler)
 
 # access like this: world[y][x]
 # notice how y is before x
@@ -65,6 +64,12 @@ if debug and not compat_debug:
 
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
 
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
+
+    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+
+    curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_BLACK)
+
     curses.noecho()
 
     curses.curs_set(False)
@@ -77,6 +82,7 @@ if debug and not compat_debug:
 logging_loc = 0
 logging_x = 1
 
+
 def log_output(string="", newline=True):
     if silent_output:
         return
@@ -86,7 +92,9 @@ def log_output(string="", newline=True):
         global logging_x
 
         logging_pad.addstr(logging_loc, logging_x, str(string))
-        logging_pad.refresh( logging_loc-min(logging_loc, curses.LINES - debug_lines - 1),0, debug_lines,0, curses.LINES - 1,curses.COLS - 1)
+        logging_pad.refresh(logging_loc - min(logging_loc, curses.LINES -
+                            debug_lines - 1), 0, debug_lines, 0,
+                            curses.LINES - 1, curses.COLS - 1)
 
         if newline:
             logging_x = 1
@@ -98,7 +106,6 @@ def log_output(string="", newline=True):
             print(string)
         else:
             print(string, end='')
-
 
 
 operators = (
@@ -119,28 +126,12 @@ operators = (
     '~',
     'x'
 )
-operators_eval = (
-    '+',
-    '-',
-    '*',
-    '/',
-    '%',
-    '**',
-    '!=',
-    '&',
-    '|',
-    '==',
-    '<',
-    '>',
-    '<=',
-    '>=',
-    '~',
-    '^'
-)
+
 enc_opers_square = []
 enc_opers_curly = []
 
 dot_synonyms = []
+
 
 def quit_curses():
     if debug and not compat_debug:
@@ -150,14 +141,26 @@ def quit_curses():
 
         curses.endwin()
 
+
 def exit_progam(exit_code=0):
     quit_curses()
 
     sys.exit(exit_code)
 
+
+operator_two_way_map = {}
+
 for idx, oper in enumerate(operators):
-    enc_opers_square.append(chr(128 + idx))
-    enc_opers_curly.append(chr(128 + idx + len(operators) + 1))
+    ch_square = chr(128 + idx)
+    ch_curly = chr(128 + idx + len(operators) + 1)
+
+    operator_two_way_map[ch_square] = oper
+    operator_two_way_map[ch_curly] = oper
+
+    operator_two_way_map[oper] = (ch_square, ch_curly,)
+
+    enc_opers_square.append(ch_square)
+    enc_opers_curly.append(ch_curly)
 
 
 # see http://stackoverflow.com/a/21785167/6496271
@@ -172,6 +175,14 @@ def curses_input(stdscr, r, c, prompt_string):
 
     return input
 
+
+def get_input(text):
+    if debug and not compat_debug:
+        return curses_input(stdscr, curses.LINES - 2, 2, text)
+    else:
+        return input(text)
+
+
 def render():
 
     if compat_debug:
@@ -185,7 +196,6 @@ def render():
 
     special_char = False
 
-    # y = -1
     last_blank = False
 
     display_y = 0
@@ -217,15 +227,25 @@ def render():
 
                 continue
 
+            replaced_char = False
+
             if char in lib_alias_chars:
                 char = "§"
+                replaced_char = True
             elif ord(char) > 127:
                 char = "◊"
+                replaced_char = True
 
             if (x, y) in d_l:
-                win_program.addch(display_y, x, ord(char), curses.color_pair(1))
+                win_program.addstr(display_y, x, char, curses.color_pair(1))
+            elif world[y][x] in teleporters:
+                win_program.addstr(display_y, x, char, curses.color_pair(2))
+            elif replaced_char:
+                win_program.addstr(display_y, x, char, curses.color_pair(3))
+            elif char in '#@~':
+                win_program.addstr(display_y, x, char, curses.color_pair(4))
             else:
-                win_program.addch(display_y, x, char)
+                win_program.addstr(display_y, x, char)
 
         if compat_debug:
             sys.stdout.write("\n")
@@ -237,43 +257,525 @@ def render():
 
     # sys.stdout.flush()
 
+
 def exists(x, y):
     return x >= 0 and y >= 0 and y < len(world)and x < len(world[y])
 
 
-class dot:
-    def __init__(self, _x, _y, _dir=None, _data=None):
-        self.map_handlers()
-
-        self.print_as_ascii = False
-
-        self.newline = True
-
-        self.single_quotes = False
-
-        self.stack = []
-
-        self.x = _x
-        self.y = _y
-        if _data is None:
-            self.data = {'value': 0, 'address': 0}
+def moveFirstTime(func):
+    def _decorator(self, *args, **kwargs):
+        # print('self is {0}'.format(self))
+        # print(self.a)
+        if not self.hasRun:
+            self.moveParent()
+            self.hasRun = True
         else:
-            self.data = _data
+            func(self, *args, **kwargs)
+    return _decorator
 
-        self.selected = None
 
-        self.last_char_int = False
+class State(object):
+    def __init__(self, parent):
+        self.parent = parent
+        self.hasRun = False
+
+    def next(self, char):
+        quit_curses()
+        raise Exception("State Next Method Not Implemented!")
+
+    def run(self, char):
+        quit_curses()
+        raise Exception("State Run Method Not Implemented!")
+
+    def setParentState(self, newState):
+        self.parent.state = newState(self.parent)
+
+    def moveParent(self, direction=None):
+        if direction is None:
+            direction = self.parent.dir
+
+        self.parent.x += direction[0]
+        self.parent.y += direction[1]
+
+    # define lambda like this: lambda x, y: (your func or constant)
+    def changeParentDirWithFunc(self, newDirLambda):
+        self.parent.dir = list(newDirLambda(*self.parent.dir))
+
+    def setParentDir(self, newDirX, newDirY):
+        self.parent.dir = [newDirX, newDirY]
+
+    def isParentMovingVert(self):
+        return self.parent.dir[1] != 0
+
+    def isParentMovingHoriz(self):
+        return self.parent.dir[0] != 0
+
+    def __str__(self):
+        return type(self).__name__
+
+
+class TravelState(State):
+    def next(self, char):
+        if char == ' ':
+            return DeadState(self.parent)
+        elif char == '~':
+            return TildeState(self.parent)
+        elif char == '#':
+            return ValueState(self.parent)
+        elif char == '@':
+            return AddressState(self.parent)
+        elif char == '$':
+            return PrintState(self.parent)
+        elif char in ('[', ']',) and self.isParentMovingVert():
+            return DeadState(self.parent)
+        elif char in ('{', '}',) and self.isParentMovingVert():
+            return DeadState(self.parent)
+        elif char in enc_opers_square:
+            return OperSquareState(self.parent)
+        elif char in enc_opers_curly:
+            return OperCurlyState(self.parent)
+        elif char == '-' and self.isParentMovingVert():
+            return DeadState(self.parent)
+        elif char == '|' and self.isParentMovingHoriz():
+            return DeadState(self.parent)
+        elif char == ':' and self.parent.value == 0:
+            return DeadState(self.parent)
+        elif char == ';' and self.parent.value == 1:
+            return DeadState(self.parent)
+        else:
+            return self
+
+    def run(self, char):
+        if char == '\\':
+            self.changeParentDirWithFunc(lambda x, y: (y, x))
+        elif char == '/':
+            self.changeParentDirWithFunc(lambda x, y: (-y, -x))
+        elif char == '(':
+            self.setParentDir(1, 0)
+        elif char == ')':
+            self.setParentDir(-1, 0)
+        elif char == '>':
+            if self.isParentMovingVert():
+                self.setParentDir(1, 0)
+        elif char == '<':
+            if self.isParentMovingVert():
+                self.setParentDir(-1, 0)
+        elif char == '^':
+            if self.isParentMovingHoriz():
+                self.setParentDir(0, -1)
+        elif char == 'v':
+            if self.isParentMovingHoriz():
+                self.setParentDir(0, 1)
+        elif char == '*':
+            for xoffset in range(-1, 1+1):
+                for yoffset in range(-1, 1+1):
+                    # If the abs vals of both offsets are one, skip
+                    if not abs(xoffset) ^ abs(yoffset):
+                        continue
+
+                    if [-xoffset, -yoffset] == self.parent.dir\
+                            or [xoffset, yoffset] == self.parent.dir:
+                        continue
+
+                    abs_offset_x = self.parent.x+xoffset
+                    abs_offset_y = self.parent.y+yoffset
+
+                    if exists(abs_offset_x, abs_offset_y)\
+                            and world[abs_offset_y][abs_offset_x] != ' ':
+                        new_dot = eval(str(self.parent))
+                        new_dot.dir = [xoffset, yoffset]
+
+                        new_dot.state.moveParent()
+
+                        new_dots.append(new_dot)
+        elif char in lib_alias_chars:
+            self.parent.stack.append((self.parent.x, self.parent.y))
+
+            dir_list = ([1, 0], [0, -1], [-1, 0], [0, 1])
+
+            goto_idx = dir_list.index(self.parent.dir)
+
+            dest_char = lib_alias_chars[char]['goto_chars'][goto_idx]
+
+            found = False
+
+            for y in range(len(world)):
+                if world[y][0] == '%':
+                    continue
+
+                for x in range(len(world[y])):
+                    if "''" in world[y][:x]:
+                        break
+
+                    if x == self.parent.x and y == self.parent.y:
+                        continue
+
+                    cell = world[y][x]
+
+                    if cell == dest_char:
+                        self.parent.x = x
+                        self.parent.y = y
+                        found = True
+                        break
+
+                if found:
+                    break
+
+        elif char in teleporters:
+            found = False
+
+            for y in range(len(world)):
+                if world[y][0] == '%':
+                    continue
+
+                for x in range(len(world[y])):
+                    if "''" in world[y][:x]:
+                        break
+
+                    if x == self.parent.x and y == self.parent.y:
+                        continue
+
+                    cell = world[y][x]
+
+                    if cell == char:
+                        self.parent.x = x
+                        self.parent.y = y
+                        found = True
+                        break
+
+                if found:
+                    break
+        else:
+            for lib_main_alias in lib_alias_chars:
+                lib_gotos = lib_alias_chars[lib_main_alias]['goto_chars']
+
+                if char in lib_gotos:
+                    (self.parent.x, self.parent.y) = self.parent.stack.pop()
+
+        self.moveParent()
+
+
+class ValueState(State):
+    def __init__(self, parent):
+        State.__init__(self, parent)
+        self.firstDigit = True
+
+    def next(self, char):
+        if not char.isdecimal() and char != '?':
+            return TravelState(self.parent)
+        else:
+            return self
+
+    @moveFirstTime
+    def run(self, char):
+        if char.isdecimal():
+            if self.firstDigit:
+                self.parent.value = int(char)
+                self.firstDigit = False
+            else:
+                self.parent.value = self.parent.value * 10 + int(char)
+        elif char == '?':
+            self.parent.value = int(get_input('?: '))
+
+        self.moveParent()
+
+
+class AddressState(State):
+    def __init__(self, parent):
+        State.__init__(self, parent)
+        self.firstDigit = True
+
+    def next(self, char):
+        if char in ('[', ']', '{', '}') and self.isParentMovingVert():
+            return DeadState(self.parent)
+        elif char in enc_opers_square:
+            return OperSquareState(self.parent, addressMode=True)
+        elif char in enc_opers_curly:
+            return OperCurlyState(self.parent, addressMode=True)
+        elif char.isdecimal() or char == '?':
+            return self
+        elif char == '~':
+            return TildeState(self.parent, addressMode=True)
+        else:
+            return TravelState(self.parent)
+
+    @moveFirstTime
+    def run(self, char):
+        if char.isdecimal():
+            if self.firstDigit:
+                self.parent.address = int(char)
+                self.firstDigit = False
+            else:
+                self.parent.address = self.parent.address * 10 + int(char)
+        elif char == '?':
+            self.parent.address = int(input('?: '))
+        else:
+            pass
+
+        self.moveParent()
+
+
+class PrintState(State):
+    def __init__(self, parent):
+        State.__init__(self, parent)
+        self.newline = True
+        self.asciiMode = False
+
+    def next(self, char):
+        if char in ('$', '_', 'a', '#', '@',):
+            return self
+        elif char == ' ':
+            return DeadState(self.parent)
+        elif char == '"':
+            return PrintDoubleQuoteState(self.parent, newline=self.newline)
+        elif char == "'":
+            return PrintSingleQuoteState(self.parent, newline=self.newline)
+        else:
+            return TravelState(self.parent)
+
+    @moveFirstTime
+    def run(self, char):
+        if char == '_':
+            self.newline = False
+        elif char == 'a':
+            self.asciiMode = True
+        elif char == '#':
+            data = self.parent.value
+
+            if self.asciiMode:
+                data = chr(data)
+
+            log_output(data, newline=self.newline)
+        elif char == '@':
+            data = self.parent.address
+
+            if self.asciiMode:
+                data = chr(data)
+
+            log_output(data, newline=self.newline)
+        else:
+            pass
+
+        self.moveParent()
+
+
+class PrintDoubleQuoteState(State):
+    def __init__(self, parent, newline=True):
+        State.__init__(self, parent)
+        self.newline = newline
+        self.pendingExit = False
+
+    def next(self, char):
+        if self.pendingExit:
+            return TravelState(self.parent)
+        else:
+            return self
+
+    @moveFirstTime
+    def run(self, char):
+        if char == '"':
+            if self.newline:
+                log_output()
+
+            self.pendingExit = True
+        else:
+            log_output(char, newline=False)
+
+        self.moveParent()
+
+
+class PrintSingleQuoteState(State):
+    def __init__(self, parent, newline=True):
+        State.__init__(self, parent)
+        self.newline = newline
+        self.pendingExit = False
+
+    def next(self, char):
+        if self.pendingExit:
+            return TravelState(self.parent)
+        else:
+            return self
+
+    @moveFirstTime
+    def run(self, char):
+        if char == "'":
+            if self.newline:
+                log_output()
+
+            self.pendingExit = True
+        else:
+            log_output(char, newline=False)
+
+        self.moveParent()
+
+
+class TwoDotState(State):
+    def __init__(self, parent, isMaster, addressMode=False):
+        State.__init__(self, parent)
+
+        self.addressMode = addressMode
+
+        self.isMaster = isMaster(self)
+
+        self.isWaiting = True
+        self.age = 0
+
+    operation_map = {
+        '+': (lambda x, y: x + y),
+        '-': (lambda x, y: x - y),
+        '*': (lambda x, y: x * y),
+        '/': (lambda x, y: x / y),
+        '^': (lambda x, y: x ** y),
+        'o': (lambda x, y: x | y),
+        'x': (lambda x, y: x ^ y),
+        '&': (lambda x, y: x & y),
+        '!': (lambda x, y: x != y),
+        '=': (lambda x, y: x == y),
+        '>': (lambda x, y: x > y),
+        '≥': (lambda x, y: x >= y),
+        '<': (lambda x, y: x < y),
+        '≤': (lambda x, y: x <= y),
+        '%': (lambda x, y: x % y)
+    }
+
+    def next(self, char):
+        if self.isWaiting:
+            return self
+        else:
+            return TravelState(self.parent)
+
+    def run(self, char):
+        if self.isMaster:
+            # We want to find the companion dot that has been waiting the
+            # longest. At the same time, if we find a dot that is also a master
+            # that has been waiting longer than this, keep on waiting
+            candidate_index = -1
+            best_candidate_age = -1
+
+            ready_to_operate = False
+
+            for idx, dot in enumerate(dots):
+                if dot.x == self.parent.x and dot.y == self.parent.y\
+                        and isinstance(dot.state, TwoDotState):
+                    if dot.state.isMaster:
+                        if dot.state.age > self.age:
+                            ready_to_operate = False
+                            break
+                    else:
+                        age = dot.state.age
+                        if age > best_candidate_age:
+                            candidate_index = idx
+                            ready_to_operate = True
+
+            if ready_to_operate:
+                candidate = dots[candidate_index]
+
+                if candidate.state.addressMode:
+                    candidate_par = candidate.address
+                else:
+                    candidate_par = candidate.value
+
+                if self.addressMode:
+                    self_par = self.parent.address
+                else:
+                    self_par = self.parent.value
+
+                self.doOperation(char, self_par, candidate_par, candidate,
+                                 candidate_index)
+
+                candidate.state = DeadState(candidate)
+
+                # print(self)
+
+                # self.moveParent()
+
+                self.isWaiting = False
+
+        self.age += 1
+        self.parent.breakLoop = True
+
+        def doOperation(self, candidate, candidate_idx):
+            raise Exception("DoOperation not implemented!")
+
+
+class OperState(TwoDotState):
+    def __init__(self, parent, isMaster, addressMode=False):
+        TwoDotState.__init__(self, parent, isMaster, addressMode)
+
+    def doOperation(self, char, self_par, candidate_par, candidate,
+                    candidate_idx):
+        plaintext_char = operator_two_way_map[char]
+        result = self.operation_map[plaintext_char](self_par, candidate_par)
+
+        if self.addressMode:
+            self.parent.address = result
+        else:
+            self.parent.value = result
+
+
+class OperSquareState(OperState):
+    def __init__(self, parent, addressMode=False):
+        OperState.__init__(self, parent,
+                           isMaster=(lambda self: self.isParentMovingVert()),
+                           addressMode=addressMode)
+
+
+class OperCurlyState(OperState):
+    def __init__(self, parent, addressMode=False):
+        OperState.__init__(self, parent,
+                           isMaster=(lambda self: self.isParentMovingHoriz()),
+                           addressMode=addressMode)
+
+
+class TildeState(TwoDotState):
+    def __init__(self, parent, addressMode=False):
+        TwoDotState.__init__(self, parent,
+                             isMaster=(lambda self: self.isParentMovingHoriz()),
+                             addressMode=addressMode)
+
+    def doOperation(self, char, self_par, candidate_par, candidate,
+                    candidate_idx):
+        if candidate_par != 0:
+            self.setParentDir(0, -1)
+        # else:
+            # self.setParentDir(1, 0)
+
+
+class DeadState(State):
+    def next(self, char):
+        return self
+
+    def run(self, char):
+        pass
+
+
+class Dot:
+    def __init__(self, x, y, address=None, value=None, direction=None,
+                 state=None, stack=None):
+
+        self.breakLoop = False
+
+        if stack is None:
+            self.stack = []
+        else:
+            self.stack = stack
+
+        self.x = x
+        self.y = y
+
+        if address is None:
+            self.address = 0
+        else:
+            self.address = address
+
+        if value is None:
+            self.value = 0
+        else:
+            self.value = value
 
         self.is_dead = False
 
-        self.is_printing = False
-        self.in_quotes = False
-
-        self.waiting = False
-
-        self.waiting_for = 0
-
-        if _dir is None:
+        if direction is None:
             if self.x > 0:
                 if(world[self.y][self.x - 1] in ('-', '/', '\\', '>', '<')):
                     self.dir = [-1, 0]
@@ -289,546 +791,28 @@ class dot:
             if self.y + 1 < len(world) and self.x < len(world[self.y + 1]):
                 if(world[self.y + 1][self.x] in ('|', '/', '\\', '>', '<')):
                     self.dir = [0, +1]
-        else:
-            self.dir = _dir
 
-        if not hasattr(self, 'dir'):
-            print("error: cannot determine dot location")
-            print(self)
-            print(world_raw)
-            exit_progam(1)
+            if not hasattr(self, 'dir'):
+                print("error: cannot determine dot location")
+                print(self)
+                print(world_raw)
+                exit_progam(1)
+            else:
+                self.x += self.dir[0]
+                self.y += self.dir[1]
+        else:
+            self.dir = direction
+
+        if state is None:
+            self.state = TravelState(self)
+        else:
+            self.state = state(self)
 
     def __repr__(self):
-        return json.dumps({'data': self.data,
-                           'x': self.x,
-                           'y': self.y,
-                           'dir': self.dir,
-                           'waiting': self.waiting,
-                           'waiting_for': self.waiting_for,
-                           'selected': self.selected})
-    def __eq__(self, other):
-        return str(self) == str(other)
-    def __hash__(self):
-        return hash(('data',
-                     str(self.data),
-                     'x',
-                     self.x,
-                     'y',
-                     self.y,
-                     'dir',
-                     str(self.dir),
-                     'waiting',
-                     self.waiting,
-                     'waiting_for',
-                     self.waiting_for,
-                     'selected',
-                     self.selected))
+        return 'Dot(x={x}, y={y}, address={address}, value={value}, \
+                direction={dir}, state={state}, stack={stack})'\
+                .format(**self.__dict__)
 
-    def increment_others(self):
-        for d in dots:
-            if d.x == self.x and d.y == self.y and d.waiting:
-                d.waiting_for += 1
-
-    def map_handlers(self):
-        self.char_handler_dict = {
-            '&': self.handle_and,
-            '-': self.handle_dash,
-            '{': self.handle_bracket,
-            '}': self.handle_bracket,
-            '[': self.handle_bracket,
-            ']': self.handle_bracket,
-            '|': self.handle_pipe,
-            '+': self.handle_plus,
-            ' ': self.handle_space,
-            '\\': self.handle_backslash,
-            '/': self.handle_forwardslash,
-            '@': self.handle_atsymbol,
-            '#': self.handle_poundsymbol,
-            '?': self.handle_question,
-            '(': self.handle_left_paren,
-            ')': self.handle_right_paren,
-            '>': self.handle_gt_symbol,
-            '<': self.handle_lt_symbol,
-            '*': self.handle_asterisk,
-            '~': self.handle_tilde,
-            '^': self.handle_up,
-            'v': self.handle_down
-        }
-
-    def handle_printing(self, char):
-        if self.in_quotes:
-            if (not self.single_quotes and char == '"') or (self.single_quotes and char == "'"):
-                # print("done")
-                if self.newline:
-                    log_output()
-
-                self.newline = True
-
-                self.in_quotes = False
-                self.single_quotes = False
-                self.is_printing = False
-            else:
-                # print("char: "+char)
-                # if char == '#':
-                #     log_output(self.data['value'], newline=False)
-                # elif char == '@':
-                #     log_output(self.data['address'], newline=False)
-                # else:
-                log_output(char, newline=False)
-            return True
-        else:
-            if char == '_':
-                self.newline = False
-
-                return True
-            elif char == 'a':
-                self.print_as_ascii = True
-
-                return True
-            elif char == '#':
-                dat = self.data['value']
-                if self.print_as_ascii:
-                    dat = chr(dat)
-                log_output(dat, newline=self.newline)
-                return True
-            elif char == '@':
-                dat = self.data['address']
-                if self.print_as_ascii:
-                    dat = chr(dat)
-                log_output(dat, newline=self.newline)
-                return True
-            elif char == '"':
-                self.in_quotes = True
-                self.single_quotes = False
-
-                self.print_as_ascii = False
-                return True
-            elif char == "'":
-                self.in_quotes = True
-                self.single_quotes = True
-
-                self.print_as_ascii = False
-                return True
-            elif char == ' ':
-                self.is_dead = True
-                return True
-            else:
-                self.is_printing = False
-
-                self.print_as_ascii = False
-
-                self.newline = True
-                return False
-
-    def handle_digit(self, number):
-        if self.selected is not None:
-            if self.last_char_int:
-                self.data[self.selected] = self.data[self.selected] * 10 + number
-            else:
-                self.data[self.selected] = number
-
-    def handle_and(self):
-        if not debug:
-            exit_progam(0)
-
-        self.waiting = True
-        return True
-
-    def handle_dash(self):
-        if self.dir[1] != 0:
-            self.is_dead = True
-            return True
-
-        self.selected = None
-
-        return False
-
-    def handle_bracket(self):
-        if self.dir[1] != 0:
-            self.is_dead = True
-            return True
-
-        return False
-
-    def handle_pipe(self):
-        if self.dir[0] != 0:
-            self.is_dead = True
-            return True
-
-        self.selected = None
-
-        return False
-
-    def handle_plus(self):
-        self.selected = None
-
-        return False
-
-    def handle_space(self):
-        self.is_dead = True
-        return True
-
-    def handle_backslash(self):
-        self.dir = [self.dir[1], self.dir[0]]
-
-        self.selected = None
-        return False
-
-    def handle_forwardslash(self):
-        self.dir = [-self.dir[1], -self.dir[0]]
-
-        self.selected = None
-        return False
-
-    def handle_atsymbol(self):
-        self.selected = 'address'
-        return False
-
-    def handle_poundsymbol(self):
-        self.selected = 'value'
-        return False
-
-    def handle_question(self):
-        if self.selected is not None:
-            if debug and not compat_debug:
-                user_in = int(curses_input(stdscr, curses.LINES - 2, 2, "Please input an {0}: ".format(self.selected)))
-                self.data[self.selected] = user_in
-            else:
-                self.data[self.selected] = int(input(
-                        "Please input an {0}: ".format(self.selected)))
-
-    def handle_left_paren(self):
-        self.dir = [1, self.dir[1]]
-
-        self.selected = None
-        return False
-
-    def handle_right_paren(self):
-        self.dir = [-1, self.dir[1]]
-
-        self.selected = None
-        return False
-
-    def handle_gt_symbol(self):
-        if self.dir[1] != 0:
-            self.dir = [1, 0]
-        else:
-            self.dir = self.dir[:]
-
-        self.selected = None
-        return False
-
-    def handle_lt_symbol(self):
-        if self.dir[1] != 0:
-            self.dir = [-1, 0]
-        else:
-            self.dir = self.dir[:]
-
-        self.selected = None
-        return False
-
-    def handle_up(self):
-        if self.dir[0] != 0:
-            self.dir = [0, -1]
-        else:
-            self.dir = self.dir[:]
-
-        self.selected = None
-        return False
-
-    def handle_down(self):
-        if self.dir[0] != 0:
-            self.dir = [0, 1]
-        else:
-            self.dir = self.dir[:]
-
-        self.selected = None
-        return False
-
-    def handle_alias_char(self, char):
-        self.stack.append((self.x, self.y))
-
-        goto_idx = ([1, 0], [0, -1], [-1, 0], [0, 1],).index(self.dir)
-
-        dest_char = lib_alias_chars[char]['goto_chars'][goto_idx]
-
-        for y in range(len(world)):
-            if world[y][0] == '%':
-                continue
-
-            for x in range(len(world[y])):
-                if "''" in world[y][:x]:
-                    break;
-
-                if x == self.x and y == self.y:
-                    continue
-
-                cell = world[y][x]
-
-                if cell == dest_char:
-                    self.x = x
-                    self.y = y
-                    return
-
-    def handle_asterisk(self):
-        new_dots_directions = []
-        original = [-self.dir[0], -self.dir[1]]
-        char_list = [
-            '~',
-            '/',
-            '\\',
-            '<',
-            '>',
-            '+',
-            '#',
-            '@',
-            '0',
-            '1',
-            '2',
-            '3',
-            '4',
-            '5',
-            '6',
-            '7',
-            '8',
-            '9',
-            '(',
-            ')',
-            '}',
-            '{',
-            '[',
-            ']',
-            '*',
-            '^',
-            'v']
-
-        char_list.extend(enc_opers_square)
-        char_list.extend(enc_opers_curly)
-        if self.x > 0:
-            if(world[self.y][self.x - 1] in char_list + ['-']):
-                this_dir = [-1, 0]
-                if this_dir != original:
-                    new_dots_directions.append(this_dir)
-
-        if self.x + 1 < len(world[self.y]):
-            if(world[self.y][self.x + 1] in char_list + ['-']):
-                this_dir = [+1, 0]
-                if this_dir != original:
-                    new_dots_directions.append(this_dir)
-
-        if self.y > 0:
-            if(world[self.y - 1][self.x] in char_list + ['|']):
-                this_dir = [0, -1]
-                if this_dir != original:
-                    new_dots_directions.append(this_dir)
-
-        if self.y + 1 < len(world):
-            if(world[self.y + 1][self.x] in char_list + ['|']):
-                this_dir = [0, +1]
-                if this_dir != original:
-                    new_dots_directions.append(this_dir)
-
-        self.dir = new_dots_directions[0]
-        for i in new_dots_directions[1:]:
-            d = dot(
-                self.x,
-                self.y,
-                _dir=i[:],
-                _data=self.data.copy())
-            d.stack = self.stack[:]
-            dots.append(d)
-            d.tick()
-
-    def handle_tilde(self):
-        if self.dir[0] == 0 and self.dir[1] == 0:
-            return
-        elif self.dir[0] == 0 and self.dir[1] == -1:
-            self.dir = [0, 0]
-            self.waiting = True
-
-            self.increment_others()
-
-            return
-
-        elif self.dir[0] != 0 and self.dir[1] == 0:
-            self.waiting = True
-
-            self.increment_others()
-
-            canidate_idx = None
-            canidate = None
-            canidate_rank = -1
-
-            for idx, d in enumerate(dots):
-                # If this is not first in line, return
-                if d.x == self.x and d.y == self.y and d.dir[
-                        0] != 0 and d.dir[1] == 0 and not d.is_dead:
-                    if d.waiting_for > self.waiting_for:
-                        return
-
-                # This is part of finding the matching dot that is
-                # first in line
-                if d.x == self.x and d.y == self.y and d.dir[
-                        0] == 0 and d.dir[1] == 0 and not d.is_dead:
-                    if canidate_rank == -1 or d.waiting_for > canidate_rank:
-                        canidate_idx = idx
-
-            if canidate_idx is not None:
-                canidate = dots[canidate_idx]
-
-            if canidate is not None:
-                if canidate.selected is None or canidate.selected == "value":
-                    canidate_par = canidate.data.copy()['value']
-                else:
-                    canidate_par = canidate.data.copy()['address']
-
-                canidate.is_dead = True
-
-                self.waiting = False
-                self.waiting_for = 0
-
-                if canidate_par == 1:
-                    self.dir = [0, -1]
-                else:
-                    pass
-
-            return
-
-        else:
-            print('error!')
-            print(self)
-
-    def handle_oper_square(self, char):
-        if self.dir[0] == 0 and self.dir[1] == 0:
-            return
-        elif self.dir[0] != 0 and self.dir[1] == 0:
-            self.waiting = True
-
-            self.increment_others()
-
-            return
-        elif self.dir[0] == 0 and self.dir[1] != 0:
-            self.waiting = True
-
-            self.increment_others()
-
-            canidate = None
-            canidate_idx = None
-            canidate_rank = -1
-
-            for idx, d in enumerate(dots):
-                # If this is not first in line, return
-                if d.x == self.x and d.y == self.y and d.dir[
-                        0] == 0 and d.dir[1] != 0 and not d.is_dead:
-                    if d.waiting_for > self.waiting_for:
-                        return
-
-                # This is part of finding the matching dot that is
-                # first in line
-                if d.x == self.x and d.y == self.y and d.dir[
-                        0] != 0 and d.dir[1] == 0 and not d.is_dead:
-                    if canidate_rank == -1 or d.waiting_for > canidate_rank:
-                        canidate_idx = idx + 0
-
-            if canidate_idx is not None:
-                canidate = dots[canidate_idx]
-
-            if canidate is not None:
-                if canidate.selected is None or canidate.selected == "value":
-                    canidate_par = canidate.data.copy()['value']
-                else:
-                    canidate_par = canidate.data.copy()['address']
-
-                self.waiting = False
-
-                self.waiting_for = 0
-
-                if self.selected is None or self.selected == "value":
-                    a_val = str(Decimal(self.data['value']))
-                    dest = "value"
-                else:
-                    a_val = str(Decimal(self.data['address']))
-                    dest = "address"
-
-
-                a_val = a_val.rstrip('0').rstrip('.') if '.' in a_val else a_val
-
-                b_val = str(Decimal(canidate_par))
-                b_val = b_val.rstrip('0').rstrip('.') if '.' in b_val else b_val
-
-                oper = operators_eval[enc_opers_square.index(char)]
-
-                self.data[dest] = eval(a_val + oper + b_val) * 1  # the '* 1' converts it to an int if it is a boolean
-
-                canidate.is_dead = True
-            else:
-                return
-
-    def handle_oper_curly(self, char):
-        if self.dir[0] == 0 and self.dir[1] == 0:
-            return
-        elif self.dir[0] == 0 and self.dir[1] != 0:
-            self.waiting = True
-
-            self.increment_others()
-
-            return
-        elif self.dir[0] != 0 and self.dir[1] == 0:
-            self.waiting = True
-
-            self.increment_others()
-
-            canidate = None
-            canidate_idx = None
-            canidate_rank = -1
-            for idx, d in enumerate(dots):
-                # If this is not first in line, return
-                if d.x == self.x and d.y == self.y and d.dir[
-                        0] != 0 and d.dir[1] == 0 and not d.is_dead:
-                    if d.waiting_for > self.waiting_for:
-                        return
-
-                # This is part of finding the matching dot that is
-                # first in line
-                if d.x == self.x and d.y == self.y and d.dir[
-                        0] == 0 and d.dir[1] != 0 and not d.is_dead:
-                    if canidate_rank == -1 or d.waiting_for > canidate_rank:
-                        canidate_idx = idx
-
-            if canidate_idx is not None:
-                canidate = dots[canidate_idx]
-
-            if canidate is not None:
-                if canidate.selected is None or canidate.selected == "value":
-                    canidate_par = canidate.data.copy()['value']
-                else:
-                    canidate_par = canidate.data.copy()['address']
-
-                self.waiting = False
-
-                self.waiting_for = 0
-
-                if self.selected is None or self.selected == "value":
-                    a_val = str(Decimal(self.data['value']))
-                    dest = "value"
-                else:
-                    a_val = str(Decimal(self.data['address']))
-                    dest = "address"
-
-                a_val = a_val.rstrip('0').rstrip('.') if '.' in a_val else a_val
-
-                b_val = str(Decimal(canidate_par))
-                b_val = b_val.rstrip('0').rstrip('.') if '.' in b_val else b_val
-
-                oper = operators_eval[enc_opers_curly.index(char)]
-
-                self.data[dest] = eval(a_val + oper + b_val) * 1  # the '* 1' converts it to an int if it is a boolean
-
-                canidate.is_dead = True
-            else:
-                return
-
-    # @profile
     def tick(self):
         past_locations = []
         while(True):
@@ -849,97 +833,30 @@ class dot:
             if coords in past_locations:
                 return
 
-            if not self.waiting:
-                self.x += self.dir[0]
-                self.y += self.dir[1]
-            else:
-                self.waiting_for += 1
-
-            past_locations.append(coords)
-
             if not exists(self.x, self.y):
                 self.is_dead = True
                 return
 
             char = world[self.y][self.x]
 
-            if char == '$' and not self.is_printing:
-                self.is_printing = True
-                continue
+            if char == '&':
+                if not debug:
+                    exit_progam(0)
 
-            if self.is_printing:
-                if self.handle_printing(char):
-                    return
-                else:
-                    pass
-
-            if char == '"':
-                continue
-
-            if char in ('0', '1', '2', '3', '4', '5', '6', '7', '8', '9'):
-                self.handle_digit(int(char))
-                self.last_char_int = True
-                continue
-            else:
-                self.last_char_int = False
-
-            if char in lib_alias_chars:
-                self.handle_alias_char(char)
+                self.state = DeadState
                 return
 
-            if char == ':':
-                if self.data['value'] == 0:
-                    self.is_dead = True
-                    return
+            self.state = self.state.next(char)
 
-                continue
+            self.state.run(char)
 
-            if char == ';':
-                if self.data['value'] == 1:
-                    self.is_dead = True
-                    return
-
-                continue
-
-            if char in enc_opers_square:
-                self.handle_oper_square(char)
+            if type(self.state) is DeadState:
+                self.is_dead = True
                 return
 
-            if char in enc_opers_curly:
-                self.handle_oper_curly(char)
-                return
-
-            if char in teleporters:
-                for y in range(len(world)):
-                    if world[y][0] == '%':
-                        continue
-
-                    for x in range(len(world[y])):
-                        if "''" in world[y][:x]:
-                            break;
-
-                        if x == self.x and y == self.y:
-                            continue
-
-                        cell = world[y][x]
-
-                        if cell == char:
-                            self.x = x
-                            self.y = y
-                            return
-
-            for lib_main_alias in lib_alias_chars:
-                lib_gotos = lib_alias_chars[lib_main_alias]['goto_chars']
-
-                if char in lib_gotos:
-                    (self.x, self.y) = self.stack.pop()
-                    return
-
-            try:
-                if self.char_handler_dict[char]():
-                    return
-            except KeyError:
-                pass
+            if self.breakLoop:
+                self.breakLoop = False
+                break
 
 
 raw_chars = []
@@ -965,18 +882,13 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
     global lib_alias_chars
     global main_lines
     global libs
-    # global include_aliases
 
     include_files = []
     include_aliases = []
 
     lines = []
 
-    # print(raw_lines)
     for line in raw_lines:
-        # if len(line.rstrip(' ')) < 1:
-        #     continue
-
         if line[:2] == '%!':
             pieces = line[2:].split()
 
@@ -985,29 +897,21 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
         else:
             lines.append(line)
 
-    # print(include_files)
-
     for idx, file_name in enumerate(include_files):
-        # print(idx)
         if file_name not in libs:
-            # print(file_name)
             if os.path.isfile(os.path.join(program_dir, file_name)):
                 new_path = os.path.join(program_dir, file_name)
             else:
                 interpreter_dir = os.path.dirname(os.path.realpath(__file__))
                 new_path = os.path.join(interpreter_dir, "libs", file_name)
 
-            # print(new_path.split('%', 1)[0])
             with open(new_path.split('%', 1)[0], 'r') as lib_file:
                 next_lines = lib_file.readlines()
-
-            # next_lines = [li if li[:2] != '%!' else '   ' for li in next_lines]
 
             alias_char = chr(offset)
 
             libs[file_name] = {'id': lib_id_counter, 'alias': alias_char}
 
-            # print(libs)
             # Find all the library tp chars
             tp_chars = []
             for line in next_lines:
@@ -1021,7 +925,7 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
             for idx_1, char in enumerate(tp_chars):
                 replacement = chr(offset+idx_1+1)
 
-                next_lines = [li.replace(char, replacement) for li in next_lines]
+                next_lines = [i.replace(char, replacement) for i in next_lines]
 
                 lib_alias_chars[alias_char]['goto_chars'].append(replacement)
 
@@ -1030,17 +934,19 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
             lib_id_counter += 5
 
             offset += 5
-            # print(file_name)
             find_and_process_libs(next_lines, False, this_file_name=file_name)
-
 
         # Replace all alias chars with their universal counterparts
         if is_main:
-            # print("modding: {0}".format(libs))
-            # print(file_name)
-            main_lines = [li.replace(include_aliases[idx], libs[file_name]['alias']) if li[0] != '%' else li for li in main_lines]
+            main_lines = [li.replace(include_aliases[idx],
+                          libs[file_name]['alias']) if li[0] != '%' else li
+                          for li in main_lines]
         else:
-            libs[this_file_name]['lines'] = [li.replace(include_aliases[idx], libs[file_name]['alias']) for li in libs[this_file_name]['lines']]
+            libs[this_file_name]['lines'] = [li.replace(include_aliases[idx],
+                                             libs[file_name]['alias'])
+                                             for li in
+                                             libs[this_file_name]['lines']]
+
 
 def main(args):
     global dots
@@ -1052,6 +958,7 @@ def main(args):
     global world_raw
     global offset
     global main_lines
+    global new_dots
 
     file_path = args[0]
 
@@ -1060,14 +967,7 @@ def main(args):
     with open(file_path, 'r') as file:
         main_lines = file.readlines()
 
-    # print(main_lines[0])
-
     find_and_process_libs(main_lines, True)
-
-    # print(libs)
-    # print(lib_alias_chars)
-    #
-    # print(main_lines)
 
     for library_file in libs:
         main_lines.extend(libs[library_file]['lines'])
@@ -1080,7 +980,8 @@ def main(args):
                 dot_synonyms = list(line[2:].rstrip())
             elif line[1] == '$':
                 raw_chars = list(line[2:].rstrip())
-                teleporters = [chr(idx+offset) for idx, c in enumerate(raw_chars)]
+                teleporters = [chr(idx+offset)
+                               for idx, c in enumerate(raw_chars)]
             continue
 
         data = ' ' + line.split("''", 1)[0].rstrip() + ' '
@@ -1096,40 +997,21 @@ def main(args):
             data = data.replace(rc, teleporters[idx])
 
         for idx, oper in enumerate(operators):
-            data = data.replace("[{0}]".format(
-                oper), "[{0}]".format(chr(128 + idx)))
-            data = data.replace(
-                "{" + oper + "}", "{" + "{0}".format(chr(128 + idx + len(operators) + 1) + "}"))
+            data = data.replace("[{0}]".format(oper),
+                                "[{0}]".format(chr(128 + idx)))
+            data = data.replace("{" + oper + "}", "{" + "{0}".format(
+                                chr(128 + idx + len(operators) + 1) + "}"))
 
         world.append(list(data))
 
     longest_line = max((len(l), i) for i, l in enumerate(world))[0]
 
-    world     = [' '*longest_line] + world
+    world = [' '*longest_line] + world
     world_raw = [' '*longest_line] + world_raw
-
 
     for idx, line in reversed(list(enumerate(world))):
         world[idx] += (' ' * (longest_line - len(line) + 1))
         world_raw[idx] += (' ' * (longest_line - len(line) + 1))
-
-    # filtered_world = []
-    #
-    # last_blank = False
-
-    # for li in world_raw:
-    #     if len(''.join(li).rstrip()) < 1:
-    #         if last_blank:
-    #             continue
-    #         else:
-    #             last_blank = True
-    #     else:
-    #         last_blank = False
-    #
-    #     filtered_world.append(li)
-    #
-    #
-    # world_raw = filtered_world
 
     try:
         special_dots = [[]] * len(dot_synonyms)
@@ -1145,9 +1027,9 @@ def main(args):
             cell = world[y][x]
 
             if cell == '.':
-                dots.append(dot(x, y))
+                dots.append(Dot(x, y))
             elif cell in dot_synonyms:
-                special_dots[dot_synonyms.index(cell)].append(dot(x, y))
+                special_dots[dot_synonyms.index(cell)].append(Dot(x, y))
 
     dots.extend(reversed(list(chain.from_iterable(special_dots))))
 
@@ -1158,7 +1040,6 @@ def main(args):
         new_dots = []
 
         dot_locations = []
-
 
         for idx in reversed(range(len(dots))):
             d = dots[idx]
@@ -1193,6 +1074,7 @@ def main(args):
 
     # End program
     return 0
+
 
 if __name__ == '__main__':
     try:
