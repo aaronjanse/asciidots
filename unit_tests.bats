@@ -29,3 +29,8 @@
   [ "$status" -eq 0 ]
   [ "$(echo $output)" = "$(cat ./tests/quine.dots)" ]
 }
+
+@test "factor" {
+  result="$(echo 24 | python3 . ./tests/factor.dots)"
+  [ "$result" = "$(seq 4)" ]
+}

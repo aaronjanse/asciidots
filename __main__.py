@@ -22,19 +22,21 @@ signal.signal(signal.SIGINT, signal_handler)
 
 # access like this: world[y][x]
 # notice how y is before x
-world_raw = []
-world = []
-
-dots = []
-
-new_dots = []
-
-teleporters = []
+# world_raw = []
+# world = []
+#
+# dots = []
+#
+# new_dots = []
+#
+# teleporters = []
 
 compat_debug = '-w' in sys.argv[1:]
 
 debug = '-d' in sys.argv[1:] or compat_debug
 step_manual = debug
+
+quick_debug = '-q' in sys.argv[1:]
 
 debug_lines = 40
 if '-l' in sys.argv[1:]:
@@ -180,17 +182,20 @@ def get_input(text):
     if debug and not compat_debug:
         return curses_input(stdscr, curses.LINES - 2, 2, text)
     else:
-        return input(text)
+        if not sys.stdin.isatty():
+            return input("")
+        else:
+            return input(text)
 
 
-def render():
+def render(inter_inst):
 
     if compat_debug:
         os.system('cls' if os.name == 'nt' else 'clear')
 
     d_l = []
-    for idx in reversed(range(len(dots))):
-        d = dots[idx]
+    for idx in reversed(range(len(inter_inst.dots))):
+        d = inter_inst.dots[idx]
         if not d.is_dead:
             d_l.append((d.x, d.y))
 
@@ -200,11 +205,11 @@ def render():
 
     display_y = 0
 
-    for y in range(len(world_raw)):
+    for y in range(len(inter_inst.world_raw)):
         if display_y > debug_lines-1:
             break
 
-        if len(''.join(world_raw[y]).rstrip()) < 1:
+        if len(''.join(inter_inst.world_raw[y]).rstrip()) < 1:
             if last_blank:
                 continue
             else:
@@ -212,8 +217,8 @@ def render():
         else:
             last_blank = False
 
-        for x in range(len(world_raw[y])):
-            char = world_raw[y][x]
+        for x in range(len(inter_inst.world_raw[y])):
+            char = inter_inst.world_raw[y][x]
 
             if compat_debug:
                 char_selected = (x, y) in d_l
@@ -229,7 +234,7 @@ def render():
 
             replaced_char = False
 
-            if char in lib_alias_chars:
+            if char in inter_inst.lib_alias_chars:
                 char = "§"
                 replaced_char = True
             elif ord(char) > 127:
@@ -238,7 +243,7 @@ def render():
 
             if (x, y) in d_l:
                 win_program.addstr(display_y, x, char, curses.color_pair(1))
-            elif world[y][x] in teleporters:
+            elif inter_inst.world[y][x] in inter_inst.teleporters:
                 win_program.addstr(display_y, x, char, curses.color_pair(2))
             elif replaced_char:
                 win_program.addstr(display_y, x, char, curses.color_pair(3))
@@ -258,8 +263,8 @@ def render():
     # sys.stdout.flush()
 
 
-def exists(x, y):
-    return x >= 0 and y >= 0 and y < len(world)and x < len(world[y])
+def exists(inter_inst, x, y):
+    return x >= 0 and y >= 0 and y < len(inter_inst.world)and x < len(inter_inst.world[y])
 
 
 def moveFirstTime(func):
@@ -377,40 +382,46 @@ class TravelState(State):
                             or [xoffset, yoffset] == self.parent.dir:
                         continue
 
-                    abs_offset_x = self.parent.x+xoffset
-                    abs_offset_y = self.parent.y+yoffset
+                    abs_offset_x = self.parent.x + xoffset
+                    abs_offset_y = self.parent.y + yoffset
 
-                    if exists(abs_offset_x, abs_offset_y)\
-                            and world[abs_offset_y][abs_offset_x] != ' ':
-                        new_dot = eval(str(self.parent))
+                    if exists(self.parent.inter_inst, abs_offset_x, abs_offset_y)\
+                            and self.parent.inter_inst.world[abs_offset_y][abs_offset_x] != ' ':
+
+                        pars = 'x={x}, y={y}, address={address}, value={value}, \
+                                direction={dir}, state={state}, stack={stack}'\
+                                .format(**self.parent.__dict__)
+
+                        new_dot = eval('Dot(self.parent.inter_inst, '+pars+')')
+
                         new_dot.dir = [xoffset, yoffset]
 
                         new_dot.state.moveParent()
 
-                        new_dots.append(new_dot)
-        elif char in lib_alias_chars:
+                        self.parent.inter_inst.new_dots.append(new_dot)
+        elif char in self.parent.inter_inst.lib_alias_chars:
             self.parent.stack.append((self.parent.x, self.parent.y))
 
             dir_list = ([1, 0], [0, -1], [-1, 0], [0, 1])
 
             goto_idx = dir_list.index(self.parent.dir)
 
-            dest_char = lib_alias_chars[char]['goto_chars'][goto_idx]
+            dest_char = self.parent.inter_inst.lib_alias_chars[char]['goto_chars'][goto_idx]
 
             found = False
 
-            for y in range(len(world)):
-                if world[y][0] == '%':
+            for y in range(len(self.parent.inter_inst.world)):
+                if self.parent.inter_inst.world[y][0] == '%':
                     continue
 
-                for x in range(len(world[y])):
-                    if "''" in world[y][:x]:
+                for x in range(len(self.parent.inter_inst.world[y])):
+                    if "''" in self.parent.inter_inst.world[y][:x]:
                         break
 
                     if x == self.parent.x and y == self.parent.y:
                         continue
 
-                    cell = world[y][x]
+                    cell = self.parent.inter_inst.world[y][x]
 
                     if cell == dest_char:
                         self.parent.x = x
@@ -421,21 +432,21 @@ class TravelState(State):
                 if found:
                     break
 
-        elif char in teleporters:
+        elif char in self.parent.inter_inst.teleporters:
             found = False
 
-            for y in range(len(world)):
-                if world[y][0] == '%':
+            for y in range(len(self.parent.inter_inst.world)):
+                if self.parent.inter_inst.world[y][0] == '%':
                     continue
 
-                for x in range(len(world[y])):
-                    if "''" in world[y][:x]:
+                for x in range(len(self.parent.inter_inst.world[y])):
+                    if "''" in self.parent.inter_inst.world[y][:x]:
                         break
 
                     if x == self.parent.x and y == self.parent.y:
                         continue
 
-                    cell = world[y][x]
+                    cell = self.parent.inter_inst.world[y][x]
 
                     if cell == char:
                         self.parent.x = x
@@ -446,8 +457,8 @@ class TravelState(State):
                 if found:
                     break
         else:
-            for lib_main_alias in lib_alias_chars:
-                lib_gotos = lib_alias_chars[lib_main_alias]['goto_chars']
+            for lib_main_alias in self.parent.inter_inst.lib_alias_chars:
+                lib_gotos = self.parent.inter_inst.lib_alias_chars[lib_main_alias]['goto_chars']
 
                 if char in lib_gotos:
                     (self.parent.x, self.parent.y) = self.parent.stack.pop()
@@ -488,9 +499,9 @@ class AddressState(State):
     def next(self, char):
         if char in ('[', ']', '{', '}') and self.isParentMovingVert():
             return DeadState(self.parent)
-        elif char in enc_opers_square:
+        elif char in self.parent.inter_inst.enc_opers_square:
             return OperSquareState(self.parent, addressMode=True)
-        elif char in enc_opers_curly:
+        elif char in self.parent.inter_inst.enc_opers_curly:
             return OperCurlyState(self.parent, addressMode=True)
         elif char.isdecimal() or char == '?':
             return self
@@ -545,14 +556,14 @@ class PrintState(State):
             if self.asciiMode:
                 data = chr(data)
 
-            log_output(data, newline=self.newline)
+            self.parent.inter_inst.log_output(data, newline=self.newline)
         elif char == '@':
             data = self.parent.address
 
             if self.asciiMode:
                 data = chr(data)
 
-            log_output(data, newline=self.newline)
+            self.inter_inst.parent.log_output(data, newline=self.newline)
         else:
             pass
 
@@ -654,7 +665,7 @@ class TwoDotState(State):
 
             ready_to_operate = False
 
-            for idx, dot in enumerate(dots):
+            for idx, dot in enumerate(self.parent.inter_inst.dots):
                 if dot.x == self.parent.x and dot.y == self.parent.y\
                         and isinstance(dot.state, TwoDotState):
                     if dot.state.isMaster:
@@ -668,7 +679,7 @@ class TwoDotState(State):
                             ready_to_operate = True
 
             if ready_to_operate:
-                candidate = dots[candidate_index]
+                candidate = self.parent.inter_inst.dots[candidate_index]
 
                 if candidate.state.addressMode:
                     candidate_par = candidate.address
@@ -750,8 +761,10 @@ class DeadState(State):
 
 
 class Dot:
-    def __init__(self, x, y, address=None, value=None, direction=None,
+    def __init__(self, inter_inst,  x, y, address=None, value=None, direction=None,
                  state=None, stack=None):
+
+        self.inter_inst = inter_inst
 
         self.breakLoop = False
 
@@ -777,25 +790,25 @@ class Dot:
 
         if direction is None:
             if self.x > 0:
-                if(world[self.y][self.x - 1] in ('-', '/', '\\', '>', '<')):
+                if(self.inter_inst.world[self.y][self.x - 1] in ('-', '/', '\\', '>', '<')):
                     self.dir = [-1, 0]
 
-            if self.x + 1 < len(world[self.y]):
-                if(world[self.y][self.x + 1] in ('-', '/', '\\', '>', '<')):
+            if self.x + 1 < len(self.inter_inst.world[self.y]):
+                if(self.inter_inst.world[self.y][self.x + 1] in ('-', '/', '\\', '>', '<')):
                     self.dir = [+1, 0]
 
-            if self.y > 0 and self.x < len(world[self.y - 1]):
-                if(world[self.y - 1][self.x] in ('|', '/', '\\', '>', '<')):
+            if self.y > 0 and self.x < len(self.inter_inst.world[self.y - 1]):
+                if(self.inter_inst.world[self.y - 1][self.x] in ('|', '/', '\\', '>', '<')):
                     self.dir = [0, -1]
 
-            if self.y + 1 < len(world) and self.x < len(world[self.y + 1]):
-                if(world[self.y + 1][self.x] in ('|', '/', '\\', '>', '<')):
+            if self.y + 1 < len(self.inter_inst.world) and self.x < len(self.inter_inst.world[self.y + 1]):
+                if(self.inter_inst.world[self.y + 1][self.x] in ('|', '/', '\\', '>', '<')):
                     self.dir = [0, +1]
 
             if not hasattr(self, 'dir'):
                 print("error: cannot determine dot location")
                 print(self)
-                print(world_raw)
+                print(self.inter_inst.world_raw)
                 exit_progam(1)
             else:
                 self.x += self.dir[0]
@@ -817,15 +830,17 @@ class Dot:
         past_locations = []
         while(True):
             if debug:
-                render()
+                render(self.inter_inst)
+
                 if step_manual:
-                    try:
-                        if compat_debug:
-                            input("")
-                        else:
-                            stdscr.getch()
-                    except SyntaxError:
-                        pass
+                    if not (quick_debug and len(self.stack) > 0):
+                        try:
+                            if compat_debug:
+                                input("")
+                            else:
+                                stdscr.getch()
+                        except SyntaxError:
+                            pass
                 elif step_speed != 0:
                     sleep(step_speed)
 
@@ -833,11 +848,11 @@ class Dot:
             if coords in past_locations:
                 return
 
-            if not exists(self.x, self.y):
+            if not exists(self.inter_inst, self.x, self.y):
                 self.is_dead = True
                 return
 
-            char = world[self.y][self.x]
+            char = self.inter_inst.world[self.y][self.x]
 
             if char == '&':
                 if not debug:
@@ -858,30 +873,71 @@ class Dot:
                 self.breakLoop = False
                 break
 
+class InterInstance(object):
+    def __init__(self, log_func):
+        self.raw_chars = []
 
-raw_chars = []
+        self.lib_id_counter = 0
 
-lib_id_counter = 0
+        self.lib_alias_chars = {}
 
-lib_alias_chars = {}
+        self.program_dir = ""
 
-program_dir = ""
+        self.offset = (128 + len(operators)*2 + 1) + 10
 
-offset = (128 + len(operators)*2 + 1) + 10
+        self.main_lines = []
 
-main_lines = []
+        self.libs = {}
 
-libs = {}
+        self.world_raw = []
+        self.world = []
 
+        self.dots = []
 
-def find_and_process_libs(raw_lines, is_main, this_file_name=""):
-    global all_lib_files
-    global lib_id_counter
-    global program_dir
-    global offset
-    global lib_alias_chars
-    global main_lines
-    global libs
+        self.new_dots = []
+
+        self.teleporters = []
+
+        self.logging_loc = 0
+        self.logging_x = 1
+
+        if log_func is None:
+            self.log_output = self.log_output_default
+        else:
+            self.log_output = log_func
+
+    def log_output_default(self, string="", newline=True):
+        if silent_output:
+            return
+
+        if debug and not compat_debug:
+            # global logging_loc
+            # global logging_x
+
+            logging_pad.addstr(self.logging_loc, self.logging_x, str(string))
+            logging_pad.refresh(self.logging_loc - min(self.logging_loc, curses.LINES -
+                                debug_lines - 1), 0, debug_lines, 0,
+                                curses.LINES - 1, curses.COLS - 1)
+
+            if newline:
+                self.logging_x = 1
+                self.logging_loc += 1
+            else:
+                self.logging_x += len(string)
+        else:
+            if newline:
+                print(string)
+            else:
+                print(string, end='')
+
+def find_and_process_libs(inter_inst, raw_lines, is_main, this_file_name=""):
+    # global all_lib_files
+    # global lib_id_counter
+    # global program_dir
+    # global offset
+    # global lib_alias_chars
+    # global main_lines
+    # global libs
 
     include_files = []
     include_aliases = []
@@ -898,9 +954,9 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
             lines.append(line)
 
     for idx, file_name in enumerate(include_files):
-        if file_name not in libs:
-            if os.path.isfile(os.path.join(program_dir, file_name)):
-                new_path = os.path.join(program_dir, file_name)
+        if file_name not in inter_inst.libs:
+            if os.path.isfile(os.path.join(inter_inst.program_dir, file_name)):
+                new_path = os.path.join(inter_inst.program_dir, file_name)
             else:
                 interpreter_dir = os.path.dirname(os.path.realpath(__file__))
                 new_path = os.path.join(interpreter_dir, "libs", file_name)
@@ -908,9 +964,9 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
             with open(new_path.split('%', 1)[0], 'r') as lib_file:
                 next_lines = lib_file.readlines()
 
-            alias_char = chr(offset)
+            alias_char = chr(inter_inst.offset)
 
-            libs[file_name] = {'id': lib_id_counter, 'alias': alias_char}
+            inter_inst.libs[file_name] = {'id': inter_inst.lib_id_counter, 'alias': alias_char}
 
             # Find all the library tp chars
             tp_chars = []
@@ -919,82 +975,86 @@ def find_and_process_libs(raw_lines, is_main, this_file_name=""):
                     tp_chars = list(line[2:].rstrip())
                     break
 
-            lib_alias_chars[alias_char] = {"file": file_name, "goto_chars": []}
+            inter_inst.lib_alias_chars[alias_char] = {"file": file_name, "goto_chars": []}
 
             # Replace all library tp chars with special unique chars
             for idx_1, char in enumerate(tp_chars):
-                replacement = chr(offset+idx_1+1)
+                replacement = chr(inter_inst.offset + idx_1 + 1)
 
                 next_lines = [i.replace(char, replacement) for i in next_lines]
 
-                lib_alias_chars[alias_char]['goto_chars'].append(replacement)
+                inter_inst.lib_alias_chars[alias_char]['goto_chars'].append(replacement)
 
-            libs[file_name]['lines'] = next_lines
+            inter_inst.libs[file_name]['lines'] = next_lines
 
-            lib_id_counter += 5
+            inter_inst.lib_id_counter += 5
 
-            offset += 5
-            find_and_process_libs(next_lines, False, this_file_name=file_name)
+            inter_inst.offset += 5
+            find_and_process_libs(inter_inst, next_lines, False, this_file_name=file_name)
 
         # Replace all alias chars with their universal counterparts
         if is_main:
-            main_lines = [li.replace(include_aliases[idx],
-                          libs[file_name]['alias']) if li[0] != '%' else li
-                          for li in main_lines]
+            inter_inst.main_lines = [li.replace(include_aliases[idx],
+                          inter_inst.libs[file_name]['alias']) if li[0] != '%' else li
+                          for li in inter_inst.main_lines]
         else:
-            libs[this_file_name]['lines'] = [li.replace(include_aliases[idx],
-                                             libs[file_name]['alias'])
+            inter_inst.libs[this_file_name]['lines'] = [li.replace(include_aliases[idx],
+                                             inter_inst.libs[file_name]['alias'])
                                              for li in
-                                             libs[this_file_name]['lines']]
+                                             inter_inst.libs[this_file_name]['lines']]
+
+interpreter_instance = None
+def main(args, program_lines, p_dir='.', logging_func=None):
+    # global dots
+    # global teleporters
+    # global raw_chars
+    # global main_lines
+    # global program_dir
+    # global world
+    # global world_raw
+    # global offset
+    # global main_lines
+    # global new_dots
+    # global interpreter_instance
 
 
-def main(args):
-    global dots
-    global teleporters
-    global raw_chars
-    global main_lines
-    global program_dir
-    global world
-    global world_raw
-    global offset
-    global main_lines
-    global new_dots
+    # if logging_func is None:
+    #     logging_func = log_output
 
-    file_path = args[0]
+    interpreter_instance = InterInstance(logging_func)
 
-    program_dir = os.path.dirname(os.path.abspath(file_path))
+    interpreter_instance.program_dir = p_dir
 
-    with open(file_path, 'r') as file:
-        main_lines = file.readlines()
+    interpreter_instance.main_lines = program_lines
 
-    find_and_process_libs(main_lines, True)
+    find_and_process_libs(interpreter_instance, interpreter_instance.main_lines, True)
 
-    for library_file in libs:
-        main_lines.extend(libs[library_file]['lines'])
+    for library_file in interpreter_instance.libs:
+        interpreter_instance.main_lines.extend(interpreter_instance.libs[library_file]['lines'])
 
-    lines = main_lines
+    lines = interpreter_instance.main_lines
 
     for line in lines:
         if line[0] == '%':
             if line[1] == '.':
                 dot_synonyms = list(line[2:].rstrip())
             elif line[1] == '$':
-                raw_chars = list(line[2:].rstrip())
-                teleporters = [chr(idx+offset)
-                               for idx, c in enumerate(raw_chars)]
+                interpreter_instance.raw_chars = list(line[2:].rstrip())
+                interpreter_instance.teleporters = [chr(idx + interpreter_instance.offset)
+                               for idx, c in enumerate(interpreter_instance.raw_chars)]
             continue
 
         data = ' ' + line.split("''", 1)[0].rstrip() + ' '
 
         data = data.replace('.', '•')
 
-        world_raw.append(list(data))
+        interpreter_instance.world_raw.append(list(data))
 
         data = data.replace('•', '.')
         data = data.replace('÷', '/')
 
-        for idx, rc in enumerate(raw_chars):
-            data = data.replace(rc, teleporters[idx])
+        for idx, rc in enumerate(interpreter_instance.raw_chars):
+            data = data.replace(rc, interpreter_instance.teleporters[idx])
 
         for idx, oper in enumerate(operators):
             data = data.replace("[{0}]".format(oper),
@@ -1002,16 +1062,16 @@ def main(args):
             data = data.replace("{" + oper + "}", "{" + "{0}".format(
                                 chr(128 + idx + len(operators) + 1) + "}"))
 
-        world.append(list(data))
+        interpreter_instance.world.append(list(data))
 
-    longest_line = max((len(l), i) for i, l in enumerate(world))[0]
+    longest_line = max((len(l), i) for i, l in enumerate(interpreter_instance.world))[0]
 
-    world = [' '*longest_line] + world
-    world_raw = [' '*longest_line] + world_raw
+    interpreter_instance.world = [' '*longest_line] + interpreter_instance.world
+    interpreter_instance.world_raw = [' '*longest_line] + interpreter_instance.world_raw
 
-    for idx, line in reversed(list(enumerate(world))):
-        world[idx] += (' ' * (longest_line - len(line) + 1))
-        world_raw[idx] += (' ' * (longest_line - len(line) + 1))
+    for idx, line in reversed(list(enumerate(interpreter_instance.world))):
+        interpreter_instance.world[idx] += (' ' * (longest_line - len(line) + 1))
+        interpreter_instance.world_raw[idx] += (' ' * (longest_line - len(line) + 1))
 
     try:
         special_dots = [[]] * len(dot_synonyms)
@@ -1019,35 +1079,35 @@ def main(args):
         special_dots = []
         dot_synonyms = []
 
-    for y in range(len(world)):
-        if world[y][0] == '%':
+    for y in range(len(interpreter_instance.world)):
+        if interpreter_instance.world[y][0] == '%':
             continue
 
-        for x in range(len(world[y])):
-            cell = world[y][x]
+        for x in range(len(interpreter_instance.world[y])):
+            cell = interpreter_instance.world[y][x]
 
             if cell == '.':
-                dots.append(Dot(x, y))
+                interpreter_instance.dots.append(Dot(interpreter_instance, x, y))
             elif cell in dot_synonyms:
-                special_dots[dot_synonyms.index(cell)].append(Dot(x, y))
+                special_dots[dot_synonyms.index(cell)].append(Dot(interpreter_instance, x, y))
 
-    dots.extend(reversed(list(chain.from_iterable(special_dots))))
+    interpreter_instance.dots.extend(reversed(list(chain.from_iterable(special_dots))))
 
     tick_cnt = 0
     cycle_cnt = 0
 
-    while len(dots) > 0:
-        new_dots = []
+    while len(interpreter_instance.dots) > 0:
+        interpreter_instance.new_dots = []
 
         dot_locations = []
 
-        for idx in reversed(range(len(dots))):
-            d = dots[idx]
+        for idx in reversed(range(len(interpreter_instance.dots))):
+            d = interpreter_instance.dots[idx]
 
             d.tick()
 
             if d.is_dead:
-                del dots[idx]
+                del interpreter_instance.dots[idx]
             else:
                 dot_locations.append((d.x, d.y))
 
@@ -1055,10 +1115,10 @@ def main(args):
             if tick_max_limit is not None and tick_cnt > tick_max_limit:
                 return  # Tick limit exceeded, so return/exit
 
-        if len(new_dots) > 0:
-            dots.extend(new_dots)
+        if len(interpreter_instance.new_dots) > 0:
+            interpreter_instance.dots.extend(interpreter_instance.new_dots)
 
-        new_dots = []
+        interpreter_instance.new_dots = []
 
         cycle_cnt += 1
         if cycle_max_limit is not None and cycle_cnt > cycle_max_limit:
@@ -1066,11 +1126,11 @@ def main(args):
 
         new_list = []
 
-        for d in dots:
+        for d in interpreter_instance.dots:
             if d not in new_list:
                 new_list.append(d)
 
-        dots = new_list[:]
+        interpreter_instance.dots = new_list[:]
 
     # End program
     return 0
@@ -1078,7 +1138,14 @@ def main(args):
 
 if __name__ == '__main__':
     try:
-        exit_progam(main(sys.argv[1:]))
+        file_path = sys.argv[1]
+
+        prog_dir = os.path.dirname(os.path.abspath(file_path))
+
+        with open(file_path, 'r') as file:
+            program_lines = file.readlines()
+
+        exit_progam(main(sys.argv[1:], program_lines, prog_dir))
     except Exception:
         quit_curses()
         raise
