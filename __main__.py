@@ -588,11 +588,11 @@ class PrintDoubleQuoteState(State):
     def run(self, char):
         if char == '"':
             if self.newline:
-                log_output()
+                self.parent.inter_inst.log_output()
 
             self.pendingExit = True
         else:
-            log_output(char, newline=False)
+            self.parent.inter_inst.log_output(char, newline=False)
 
         self.moveParent()
 
@@ -613,11 +613,11 @@ class PrintSingleQuoteState(State):
     def run(self, char):
         if char == "'":
             if self.newline:
-                log_output()
+                self.parent.inter_inst.log_output()
 
             self.pendingExit = True
         else:
-            log_output(char, newline=False)
+            self.parent.inter_inst.log_output(char, newline=False)
 
         self.moveParent()
 
@@ -812,8 +812,8 @@ class Dot:
                 # print(self)
                 # print(self.inter_inst.world_raw)
 
-                log_output("error: dot cannot determine location...")
-                log_output("x: {x}, y: {y}".format(self.x, self.y))
+                self.parent.inter_inst.log_output("error: dot cannot determine location...")
+                self.parent.inter_inst.log_output("x: {x}, y: {y}".format(self.x, self.y))
 
                 self.dir = [0, 0]
                 self.is_dead = True
@@ -884,7 +884,7 @@ class Dot:
                 break
 
 class InterInstance(object):
-    def __init__(self, log_func):
+    def __init__(self, log_func=None):
         self.dead = False
 
         self.raw_chars = []
@@ -895,7 +895,7 @@ class InterInstance(object):
 
         self.program_dir = ""
 
-        self.offset = (128 + len(operators)*2 + 1) + 10
+        self.offset = (128 + len(operators) * 2 + 1) + 10
 
         self.main_lines = []
 
