@@ -478,6 +478,7 @@ class ValueState(State):
             else:
                 self.parent.value = self.parent.value * 10 + int(char)
         elif char == '?':
+            self.parent.value = int(self.parent.inter_inst.get_input('?: '))
 
         self.moveParent()
 
@@ -510,6 +511,7 @@ class AddressState(State):
             else:
                 self.parent.address = self.parent.address * 10 + int(char)
         elif char == '?':
+            self.parent.address = int(self.parent.inter_inst.input_func('?: '))
         else:
             pass
 
