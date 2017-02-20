@@ -180,16 +180,6 @@ def curses_input(stdscr, r, c, prompt_string):
     return input
 
 
-def get_input(text):
-    if debug and not compat_debug:
-        return curses_input(stdscr, curses.LINES - 2, 2, text)
-    else:
-        if not sys.stdin.isatty():
-            return input("")
-        else:
-            return input(text)
-
-
 def render(inter_inst):
 
     if compat_debug:
@@ -488,7 +478,6 @@ class ValueState(State):
             else:
                 self.parent.value = self.parent.value * 10 + int(char)
         elif char == '?':
-            self.parent.value = int(get_input('?: '))
 
         self.moveParent()
 
@@ -521,7 +510,6 @@ class AddressState(State):
             else:
                 self.parent.address = self.parent.address * 10 + int(char)
         elif char == '?':
-            self.parent.address = int(input('?: '))
         else:
             pass
 
@@ -883,8 +871,9 @@ class Dot:
                 self.breakLoop = False
                 break
 
+
 class InterInstance(object):
-    def __init__(self, log_func=None):
+    def __init__(self, log_func=None, input_func=None):
         self.dead = False
 
         self.raw_chars = []
@@ -918,6 +907,20 @@ class InterInstance(object):
         else:
             self.log_output = log_func
 
+        if input_func is None:
+            self.get_input = self.input_func_default
+        else:
+            self.get_input = input_func
+
+    def input_func_default(self, text):
+        if debug and not compat_debug:
+            return curses_input(stdscr, curses.LINES - 2, 2, text)
+        else:
+            if not sys.stdin.isatty():
+                return input("")
+            else:
+                return input(text)
+
     def log_output_default(self, string="", newline=True):
         if silent_output:
             return
@@ -941,6 +944,7 @@ class InterInstance(object):
                 print(string)
             else:
                 print(string, end='')
+
 
 def find_and_process_libs(inter_inst, raw_lines, is_main, this_file_name=""):
     # global all_lib_files
@@ -1015,8 +1019,9 @@ def find_and_process_libs(inter_inst, raw_lines, is_main, this_file_name=""):
                                              for li in
                                              inter_inst.libs[this_file_name]['lines']]
 
+
 class DotsInterpreter(object):
-    def __init__(self, program_lines, p_dir='.', logging_func=None):
+    def __init__(self, program_lines, p_dir='.', logging_func=None, input_func=None):
         # global dots
         # global teleporters
         # global raw_chars
@@ -1033,7 +1038,7 @@ class DotsInterpreter(object):
         # if logging_func is None:
         #     logging_func = log_output
 
-        self.interpreter_instance = InterInstance(logging_func)
+        self.interpreter_instance = InterInstance(logging_func, input_func)
 
         self.interpreter_instance.program_dir = p_dir
 
