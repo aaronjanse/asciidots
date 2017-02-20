@@ -802,8 +802,8 @@ class Dot:
                 # print(self)
                 # print(self.inter_inst.world_raw)
 
-                self.parent.inter_inst.log_output("error: dot cannot determine location...")
-                self.parent.inter_inst.log_output("x: {x}, y: {y}".format(self.x, self.y))
+                self.inter_inst.log_output("error: dot cannot determine location...")
+                self.inter_inst.log_output("x: {x}, y: {y}".format(self.x, self.y))
 
                 self.dir = [0, 0]
                 self.is_dead = True
