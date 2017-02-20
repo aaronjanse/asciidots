@@ -14,6 +14,8 @@ import signal
 import os
 
 
+
+
 def signal_handler(signal, frame):
         exit_progam(0)
 
@@ -415,7 +417,7 @@ class TravelState(State):
                     continue
 
                 for x in range(len(self.parent.inter_inst.world[y])):
-                    if "''" in self.parent.inter_inst.world[y][:x]:
+                    if "``" in self.parent.inter_inst.world[y][:x]:
                         break
 
                     if x == self.parent.x and y == self.parent.y:
@@ -440,7 +442,7 @@ class TravelState(State):
                     continue
 
                 for x in range(len(self.parent.inter_inst.world[y])):
-                    if "''" in self.parent.inter_inst.world[y][:x]:
+                    if "``" in self.parent.inter_inst.world[y][:x]:
                         break
 
                     if x == self.parent.x and y == self.parent.y:
@@ -806,10 +808,17 @@ class Dot:
                     self.dir = [0, +1]
 
             if not hasattr(self, 'dir'):
-                print("error: cannot determine dot location")
-                print(self)
-                print(self.inter_inst.world_raw)
-                exit_progam(1)
+                # print("error: cannot determine dot location")
+                # print(self)
+                # print(self.inter_inst.world_raw)
+
+                log_output("error: dot cannot determine location...")
+                log_output("x: {x}, y: {y}".format(self.x, self.y))
+
+                self.dir = [0, 0]
+                self.is_dead = True
+                self.state = DeadState(self)
+                # exit_progam(1)
             else:
                 self.x += self.dir[0]
                 self.y += self.dir[1]
@@ -856,7 +865,8 @@ class Dot:
 
             if char == '&':
                 if not debug:
-                    exit_progam(0)
+                    # exit_progam(0)
+                    self.inter_inst.dead = True
 
                 self.state = DeadState
                 return
@@ -875,6 +885,8 @@ class Dot:
 
 class InterInstance(object):
     def __init__(self, log_func):
+        self.dead = False
+
         self.raw_chars = []
 
         self.lib_id_counter = 0
@@ -1003,137 +1015,145 @@ def find_and_process_libs(inter_inst, raw_lines, is_main, this_file_name=""):
                                              for li in
                                              inter_inst.libs[this_file_name]['lines']]
 
-interpreter_instance = None
-def main(args, program_lines, p_dir='.', logging_func=None):
-    # global dots
-    # global teleporters
-    # global raw_chars
-    # global main_lines
-    # global program_dir
-    # global world
-    # global world_raw
-    # global offset
-    # global main_lines
-    # global new_dots
-    # global interpreter_instance
+class DotsInterpreter(object):
+    def __init__(self, program_lines, p_dir='.', logging_func=None):
+        # global dots
+        # global teleporters
+        # global raw_chars
+        # global main_lines
+        # global program_dir
+        # global world
+        # global world_raw
+        # global offset
+        # global main_lines
+        # global new_dots
+        # global interpreter_instance
 
 
-    # if logging_func is None:
-    #     logging_func = log_output
+        # if logging_func is None:
+        #     logging_func = log_output
 
-    interpreter_instance = InterInstance(logging_func)
+        self.interpreter_instance = InterInstance(logging_func)
 
-    interpreter_instance.program_dir = p_dir
+        self.interpreter_instance.program_dir = p_dir
 
-    interpreter_instance.main_lines = program_lines
+        self.interpreter_instance.main_lines = program_lines
 
-    find_and_process_libs(interpreter_instance, interpreter_instance.main_lines, True)
+        find_and_process_libs(self.interpreter_instance, self.interpreter_instance.main_lines, True)
 
-    for library_file in interpreter_instance.libs:
-        interpreter_instance.main_lines.extend(interpreter_instance.libs[library_file]['lines'])
+        for library_file in self.interpreter_instance.libs:
+            self.interpreter_instance.main_lines.extend(self.interpreter_instance.libs[library_file]['lines'])
 
-    lines = interpreter_instance.main_lines
+        lines = self.interpreter_instance.main_lines
 
-    for line in lines:
-        if line[0] == '%':
-            if line[1] == '.':
-                dot_synonyms = list(line[2:].rstrip())
-            elif line[1] == '$':
-                interpreter_instance.raw_chars = list(line[2:].rstrip())
-                interpreter_instance.teleporters = [chr(idx + interpreter_instance.offset)
-                               for idx, c in enumerate(interpreter_instance.raw_chars)]
-            continue
+        for line in lines:
+            if line[0] == '%':
+                if line[1] == '.':
+                    dot_synonyms = list(line[2:].rstrip())
+                elif line[1] == '$':
+                    self.interpreter_instance.raw_chars = list(line[2:].rstrip())
+                    self.interpreter_instance.teleporters = [chr(idx + self.interpreter_instance.offset)
+                                   for idx, c in enumerate(self.interpreter_instance.raw_chars)]
+                continue
 
-        data = ' ' + line.split("''", 1)[0].rstrip() + ' '
+            data = ' ' + line.split("``", 1)[0].rstrip() + ' '
 
-        data = data.replace('.', '•')
+            data = data.replace('.', '•')
 
-        interpreter_instance.world_raw.append(list(data))
+            self.interpreter_instance.world_raw.append(list(data))
 
-        data = data.replace('•', '.')
-        data = data.replace('÷', '/')
+            data = data.replace('•', '.')
+            data = data.replace('÷', '/')
 
-        for idx, rc in enumerate(interpreter_instance.raw_chars):
-            data = data.replace(rc, interpreter_instance.teleporters[idx])
+            for idx, rc in enumerate(self.interpreter_instance.raw_chars):
+                data = data.replace(rc, self.interpreter_instance.teleporters[idx])
 
-        for idx, oper in enumerate(operators):
-            data = data.replace("[{0}]".format(oper),
-                                "[{0}]".format(chr(128 + idx)))
-            data = data.replace("{" + oper + "}", "{" + "{0}".format(
-                                chr(128 + idx + len(operators) + 1) + "}"))
+            for idx, oper in enumerate(operators):
+                data = data.replace("[{0}]".format(oper),
+                                    "[{0}]".format(chr(128 + idx)))
+                data = data.replace("{" + oper + "}", "{" + "{0}".format(
+                                    chr(128 + idx + len(operators) + 1) + "}"))
 
-        interpreter_instance.world.append(list(data))
+            self.interpreter_instance.world.append(list(data))
 
-    longest_line = max((len(l), i) for i, l in enumerate(interpreter_instance.world))[0]
+        longest_line = max((len(l), i) for i, l in enumerate(self.interpreter_instance.world))[0]
 
-    interpreter_instance.world = [' '*longest_line] + interpreter_instance.world
-    interpreter_instance.world_raw = [' '*longest_line] + interpreter_instance.world_raw
+        self.interpreter_instance.world = [' '*longest_line] + self.interpreter_instance.world
+        self.interpreter_instance.world_raw = [' '*longest_line] + self.interpreter_instance.world_raw
 
-    for idx, line in reversed(list(enumerate(interpreter_instance.world))):
-        interpreter_instance.world[idx] += (' ' * (longest_line - len(line) + 1))
-        interpreter_instance.world_raw[idx] += (' ' * (longest_line - len(line) + 1))
+        for idx, line in reversed(list(enumerate(self.interpreter_instance.world))):
+            self.interpreter_instance.world[idx] += (' ' * (longest_line - len(line) + 1))
+            self.interpreter_instance.world_raw[idx] += (' ' * (longest_line - len(line) + 1))
 
-    try:
-        special_dots = [[]] * len(dot_synonyms)
-    except:
-        special_dots = []
-        dot_synonyms = []
+        try:
+            special_dots = [[]] * len(dot_synonyms)
+        except Exception:
+            special_dots = []
+            dot_synonyms = []
 
-    for y in range(len(interpreter_instance.world)):
-        if interpreter_instance.world[y][0] == '%':
-            continue
+        for y in range(len(self.interpreter_instance.world)):
+            if self.interpreter_instance.world[y][0] == '%':
+                continue
 
-        for x in range(len(interpreter_instance.world[y])):
-            cell = interpreter_instance.world[y][x]
+            for x in range(len(self.interpreter_instance.world[y])):
+                cell = self.interpreter_instance.world[y][x]
 
-            if cell == '.':
-                interpreter_instance.dots.append(Dot(interpreter_instance, x, y))
-            elif cell in dot_synonyms:
-                special_dots[dot_synonyms.index(cell)].append(Dot(interpreter_instance, x, y))
+                if cell == '.':
+                    self.interpreter_instance.dots.append(Dot(self.interpreter_instance, x, y))
+                elif cell in dot_synonyms:
+                    special_dots[dot_synonyms.index(cell)].append(Dot(self.interpreter_instance, x, y))
 
-    interpreter_instance.dots.extend(reversed(list(chain.from_iterable(special_dots))))
+        self.interpreter_instance.dots.extend(reversed(list(chain.from_iterable(special_dots))))
 
-    tick_cnt = 0
-    cycle_cnt = 0
+        self.needsShutdown = False
+        #
+        # # End program
+        # return 0
 
-    while len(interpreter_instance.dots) > 0:
-        interpreter_instance.new_dots = []
+    def terminate(self):
+        self.needsShutdown = True
 
-        dot_locations = []
+    def run(self):
+        tick_cnt = 0
+        cycle_cnt = 0
 
-        for idx in reversed(range(len(interpreter_instance.dots))):
-            d = interpreter_instance.dots[idx]
+        while len(self.interpreter_instance.dots) > 0 and not self.needsShutdown and not self.interpreter_instance.dead:
+            self.interpreter_instance.new_dots = []
 
-            d.tick()
+            dot_locations = []
 
-            if d.is_dead:
-                del interpreter_instance.dots[idx]
-            else:
-                dot_locations.append((d.x, d.y))
+            for idx in reversed(range(len(self.interpreter_instance.dots))):
+                d = self.interpreter_instance.dots[idx]
 
-            tick_cnt += 1
-            if tick_max_limit is not None and tick_cnt > tick_max_limit:
+                d.tick()
+
+                if d.is_dead:
+                    del self.interpreter_instance.dots[idx]
+                else:
+                    dot_locations.append((d.x, d.y))
+
+                tick_cnt += 1
+                if tick_max_limit is not None and tick_cnt > tick_max_limit:
+                    return  # Tick limit exceeded, so return/exit
+
+            if len(self.interpreter_instance.new_dots) > 0:
+                self.interpreter_instance.dots.extend(self.interpreter_instance.new_dots)
+
+            self.interpreter_instance.new_dots = []
+
+            cycle_cnt += 1
+            if cycle_max_limit is not None and cycle_cnt > cycle_max_limit:
                 return  # Tick limit exceeded, so return/exit
 
-        if len(interpreter_instance.new_dots) > 0:
-            interpreter_instance.dots.extend(interpreter_instance.new_dots)
+            new_list = []
 
-        interpreter_instance.new_dots = []
+            for d in self.interpreter_instance.dots:
+                if d not in new_list:
+                    new_list.append(d)
 
-        cycle_cnt += 1
-        if cycle_max_limit is not None and cycle_cnt > cycle_max_limit:
-            return  # Tick limit exceeded, so return/exit
+            self.interpreter_instance.dots = new_list[:]
 
-        new_list = []
-
-        for d in interpreter_instance.dots:
-            if d not in new_list:
-                new_list.append(d)
-
-        interpreter_instance.dots = new_list[:]
-
-    # End program
-    return 0
+# def main
 
 
 if __name__ == '__main__':
@@ -1145,7 +1165,11 @@ if __name__ == '__main__':
         with open(file_path, 'r') as file:
             program_lines = file.readlines()
 
-        exit_progam(main(sys.argv[1:], program_lines, prog_dir))
+        interpreter = DotsInterpreter(program_lines, prog_dir)
+
+        interpreter.run()
+
+        exit_progam(0)
     except Exception:
         quit_curses()
         raise

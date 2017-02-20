@@ -85,9 +85,11 @@ Some extra flags when debugging:
 -w                Run the program without using ncurses. This can fix problems related to Windows.
 
 -l [line-count]   When not in compatibility mode, reserve the specified number of the lines for displaying the program
+
+-q                Don't manually move dots a step at a time when inside a library. Instead, don't inside libraries move automatically with no delay
 ```
 
-This is how one might debug a program for 300 cycles while running it automatically:
+This is how one might debug a program for 300 cycles while running it automatically with a delay of 0.05 seconds:
 
 ```bash
 $ python __main__.py ./samples/counter.fry -c 300 -d -a 0.05
@@ -96,17 +98,51 @@ $ python __main__.py ./samples/counter.fry -c 300 -d -a 0.05
 ## Program Syntax
 
 ### Basics
-`.`, or `•`, signifies a dot, the core of the language. This carries information. Each dot is initialized with both an [address and value](#addresses-and-values) of `0`
 
-Everything after ``` '' ``` (two apostrophes) is a comment and is ignored
+### Starting a program
+`.`, or `•`, signifies the starting location of a *dot*, the name for this language's information-carrying unit. Each dot is initialized with both an [address and value](#addresses-and-values) of `0`.
+
+### Ending a program
+Interpretation of a dots program ends when a dot passes over an `&`. It also ends when all dots die (i.e. they all pass over the end of a path into nothingness)
+
+### Comments
+Everything after ` `` ` (two back ticks) is a comment and is ignored by the interpreter
 
 ### Paths
-`|` is a vertical path<br>
-`-` is a horizontal path
+`|` is a vertical path that dots travel along<br>
+`-` is a horizontal path that dots travel along
+
+*Note*: Only one path should be adjacent to a starting dot location, so that there is no question where it should go
+
+Here's an example program that just starts then ends (note that programs aren't always written and run top-to-bottom):
+
+```
+. `` This is where the program starts
+| `` The dot travels downwards
+| `` Keep on going!
+& `` The program ends
+```
 
 Think as these two paths as mirrors:<br>
 `/`<br>
 `\`
+
+So... here's a more complex program demonstrating the use of paths (it still just starts then ends):
+
+```
+
+
+/-&         `` This is where the program ends!
+|
+\-\ /-\
+  | | |
+/-/ | \-\
+\---/   |
+        |
+        \-. `` Here's where the program starts
+```
+
+
 
 #### Special Paths
 `+` is the crossing of paths (they do not interact)
@@ -116,10 +152,34 @@ Think as these two paths as mirrors:<br>
 `^` (caret) does this but upwards<br>
 `v` (the letter 'v') does likewise but downwards
 
-`(` reflects a dot backwards along its original path. It accepts dot coming from the left.<br>
+Here's a way to bounce a dot backwards along its original path using these symbols:
+
+```
+/->-- `` Input/output comes through here
+| |
+\-/
+```
+
+But there is an easier way to do that:
+
+`(` reflects a dot backwards along its original path. It accepts dot coming from the left, and lets them pass through to the right<br>
 `)` does likewise but for the opposite direction
 
 `*` duplicates a dot and distributes copies including the original dot to all attached paths except the origin of dot
+
+Here's a fun example of using these special paths. Don't worry—we'll soon be able to do more than just start then end a program.
+
+```
+  /-\ /-& `` End
+  | | |
+  \-+-v
+    | | /-\
+(-<-/ | | |
+  |   \-<-/
+  \-\
+    |
+    .    `` Start
+```
 
 ### Addresses and Values
 `@` sets the address to the value after it following the direction of the line<br>
@@ -127,47 +187,69 @@ Think as these two paths as mirrors:<br>
 
 ### Interactive Console
 `$` is the output console. If there are single/double quotation marks (`'` or `"`), it outputs the text after it until there are closing quotation marks. `#` and `@` are substituted with the dot's value and address, respectively<br>
-&nbsp;&nbsp;&nbsp;&nbsp;When `_` follows a `$`, the program does not end printing with a newline.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;When `_` follows a `$`, the program does not end printing with a [newline](https://en.wikipedia.org/wiki/Newline).<br>
 &nbsp;&nbsp;&nbsp;&nbsp;When not in quotes, if a `a` comes before a `#` or `@` symbol, the value is converted to ascii before it is printed
 
-Example (prints '%'):
+Here's how to set and then print a dot's value:
+
+```
+  . `` This dot is the data carrier
+  | `` Travel along these vertical paths
+  # `` Set the value...
+  3 ``   ... to 3
+  | `` Continue down the path
+  $ `` Output to the console...
+  # ``   ... the dot's value
+```
+
+Here's our hello world again:
+
+```
+.-$"Hello, World!"
+```
+
+Here's how to print that character 'h' without a newline:
+
+```
+.-$_"h"
+```
+
+And this prints '%' using the ascii code 37:
 
 ```
 .-#37-$a#
 ```
 
-Here's how to print 'a' without a newline:
-
-```
-.-$_"a"
-```
-
 `?` is input from the console. It prompts the user for a value, and pauses until a value is entered in. It only runs after a `#` or `@` symbol<br>
 
-```
-  . '' This dot is the data carrier
-  | '' Travel along these vertical paths
-  # '' Set the value...
-  3 ''   ... to 3
-  | '' Continue down the path
-  $ '' Output to the console...
-  # ''   ... the dot's value
-```
-
 
 ```
-  .
+  . `` Start
   |
-  # '' Get ready to set the value
-  ? '' Prompt the user
+  # `` Get ready to set the value
+  ? `` Prompt the user
   |
   $
-  # '' Print that value to the console
+  # `` Print that value to the console
+    `` Since the only dot goes off the end of the path, it dies. Since no dots are left, the program ends
 ```
 
 ### Control Flow
-` ~` (tilde) redirects dots going through it horizontally to the upward path if a dot waiting at the bottom has a value greater than 0. Otherwise, the dot continues horizontally. If an exclamation point (`!`) is under it, then it redirects only if the value of the dot waiting is *not* greater than zero.<br>
+` ~` (tilde) redirects dots going through it horizontally to the upward path if a dot waiting at the bottom has a value *not* equal to than `0`. Otherwise, the dot continues horizontally. If an exclamation point (`!`) is under it, then it redirects the dot upwards only if the value of the dot waiting *is* equal to zero.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;`!` acts like a pipe. Special function described above
+
+This example prompts for a value then prints to the console whether the user provided value is equal to zero:
+
+```
+  /-$"The value is not equal to zero"
+  |
+.-~-$"The value is equal to zero"
+  |
+  ?
+  #
+  |
+  .
+```
 
 ### Operations
 `[*]` multiplies the value that passes through vertically by the value that runs into it horizontally. When a dot arrive here, it waits for another dot to arrive from a perpendicular direction. When that dot arrives, the dot that arrived from the top or bottom has its value updated and it continues through the opposite side. The dot that passed through horizontally is deleted.<br>
@@ -184,6 +266,7 @@ Other operations work similarly but with a different symbol in the middle. This 
 `&`: boolean AND<br>
 `!`: boolean NOT<br>
 `o`: boolean OR<br>
+`x`: boolean XOR<br>
 `>`: greater than<br>
 `≥`: greater than or equal to<br>
 `<`: less than<br>
@@ -191,16 +274,16 @@ Other operations work similarly but with a different symbol in the middle. This 
 `=`: equal to<br>
 `≠`: not equal to<br>
 
-Boolean operations return a dot with a value of `1` if true and `0` if false.
+Boolean operations return a dot with a value of `1` if the expression evaluates to true and `0` if false.
 
-These are only operators when located within brackets. When outside of brackets,
+These characters are only considered operators when located within brackets. When outside of brackets,
 symbols like `*` perform their regular functions as described earlier.
 
 Example:
 
 ```
-'' Simple subtraction:
-''   (3 - 2 = 1)
+`` Simple subtraction:
+``   (3 - 2 = 1)
 
    #
    $
@@ -211,6 +294,14 @@ Example:
    #
    |
    .
+```
+
+Add two user inputted values together then output the sum:
+
+```
+.-#?-{+}-$#
+      |
+.-#?--/
 ```
 
 ### Warps
@@ -225,9 +316,25 @@ Example:
 ```
 %$A
 
-.-#9-A '' Create a dot, set its value to 9, then warp it
+.-#9-A `` Create a dot, set its value to 9, then warp it
 
-A-$#   '' Print the dot's value (9)
+A-$#   `` Print the dot's value (9)
+```
+
+Here's a fun example of using warps (although it is not very useful in this case)
+
+```
+
+%$A
+
+#  /-)
+$  |
+\>-A
+ \-3#-.
+
+A-\
+\-/
+
 ```
 
 ## Libraries
@@ -282,7 +389,9 @@ The inputs/outputs for a library with the inputs/outputs like this (A is from th
 %+ABCD
 ```
 
-Unused inputs are replaced with an underscore(`_`). So, if the upper input/output is unused, the definition would look like this (note the underscore):
+Note that letters other than those shown here may be used.
+
+Unused inputs are replaced with an underscore (`_`). So, if the upper input/output is unused, the definition would look like this (note the underscore):
 
 ```
 %+A_CD
@@ -294,7 +403,7 @@ Here's the code for a library that accepts a dot coming from the left, sets its 
 ```
 %+A_B_
 
-'' Set address to zero, then add the value to the address (which is 0)
+`` Set address to zero, then add the value to the address (which is 0)
 
 A-*-@0-@{+}-B
   |      |
@@ -308,16 +417,13 @@ goes on a path that it has already traversed in the same tick
 
 Due to the fact that dots may be moving backwards down a line, if a number or system value (e.g. `?`) is seen without a preceding `@` or `#`, it will be ignored, along with any `@` or `#` immediately thereafter
 
-### Ending the program
-Interpretation of a dots program ends when a dot passes over an `&`
-
-### Defining custom dots and prompts (***Obsolete***)
+### Defining custom dots and prompts (***Obsolete!***)
 At the beginning of the program, the priority of the dots at the beginning of runtime can be
 defined at the beginning of the program by writing `%.` followed by the list of letters that represent dots with the letter with the highest priority first.<br>
 
 ```
-'' Print to the console if the input equals 0
-'' Note that the 'A' dot moves before the 'B' dot
+`` Print to the console if the input equals 0
+`` Note that the 'A' dot moves before the 'B' dot
 
         #
         $
@@ -342,7 +448,8 @@ Hello, World!<br>
 
 ---
 <br>
-Test if 2 input values are equal:<br>
+
+Test if two input values are equal:<br>
 
 ```
        /-$"Equal"
@@ -386,9 +493,8 @@ Fibonacci Sequence Calculator:<br>
 >-*>{+}/
 | \+-/
 1  |
-#  #
-|  1
+#  1
+|  #
 |  |
-|  .
-.
+.  .
 ```
