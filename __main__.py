@@ -847,6 +847,8 @@ class Dot:
             if coords in past_locations:
                 return
 
+            past_locations.append(coords)
+
             if not exists(self.inter_inst, self.x, self.y):
                 self.is_dead = True
                 return
