@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>AsciiDots Online Interpreter</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+    <meta name="author" content="Aaron Janse">
+
+    <style>
+        #txtarea {
+            height: 225px;
+        }
+
+        #out {
+            height: 180px;
+            white-space: pre-line;
+        }
+
+        #txtarea,
+        #out {
+            font-family: monospace;
+        }
+
+        body {
+            margin: 20px;
+        }
+
+        h1,
+        button {
+            display: inline;
+            vertical-align: middle;
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            margin-bottom: 1/20px;
+            /*margin-top: -5px;*/
+        }
+
+        button {
+            margin-left: 30px;
+            margin-bottom: 10px;
+            margin-top: 12px;
+        }
+
+        #dropdowndiv{
+          /*vertical-align: middle;*/
+          width: 250px;
+          /*display: inline;*/
+
+          margin-top: 20px;
+          margin-bottom: 20px;
+        }
+
+        #dropdowndiv button {
+          margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <span>
+      <h1>AsciiDots Online Interpreter</h1>
+      <button onclick="run()">Run</button>
+      <button onclick="stop()">Stop</button>
+      <div class="input-group" id='dropdowndiv'>
+        <input type="TextBox" id="selectedbox" class="form-control" value="Examples" readonly></input>
+        <div class="input-group-btn">
+          <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+    </button>
+    <ul id="demolist" class="dropdown-menu">
+        <li><a>Hello World</a></li>
+        <li><a>Counter</a></li>
+        <li><a>Fibonacci</a></li>
+        <li><a>Factorial</a></li>
+        <li><a>Factor</a></li>
+    </ul>
+    </div>
+    </div>
+    </span>
+    <div class="form-group" id="txtgroup">
+        <textarea class="form-control" placeholder='.-$"Hello, world!"' id="txtarea">.-$"Hello, World!"</textarea>
+    </div>
+
+    <div id="out" class="well pre-scrollable">$ Output</div>
+
+    <!--<div class="form-group">
+        <input type="text" class="form-control" id="textin" placeholder="Interactive input">
+    </div>-->
+
+    <script>
+        // function str2ab(str) {
+        //     var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
+        //     var bufView = new Uint16Array(buf);
+        //     for (var i = 0, strLen = str.length; i < strLen; i++) {
+        //         bufView[i] = str.charCodeAt(i);
+        //     }
+        //     return buf;
+        // }
+
+        open = false
+        socket = new WebSocket('ws://localhost:8765');
+
+        hasSend = false
+
+        socket.onopen = function() {
+            open = true
+
+            setInterval(function() {
+                socket.send('update;');
+            }, 50);
+        };
+
+        socket.onmessage = function(s) {
+            if (!hasSend) {
+                document.getElementById("out").innerHTML = ""
+                hasSend = true
+            }
+
+            console.log(s.data)
+
+            pieces = s.data.split(';')
+
+            if (pieces[0] == 'out') {
+              document.getElementById("out").textContent += pieces.splice(1).join(';')
+              // console.log(s.data);
+
+              document.getElementById("out").scrollTop = document.getElementById("out").scrollHeight;
+            } else if (pieces[0] == 'input') {
+              socket.send(prompt('Please input a value: '));
+            } else {
+              document.getElementById("out").textContent += s.data
+              // console.log(s.data);
+
+              document.getElementById("out").scrollTop = document.getElementById("out").scrollHeight;
+            }
+        };
+
+        function run() {
+            if (open) {
+                arg = document.getElementById("txtarea").value
+                    // data = new Blob(['run;' + arg], {
+                    //     type: 'text/plain'
+                    // })
+                socket.send('run;' + arg); //.split(/\n/));
+            } else {
+                document.getElementById("out").innerHTML = "Not connected..."
+            }
+            // alert(document.getElementById("txtarea").value.split(/\n/))
+        }
+
+        function stop() {
+            if (open) {
+                // arg = document.getElementById("txtarea").value
+                // data = new Blob(['stop;'], {
+                //     type: 'text/plain'
+                // })
+                socket.send('stop;'); //.split(/\n/));
+            } else {
+                document.getElementById("out").innerHTML = "Not connected..."
+            }
+        }
+
+        $(document).on('click', '.dropdown-menu li a', function() {
+            val = $(this).html()
+
+            // console.log(val == 'Hello World')
+
+            $('#selectedbox').val(val)
+
+            if (val == 'Hello World') {
+              document.getElementById("txtarea").value = `.-$"Hello, World!"`
+            } else if (val == 'Counter') {
+              document.getElementById("txtarea").value =
+`    /1#-.
+    |
+  /-+-$#\\
+  | |   |
+ [+]<1#-*
+  |     |
+  \\--<--/
+     |
+     0
+     #
+     |
+     .
+              `
+            } else if (val == 'Fibonacci') {
+              document.getElementById("txtarea").value =
+`/--#$--\\
+|      |
+>-*>{+}/
+| \\+-/
+1  |
+#  1
+|  #
+|  |
+.  .
+              `
+            } else if (val == 'Factorial') {
+              document.getElementById("txtarea").value =
+` /---------*--~-$#-&
+ | /--;---\\| [!]-\\
+ | *------++--*#1/
+ | | /1#\\ ||
+[*]*{-}-*~<+*?#-.
+ *-------+-</
+ \\-#0----/
+              `
+            } else if (val == 'Factor') {
+              document.getElementById("txtarea").value =
+`%!for_in_range.dots f
+
+/.
+#
+?/\\ #$~\\
+*~*{%}//
+|\\1#*-*
+| .-#1f\\
+*--{^}+/
+*-#2\\-\\#0*~~&
+\\#1{÷}/  \\*/
+              `
+            }
+        });
+    </script>
+</body>
+
+</html>
