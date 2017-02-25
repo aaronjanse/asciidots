@@ -1,8 +1,19 @@
-# Dots - Esoteric Language Specs
+# AsciiDots - Esoteric Language Specs
 ##### Language By Aaron Janse
 
 ---
 
+```
+                   _ _ _____        _       
+    /\            (_|_)  __ \      | |      
+   /  \   ___  ___ _ _| |  | | ___ | |_ ___
+  / /\ \ / __|/ __| | | |  | |/ _ \| __/ __|
+ / ____ \\__ \ (__| | | |__| | (_) | |_\__ \
+/_/    \_\___/\___|_|_|_____/ \___/ \__|___/
+
+```
+
+AsciiDots is an esoteric programming language based on ascii art! In this language, _dots_, represented by periods (`.`), travel down ascii art paths and undergo operations.
 ##### Table of Contents  
 [Samples](#samples)<br>
 [Using the Interpreter](#using-the-interpreter)<br>
@@ -100,7 +111,7 @@ $ python __main__.py ./samples/counter.fry -c 300 -d -a 0.05
 ### Basics
 
 ### Starting a program
-`.`, or `•`, signifies the starting location of a *dot*, the name for this language's information-carrying unit. Each dot is initialized with both an [address and value](#addresses-and-values) of `0`.
+`.` (a period), or `•` (a bullet symbol), signifies the starting location of a *dot*, the name for this language's information-carrying unit. Each dot is initialized with both an [address and value](#addresses-and-values) of `0`.
 
 ### Ending a program
 Interpretation of a dots program ends when a dot passes over an `&`. It also ends when all dots die (i.e. they all pass over the end of a path into nothingness)
@@ -109,7 +120,7 @@ Interpretation of a dots program ends when a dot passes over an `&`. It also end
 Everything after ` `` ` (two back ticks) is a comment and is ignored by the interpreter
 
 ### Paths
-`|` is a vertical path that dots travel along<br>
+`|` (vertical pipe symbol) is a vertical path that dots travel along<br>
 `-` is a horizontal path that dots travel along
 
 *Note*: Only one path should be adjacent to a starting dot location, so that there is no question where it should go
@@ -142,15 +153,13 @@ So... here's a more complex program demonstrating the use of paths (it still jus
         \-. `` Here's where the program starts
 ```
 
-
-
 #### Special Paths
 `+` is the crossing of paths (they do not interact)
 
 `>` acts like a regular, 2-way, horizontal, path, except dots can be inserted into the path from the bottom or the top. Those dots will go to the right<br>
 `<` does likewise except new dots go to the left<br>
 `^` (caret) does this but upwards<br>
-`v` (the letter 'v') does likewise but downwards
+`v` (the lowercase letter 'v') does likewise but downwards
 
 Here's a way to bounce a dot backwards along its original path using these symbols:
 
@@ -497,4 +506,81 @@ Fibonacci Sequence Calculator:<br>
 |  #
 |  |
 .  .
+```
+
+---
+<br>
+
+Find prime numbers:<br>
+
+```
+%$T
+
+        .
+        |
+        #
+        3
+        |
+        @
+        1
+        |
+/--*--*-<--\
+|  |  |   /+----\
+|  #  |   v+-0@-~-\
+|  2  | /->~*{%}/ |
+|  |  | 1  |\-+---/
+|  |  | @  ^\ |
+\-{+}-+-*  01 |
+      | |  ## |
+      | v--*+-/
+      | |  ||
+    /-* |  *+--\
+    | T |  ||  |
+    # $ # /~/  |
+    0 # 1 */   |
+    | | | |    |
+    \->-+-~----<-#$-2#-.
+        \-/
+
+
+ /--------\
+ T        |
+ *--------~
+ |        |
+ \-*----@[=]
+   |      |
+   \--#1--/
+```
+
+---
+<br>
+
+And a game!
+```
+/-""$-.
+|
+\--$"Pick a number between 1 and 255 (inclusive)"\
+/------------------------------------------------/
+\--$"I will correctly guess that number after no more than 8 tries"\
+/---------------------------------------------------------------""$/
+\--$"After each of my guesses, respond with: "\
+/---------------------------------------------/
+\--$"     '2' if I guess too high,"\
+/----------------------------------/
+\--$"     '1' if I guess too low,"\
+/---------------------------------/
+\--$"  or '0' if I guess correctly"\
+/----------------------------------/
+|
+|                             /->-\
+|         /--------------\ /-[-]| |
+#         |           /#1\-~--+[+]|
+6         |          /*-{-}*  | | |
+4  /2#\   |     /----~-----+--+-+-+-#7-$a_#-$"I won! Good game!"-&
+|/{÷}-*---*     *----/     |/-~-/ |
+||    |/--+-----+------\   \+-/   |
+\>----~#  #     \-?#-*-+----/     |
+      |1  1  /$""-$#-/ |          |
+      \/  |  ~---------*----------<-821#-.
+          \--/
 ```
