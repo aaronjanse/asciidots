@@ -14,6 +14,9 @@
 ```
 
 AsciiDots is an esoteric programming language based on ascii art! In this language, _dots_, represented by periods (`.`), travel down ascii art paths and undergo operations.
+
+### ***[Try it online at asciidots.herokuapp.com](asciidots.herokuapp.com)***
+
 ##### Table of Contents  
 [Samples](#samples)<br>
 [Using the Interpreter](#using-the-interpreter)<br>
