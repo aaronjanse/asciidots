@@ -13,9 +13,6 @@ import signal
 # TODO: import this only when needed (i.e. when debugging is enabled)
 import os
 
-
-
-
 def signal_handler(signal, frame):
         exit_progam(0)
 
@@ -128,7 +125,8 @@ operators = (
     '≤',
     '≥',
     '~',
-    'x'
+    'x',
+    '≠'
 )
 
 enc_opers_square = []
@@ -171,6 +169,7 @@ for idx, oper in enumerate(operators):
 def curses_input(stdscr, r, c, prompt_string):
     curses.echo()
     stdscr.addstr(r, c, str(prompt_string), curses.A_REVERSE)
+    stdscr.addstr(r + 1, c, "                                                 ")
     stdscr.refresh()
     input = ""
 
@@ -489,11 +488,14 @@ class AddressState(State):
         self.firstDigit = True
 
     def next(self, char):
-        if char in ('[', ']', '{', '}') and self.isParentMovingVert():
-            return DeadState(self.parent)
-        elif char in self.parent.inter_inst.enc_opers_square:
+        if char in ('[', ']', '{', '}'):
+            if self.isParentMovingVert():
+                return DeadState(self.parent)
+            else:
+                return self
+        elif char in enc_opers_square:
             return OperSquareState(self.parent, addressMode=True)
-        elif char in self.parent.inter_inst.enc_opers_curly:
+        elif char in enc_opers_curly:
             return OperCurlyState(self.parent, addressMode=True)
         elif char.isdecimal() or char == '?':
             return self
@@ -555,7 +557,7 @@ class PrintState(State):
             if self.asciiMode:
                 data = chr(data)
 
-            self.inter_inst.parent.log_output(data, newline=self.newline)
+            self.parent.inter_inst.log_output(data, newline=self.newline)
         else:
             pass
 
@@ -613,10 +615,13 @@ class PrintSingleQuoteState(State):
 
 
 class TwoDotState(State):
-    def __init__(self, parent, isMaster, addressMode=False):
+    def __init__(self, parent, isMaster, addressMode=None):
         State.__init__(self, parent)
 
-        self.addressMode = addressMode
+        if addressMode is None:
+            self.addressMode = False
+        else:
+            self.addressMode = addressMode
 
         self.isMaster = isMaster(self)
 
@@ -629,16 +634,19 @@ class TwoDotState(State):
         '*': (lambda x, y: x * y),
         '/': (lambda x, y: x / y),
         '^': (lambda x, y: x ** y),
+        '%': (lambda x, y: x % y),
+
         'o': (lambda x, y: x | y),
         'x': (lambda x, y: x ^ y),
         '&': (lambda x, y: x & y),
         '!': (lambda x, y: x != y),
+
         '=': (lambda x, y: x == y),
+        '≠': (lambda x, y: x != y),
         '>': (lambda x, y: x > y),
         '≥': (lambda x, y: x >= y),
         '<': (lambda x, y: x < y),
-        '≤': (lambda x, y: x <= y),
-        '%': (lambda x, y: x % y)
+        '≤': (lambda x, y: x <= y)
     }
 
     def next(self, char):
@@ -708,7 +716,8 @@ class OperState(TwoDotState):
     def doOperation(self, char, self_par, candidate_par, candidate,
                     candidate_idx):
         plaintext_char = operator_two_way_map[char]
-        result = self.operation_map[plaintext_char](self_par, candidate_par)
+        result = self.operation_map[plaintext_char](self_par, candidate_par) * 1
+        # NOTE: the `* 1` converts a boolean into an integer
 
         if self.addressMode:
             self.parent.address = result
