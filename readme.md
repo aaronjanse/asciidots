@@ -66,12 +66,12 @@ Semi-compact factorial calculator:
  \-#0----/
 ```
 
-Code-golfed counter (19 bytes):
+Code-golfed counter (17 bytes):
 
 ```
-.>$#\
-[+]>1#)
- \-*/
+/#$<.
+*-[+]
+\#1/
 ```
 
 ## Using the Interpreter
