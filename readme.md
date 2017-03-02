@@ -66,7 +66,7 @@ Semi-compact factorial calculator:
  \-#0----/
 ```
 
-Code-golfed counter (17 bytes):
+Code-golfed counter (16 bytes):
 
 ```
 /#$<.
