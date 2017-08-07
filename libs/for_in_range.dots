@@ -6,7 +6,14 @@
 `` A + B
 ``   C
 
-%+AOBC
+%^X `` make sure that X doesn't conflict with anything
+%$AOBC
+
+  C
+  |
+B-X-A
+  |
+  O
 
     /-\  /-------------\
     | C  |             |

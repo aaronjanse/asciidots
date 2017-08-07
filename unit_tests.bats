@@ -34,3 +34,9 @@
   result="$(echo 24 | python3 . ./tests/factor.dots)"
   [ "$result" = "$(seq 4)" ]
 }
+
+@test "singleton" {
+  run python3 . ./tests/singleton.dots
+  [ "$status" -eq 0 ]
+  [ "$output" = "$(seq 5)" ]
+}

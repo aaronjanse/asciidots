@@ -358,6 +358,8 @@ A library is a program that defines a character (usually a letter).
 #### Using Libraries
 A library can be imported by starting a line with `%!`, followed with the file name, followed with a single space and then the character that the library defines.
 
+By default, all copies of the character to lead to the same ([singleton](https://en.wikipedia.org/wiki/Singleton_pattern)) library code. This can cause some unexpected behavior if the library returns an old dot, since that old dot will come out of the char that _it_ came from.
+
 Here's an example of importing the standard `for_in_range` library (located in the `libs` folder) as the character `f`:
 
 ```
@@ -389,6 +391,29 @@ Here is an example of outputting all the numbers between `1` and `100` to the co
 ```
 
 #### Creating Libraries
+Each library defined a character that will act as a warp to & from the library.
+
+That can be done like so:
+
+```
+%$X `` X could be replaced with a different character, if so desired
+```
+
+It is recommended that you create warps for different sides of the char. Just look at the example code for the `val_to_addr.dots` library:
+
+```
+%^X
+%$AB
+
+B-X-A
+
+
+A-*----@{+}-#0-B
+  |      |
+  \------/
+```
+
+**Old Notation (Do not use!)**:
 The inputs/outputs for a library with the inputs/outputs like this (A is from the left, B from the top, etc):
 
 ```
@@ -430,27 +455,6 @@ Each tick, the dots will travel along the lines until they hit a charter that ac
 goes on a path that it has already traversed in the same tick
 
 Due to the fact that dots may be moving backwards down a line, if a number or system value (e.g. `?`) is seen without a preceding `@` or `#`, it will be ignored, along with any `@` or `#` immediately thereafter
-
-### Defining custom dots and prompts (***Obsolete!***)
-At the beginning of the program, the priority of the dots at the beginning of runtime can be
-defined at the beginning of the program by writing `%.` followed by the list of letters that represent dots with the letter with the highest priority first.<br>
-
-```
-`` Print to the console if the input equals 0
-`` Note that the 'A' dot moves before the 'B' dot
-
-        #
-        $
-        |
-B-#?-*--~
-     |  |
-     \-[=]
-        |
-        0
-        #
-        |
-        A
-```
 
 ## Examples
 
