@@ -1,3 +1,4 @@
+import threading
 from .world import World
 from .dot import Dot
 
