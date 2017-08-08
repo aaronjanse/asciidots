@@ -1,4 +1,4 @@
-# AsciiDots - Esoteric Language Specs
+# AsciiDots - Esoteric Language
 ##### Language By Aaron Janse
 
 ```
