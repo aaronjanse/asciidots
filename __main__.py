@@ -110,8 +110,6 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
             curses.endwin()
 
-        interpreter.terminate()
-
     def on_error(self, error_text):
         print('error: {}'.format(error_text))
 
@@ -194,6 +192,7 @@ def main(filename, debug, autostep_debug, head):
         interpreter.run()
     except Exception as e:
         io_callbacks.on_finish()
+        interpreter.terminate()
         raise e
 
 
