@@ -139,7 +139,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
             self.win_program.refresh()
 
             for y in range(len(interpreter.world._data_array)):
-                if display_y > self.debug_lines - 1:
+                if display_y > self.debug_lines - 2:
                     break
 
                 if len(''.join(interpreter.world._data_array[y]).rstrip()) < 1:
