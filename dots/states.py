@@ -21,11 +21,11 @@ class State(object):
         self.isWaiting = False
 
     def next(self, char):
-        quit_curses()
+        self.parent.callbacks.on_finish()
         raise Exception("State Next Method Not Implemented!")
 
     def run(self, char):
-        quit_curses()
+        self.parent.callbacks.on_finish()
         raise Exception("State Run Method Not Implemented!")
 
     def setParentState(self, newState):
