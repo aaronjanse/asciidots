@@ -111,7 +111,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
             curses.endwin()
 
     def on_error(self, error_text):
-        print('error: {}'.format(error_text))
+        self.on_output('error: {}'.format(error_text))
 
         self.on_finish()
 
