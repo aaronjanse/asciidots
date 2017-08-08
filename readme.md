@@ -1,7 +1,5 @@
-# AsciiDots - Esoteric Language Specs
+# AsciiDots - Esoteric Language
 ##### Language By Aaron Janse
-
----
 
 ```
                    _ _ _____        _       
@@ -14,6 +12,8 @@
 ```
 
 AsciiDots is an esoteric programming language based on ascii art! In this language, _dots_, represented by periods (`.`), travel down ascii art paths and undergo operations.
+
+[Read comments on Hacker News](https://news.ycombinator.com/item?id=14947449)
 
 ![AsciiDots being run in debug mode](https://github.com/aaronduino/asciidots/raw/master/dots_debug.gif "This would be faster when not in debug mode, of course")
 
