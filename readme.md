@@ -1,8 +1,6 @@
 # AsciiDots - Esoteric Language Specs
 ##### Language By Aaron Janse
 
----
-
 ```
                    _ _ _____        _       
     /\            (_|_)  __ \      | |      
