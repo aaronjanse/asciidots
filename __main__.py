@@ -189,9 +189,8 @@ def main(filename, debug, autostep_debug, head):
     with open(file_path, 'r') as file:
         program = file.readlines()
 
-    interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks)
-
     try:
+        interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks)
         interpreter.run()
     except Exception as e:
         io_callbacks.on_finish()
