@@ -19,46 +19,48 @@ debug_ = True
 autostep_debug_ = False
 
 class Default_IO_Callbacks(IOCallbacksStorage):
-    def __init__(self, debug, autostep_debug, head):
+    def __init__(self, debug, compat_debug, autostep_debug, head):
         super().__init__()
 
         self.debug = debug
+        self.compat_debug = compat_debug
         self.autostep_debug = autostep_debug
         self.head = head
 
         self.output_count = 0
 
         if self.debug:
-            self.logging_loc = 0
-            self.logging_x = 1
-
-            self.stdscr = curses.initscr()
-
-            curses.start_color()
-
-            curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
-            curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
-            curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
-            curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_BLACK)
-
-            curses.noecho()
-
-            curses.curs_set(False)
-
             self.debug_lines = 40
 
-            self.win_program = curses.newwin(self.debug_lines, curses.COLS - 1, 0, 0)
+            if not self.compat_debug:
+                self.logging_loc = 0
+                self.logging_x = 1
 
-            self.logging_pad = curses.newpad(1000, curses.COLS - 1)
+                self.stdscr = curses.initscr()
 
-            def signal_handler(signal, frame):
-                    self.on_finish()
-                    sys.exit(0)
+                curses.start_color()
 
-            signal.signal(signal.SIGINT, signal_handler)
+                curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+                curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
+                curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+                curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_BLACK)
+
+                curses.noecho()
+
+                curses.curs_set(False)
+
+                self.win_program = curses.newwin(self.debug_lines, curses.COLS - 1, 0, 0)
+
+                self.logging_pad = curses.newpad(1000, curses.COLS - 1)
+
+                def signal_handler(signal, frame):
+                        self.on_finish()
+                        sys.exit(0)
+
+                signal.signal(signal.SIGINT, signal_handler)
 
     def get_input(self):
-        if not self.debug:
+        if not self.debug or self.compat_debug:
             if not sys.stdin.isatty():
                 return input('')
             else:
@@ -85,7 +87,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
             self.on_finish()
             return
 
-        if not self.debug:
+        if not self.debug or self.compat_debug:
             print(value, end='')
         else:
             self.logging_pad.addstr(self.logging_loc, self.logging_x, str(value))
@@ -103,7 +105,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
     def on_finish(self):
         global interpreter
 
-        if self.debug:
+        if self.debug and not self.compat_debug:
             curses.nocbreak()
             self.stdscr.keypad(False)
             curses.echo()
@@ -117,10 +119,16 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
     def on_microtick(self, dot):
         if self.debug:
-            if self.autostep_debug is False:
-                self.stdscr.getch()
-            else:
+            if self.autostep_debug:
                 time.sleep(self.autostep_debug)
+            else:
+                if self.compat_debug:
+                    try:
+                        input("Press enter to step...")
+                    except SyntaxError:
+                        pass
+                else:
+                    self.stdscr.getch()
 
             d_l = []
             for idx in reversed(range(len(interpreter.get_all_dots()))):
@@ -134,7 +142,13 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
             display_y = 0
 
-            self.win_program.refresh()
+            if self.compat_debug:
+                if os.name == 'nt':
+                    os.system('cls')  # For Windows
+                else:
+                    os.system('clear')  # For Linux/OS X
+            else:
+                self.win_program.refresh()
 
             for y in range(len(interpreter.world._data_array)):
                 if display_y > self.debug_lines - 2:
@@ -151,16 +165,33 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                 for x in range(len(interpreter.world._data_array[y])):
                     char = interpreter.world._data_array[y][x]
 
+                    #RGYB
+
                     if (x, y) in d_l:
-                        self.win_program.addstr(display_y, x, char, curses.color_pair(1))
+                        if self.compat_debug:
+                            print('\033[0;31m'+char+'\033[0m', end='') # Red
+                        else:
+                            self.win_program.addstr(display_y, x, char, curses.color_pair(1))
                     elif char.isLibWarp():
-                        self.win_program.addstr(display_y, x, char, curses.color_pair(2))
+                        if self.compat_debug:
+                            print('\033[0;32m'+char+'\033[0m', end='') # Green
+                        else:
+                            self.win_program.addstr(display_y, x, char, curses.color_pair(2))
                     elif char.isWarp():
-                        self.win_program.addstr(display_y, x, char, curses.color_pair(3))
+                        if self.compat_debug:
+                            print('\033[0;33m'+char+'\033[0m', end='') # Yellow
+                        else:
+                            self.win_program.addstr(display_y, x, char, curses.color_pair(3))
                     elif char in '#@~' or char.isOper():
-                        self.win_program.addstr(display_y, x, char, curses.color_pair(4))
+                        if self.compat_debug:
+                            print('\033[0;34m'+char+'\033[0m', end='') # Blue
+                        else:
+                            self.win_program.addstr(display_y, x, char, curses.color_pair(4))
                     else:
-                        self.win_program.addstr(display_y, x, char)
+                        if self.compat_debug:
+                            print(char, end='')
+                        else:
+                            self.win_program.addstr(display_y, x, char)
 
                 display_y += 1
 
@@ -168,9 +199,10 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 @click.command()
 @click.argument('filename')
 @click.option('--debug', '-d', is_flag=True)
+@click.option('--compat_debug', '-w', is_flag=True)
 @click.option('--autostep_debug', '-a', default=False)
 @click.option('--head', '-h', default=-1)
-def main(filename, debug, autostep_debug, head):
+def main(filename, debug, compat_debug, autostep_debug, head):
     global interpreter
 
     if autostep_debug is not False:
@@ -178,7 +210,7 @@ def main(filename, debug, autostep_debug, head):
 
     head = int(head)
 
-    io_callbacks = Default_IO_Callbacks(debug, autostep_debug, head)
+    io_callbacks = Default_IO_Callbacks(debug, compat_debug, autostep_debug, head)
 
     file_path = sys.argv[1]
 
