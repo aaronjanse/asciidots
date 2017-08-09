@@ -19,10 +19,11 @@ debug_ = True
 autostep_debug_ = False
 
 class Default_IO_Callbacks(IOCallbacksStorage):
-    def __init__(self, ticks, debug, compat_debug, autostep_debug, head):
+    def __init__(self, ticks, silent, debug, compat_debug, autostep_debug, head):
         super().__init__()
 
         self.ticks = ticks
+        self.silent = silent
         self.debug = debug
         self.compat_debug = compat_debug
         self.autostep_debug = autostep_debug
@@ -90,6 +91,9 @@ class Default_IO_Callbacks(IOCallbacksStorage):
             self.on_finish()
             return
 
+        if self.silent:
+            return
+
         if not self.debug or self.compat_debug:
             print(value, end='')
         else:
@@ -121,7 +125,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
         self.on_finish()
 
     def on_microtick(self, dot):
-        if self.debug:
+        if self.debug and not self.silent:
             if self.autostep_debug:
                 time.sleep(self.autostep_debug)
             else:
@@ -211,11 +215,12 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 @click.command()
 @click.argument('filename')
 @click.option('--ticks', '-t', default=False)
+@click.option('--silent', '-s', is_flag=True)
 @click.option('--debug', '-d', is_flag=True)
 @click.option('--compat_debug', '-w', is_flag=True)
 @click.option('--autostep_debug', '-a', default=False)
 @click.option('--head', '-h', default=-1)
-def main(filename, ticks, debug, compat_debug, autostep_debug, head):
+def main(filename, ticks, silent, debug, compat_debug, autostep_debug, head):
     global interpreter
 
     if autostep_debug is not False:
@@ -226,7 +231,7 @@ def main(filename, ticks, debug, compat_debug, autostep_debug, head):
 
     head = int(head)
 
-    io_callbacks = Default_IO_Callbacks(ticks, debug, compat_debug, autostep_debug, head)
+    io_callbacks = Default_IO_Callbacks(ticks, silent, debug, compat_debug, autostep_debug, head)
 
     file_path = sys.argv[1]
 
