@@ -100,8 +100,6 @@ Some extra flags when debugging:
 -w                Run the program without using ncurses. This can fix problems related to Windows.
 
 -l [line-count]   When not in compatibility mode, reserve the specified number of the lines for displaying the program
-
--q                Don't manually move dots a step at a time when inside a library. Instead, don't inside libraries move automatically with no delay
 ```
 
 This is how one might debug a program for 300 ticks while running it automatically with a delay of 0.05 seconds:
