@@ -76,6 +76,22 @@ Code-golfed counter (16 bytes):
 \#1/
 ```
 
+## Installing
+
+Clone the repo...
+
+```
+git clone https://github.com/aaronduino/asciidots
+```
+
+...install click...
+
+```
+pip install click
+```
+
+...and run as shown in the next section:
+
 ## Using the Interpreter
 The interpreter for this language is the `__main__.py` file. It requires Python 3, and can be run from the terminal using the `python` command (or `python3` if necessary). The first argument is the `dots` file that you wish the interpreter to run.
 
