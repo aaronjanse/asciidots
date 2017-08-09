@@ -19,13 +19,14 @@ debug_ = True
 autostep_debug_ = False
 
 class Default_IO_Callbacks(IOCallbacksStorage):
-    def __init__(self, ticks, silent, debug, compat_debug, autostep_debug, head):
+    def __init__(self, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head):
         super().__init__()
 
         self.ticks = ticks
         self.silent = silent
         self.debug = debug
         self.compat_debug = compat_debug
+        self.debug_lines = debug_lines
         self.autostep_debug = autostep_debug
         self.head = head
 
@@ -33,35 +34,32 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
         self.output_count = 0
 
-        if self.debug:
-            self.debug_lines = 40
+        if self.debug and not self.compat_debug:
+            self.logging_loc = 0
+            self.logging_x = 1
 
-            if not self.compat_debug:
-                self.logging_loc = 0
-                self.logging_x = 1
+            self.stdscr = curses.initscr()
 
-                self.stdscr = curses.initscr()
+            curses.start_color()
 
-                curses.start_color()
+            curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+            curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
+            curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+            curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_BLACK)
 
-                curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
-                curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
-                curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
-                curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_BLACK)
+            curses.noecho()
 
-                curses.noecho()
+            curses.curs_set(False)
 
-                curses.curs_set(False)
+            self.win_program = curses.newwin(self.debug_lines, curses.COLS - 1, 0, 0)
 
-                self.win_program = curses.newwin(self.debug_lines, curses.COLS - 1, 0, 0)
+            self.logging_pad = curses.newpad(1000, curses.COLS - 1)
 
-                self.logging_pad = curses.newpad(1000, curses.COLS - 1)
+            def signal_handler(signal, frame):
+                    self.on_finish()
+                    sys.exit(0)
 
-                def signal_handler(signal, frame):
-                        self.on_finish()
-                        sys.exit(0)
-
-                signal.signal(signal.SIGINT, signal_handler)
+            signal.signal(signal.SIGINT, signal_handler)
 
     def get_input(self):
         if not self.debug or self.compat_debug:
@@ -218,9 +216,10 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 @click.option('--silent', '-s', is_flag=True)
 @click.option('--debug', '-d', is_flag=True)
 @click.option('--compat_debug', '-w', is_flag=True)
+@click.option('--debug_lines', '-l', default=40)
 @click.option('--autostep_debug', '-a', default=False)
 @click.option('--head', '-h', default=-1)
-def main(filename, ticks, silent, debug, compat_debug, autostep_debug, head):
+def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head):
     global interpreter
 
     if autostep_debug is not False:
@@ -231,7 +230,7 @@ def main(filename, ticks, silent, debug, compat_debug, autostep_debug, head):
 
     head = int(head)
 
-    io_callbacks = Default_IO_Callbacks(ticks, silent, debug, compat_debug, autostep_debug, head)
+    io_callbacks = Default_IO_Callbacks(ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head)
 
     file_path = sys.argv[1]
 
