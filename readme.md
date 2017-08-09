@@ -82,7 +82,7 @@ The interpreter for this language is the `__main__.py` file. It requires Python 
 Here's an example of running the counter sample program (the working directory is the dots repo folder):
 
 ```bash
-$ python __main__.py ./samples/counter.fry
+$ python __main__.py ./samples/counter.dots
 ```
 
 Here is the list if available flags:
@@ -107,7 +107,7 @@ Some extra flags when debugging:
 This is how one might debug a program for 300 ticks while running it automatically with a delay of 0.05 seconds:
 
 ```bash
-$ python __main__.py ./samples/counter.fry -t 300 -d -a 0.05
+$ python __main__.py ./samples/counter.dots -t 300 -d -a 0.05
 ```
 
 ## Program Syntax
@@ -362,7 +362,7 @@ By default, all copies of the character to lead to the same ([singleton](https:/
 Here's an example of importing the standard `for_in_range` library (located in the `libs` folder) as the character `f`:
 
 ```
-%!for_in_range.fry f
+%!for_in_range.dots f
 ```
 
 The way to use a library varies. Inputs and outputs of the library are through the alias character.
@@ -378,7 +378,7 @@ And the outputs are as follows:
 Here is an example of outputting all the numbers between `1` and `100` to the console, then stopping the program:
 
 ```
-%!for_in_range.fry f
+%!for_in_range.dots f
 
          #
          $
