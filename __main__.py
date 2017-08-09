@@ -19,13 +19,16 @@ debug_ = True
 autostep_debug_ = False
 
 class Default_IO_Callbacks(IOCallbacksStorage):
-    def __init__(self, debug, compat_debug, autostep_debug, head):
+    def __init__(self, ticks, debug, compat_debug, autostep_debug, head):
         super().__init__()
 
+        self.ticks = ticks
         self.debug = debug
         self.compat_debug = compat_debug
         self.autostep_debug = autostep_debug
         self.head = head
+
+        self.tick_number = 0
 
         self.output_count = 0
 
@@ -195,22 +198,35 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
                 display_y += 1
 
+        if self.ticks is not False:
+            if self.tick_number > self.ticks:
+                self.on_output('QUITTING next step!\n')
+
+                self.on_finish()
+                sys.exit(0)
+
+            self.tick_number += 1
+
 
 @click.command()
 @click.argument('filename')
+@click.option('--ticks', '-t', default=False)
 @click.option('--debug', '-d', is_flag=True)
 @click.option('--compat_debug', '-w', is_flag=True)
 @click.option('--autostep_debug', '-a', default=False)
 @click.option('--head', '-h', default=-1)
-def main(filename, debug, compat_debug, autostep_debug, head):
+def main(filename, ticks, debug, compat_debug, autostep_debug, head):
     global interpreter
 
     if autostep_debug is not False:
         autostep_debug = float(autostep_debug)
 
+    if ticks is not False:
+        ticks = int(ticks)
+
     head = int(head)
 
-    io_callbacks = Default_IO_Callbacks(debug, compat_debug, autostep_debug, head)
+    io_callbacks = Default_IO_Callbacks(ticks, debug, compat_debug, autostep_debug, head)
 
     file_path = sys.argv[1]
 
