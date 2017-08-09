@@ -88,7 +88,6 @@ $ python __main__.py ./samples/counter.fry
 Here is the list if available flags:
 
 ```
--c [cycles]       Run the program for a specified number of cycles
 -t [ticks]        Run the program for a specified number of ticks
 
 -s                Run without printing ANYTHING to the console. Useful for benchmarking
@@ -105,10 +104,10 @@ Some extra flags when debugging:
 -q                Don't manually move dots a step at a time when inside a library. Instead, don't inside libraries move automatically with no delay
 ```
 
-This is how one might debug a program for 300 cycles while running it automatically with a delay of 0.05 seconds:
+This is how one might debug a program for 300 ticks while running it automatically with a delay of 0.05 seconds:
 
 ```bash
-$ python __main__.py ./samples/counter.fry -c 300 -d -a 0.05
+$ python __main__.py ./samples/counter.fry -t 300 -d -a 0.05
 ```
 
 ## Program Syntax
