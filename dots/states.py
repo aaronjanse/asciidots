@@ -59,10 +59,6 @@ class State(object):
 
 
 class TravelState(State):
-    def __init__(self, parent):
-        super().__init__(parent)
-        from .dot import Dot
-
     def next(self, char):
         if char == ' ':
             return DeadState(self.parent)
@@ -131,6 +127,7 @@ class TravelState(State):
                     if self.parent.world.doesLocExist(abs_offset_x, abs_offset_y)\
                             and self.parent.world.getCharAt(abs_offset_x, abs_offset_y) != ' ':
 
+                        from .dot import Dot
                         new_dot = Dot(x=self.parent.x, y=self.parent.y, world=self.parent.world, callbacks=self.parent.callbacks, func_to_create_dots=self.parent.func_to_create_dots, func_to_get_dots=self.parent.func_to_get_dots, address=self.parent.address, value=self.parent.value, direction=[xoffset, yoffset], state=TravelState, stack=self.parent.stack[:])
 
                         # new_dot.state.moveParent()
