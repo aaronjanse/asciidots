@@ -1,6 +1,8 @@
 from dots.interpreter import AsciiDotsInterpreter
 from dots.callbacks import IOCallbacksStorage
 
+from dots import terminalsize
+
 import curses
 import click
 
@@ -209,6 +211,9 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
             self.tick_number += 1
 
+_, terminal_lines = terminalsize.get_terminal_size()
+default_debug_lines = int(terminal_lines*2/3)
+del terminal_lines
 
 @click.command()
 @click.argument('filename')
@@ -216,7 +221,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 @click.option('--silent', '-s', is_flag=True)
 @click.option('--debug', '-d', is_flag=True)
 @click.option('--compat_debug', '-w', is_flag=True)
-@click.option('--debug_lines', '-l', default=40)
+@click.option('--debug_lines', '-l', default=default_debug_lines)
 @click.option('--autostep_debug', '-a', default=False)
 @click.option('--head', '-h', default=-1)
 def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head):
