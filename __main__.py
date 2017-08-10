@@ -77,12 +77,12 @@ class Default_IO_Callbacks(IOCallbacksStorage):
         stdscr.addstr(r, c, str(prompt_string), curses.A_REVERSE)
         stdscr.addstr(r + 1, c, " " * (curses.COLS - 1))
         stdscr.refresh()
-        input = ""
+        input_val = ""
 
-        while len(input) <= 0:
-            input = stdscr.getstr(r + 1, c, 20)
+        while len(input_val) <= 0:
+            input_val = stdscr.getstr(r + 1, c, 20)
 
-        return input
+        return input_val
 
     def on_output(self, value):
         self.output_count += 1
