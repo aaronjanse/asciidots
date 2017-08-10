@@ -87,7 +87,7 @@ git clone https://github.com/aaronduino/asciidots
 ...install click...
 
 ```
-pip install click
+pip3 install click
 ```
 
 ...and run as shown in the next section:
