@@ -17,7 +17,7 @@ AsciiDots is an esoteric programming language based on ascii art! In this langua
 
 ![AsciiDots being run in debug mode](https://github.com/aaronduino/asciidots/raw/master/dots_debug.gif "This would be faster when not in debug mode, of course")
 
-### ***[Try it online at asciidots.herokuapp.com](http://asciidots.herokuapp.com)***
+### **[Try it online at asciidots.herokuapp.com](https://asciidots.herokuapp.com)**
 
 ##### Table of Contents  
 [Samples](#samples)<br>
