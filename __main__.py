@@ -70,7 +70,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
             else:
                 return input('?: ')
         else:
-            return self.curses_input(self.stdscr, curses.LINES - 2, 2, '?: ')
+            return self.curses_input(self.stdscr, curses.LINES - 3, 2, '?: ')
 
     def curses_input(self, stdscr, r, c, prompt_string):
         curses.echo()
