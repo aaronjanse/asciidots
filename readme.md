@@ -1,6 +1,8 @@
 # AsciiDots - Esoteric Language
 ##### Language By Aaron Janse
 
+[![Join the chat at https://gitter.im/asciidots/Lobby](https://badges.gitter.im/asciidots/Lobby.svg)](https://gitter.im/asciidots/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ```
                    _ _ _____        _       
     /\            (_|_)  __ \      | |      
