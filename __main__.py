@@ -103,7 +103,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
             return
 
         if not self.debug or self.compat_debug:
-            print(value, end='')
+            print(value, end='', flush=True)
         else:
             self.logging_pad.addstr(self.logging_loc, self.logging_x, str(value))
             self.logging_pad.refresh(self.logging_loc - min(self.logging_loc, curses.LINES -
