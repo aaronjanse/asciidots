@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from dots.interpreter import AsciiDotsInterpreter
 from dots.callbacks import IOCallbacksStorage
 
