@@ -11,7 +11,13 @@ from dots.callbacks import IOCallbacksStorage
 
 from dots import terminalsize
 
-import curses
+compat_debug_default = False
+try:
+    import curses
+except Exception:
+    print('failed to import curses; running in compatibility mode')
+    compat_debug_default = True
+
 import click
 
 import sys
@@ -228,7 +234,7 @@ del terminal_lines
 @click.option('--ticks', '-t', default=False)
 @click.option('--silent', '-s', is_flag=True)
 @click.option('--debug', '-d', is_flag=True)
-@click.option('--compat_debug', '-w', is_flag=True)
+@click.option('--compat_debug', '-w', is_flag=compat_debug_default)
 @click.option('--debug_lines', '-l', default=default_debug_lines)
 @click.option('--autostep_debug', '-a', default=False)
 @click.option('--head', '-h', default=-1)
