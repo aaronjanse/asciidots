@@ -1,4 +1,11 @@
 #!/usr/bin/env python
+# coding=utf-8
+
+import locale, codecs, os
+
+if codecs.lookup(locale.getpreferredencoding()).name == 'ascii':
+    os.environ['LANG'] = 'en_US.utf-8'
+
 from dots.interpreter import AsciiDotsInterpreter
 from dots.callbacks import IOCallbacksStorage
 
