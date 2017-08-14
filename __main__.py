@@ -234,7 +234,7 @@ del terminal_lines
 @click.option('--ticks', '-t', default=False)
 @click.option('--silent', '-s', is_flag=True)
 @click.option('--debug', '-d', is_flag=True)
-@click.option('--compat_debug', '-w', is_flag=compat_debug_default)
+@click.option('--compat_debug', '-w', is_flag=True, default=compat_debug_default)
 @click.option('--debug_lines', '-l', default=default_debug_lines)
 @click.option('--autostep_debug', '-a', default=False)
 @click.option('--head', '-h', default=-1)
