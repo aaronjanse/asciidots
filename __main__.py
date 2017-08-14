@@ -11,6 +11,9 @@ from dots.callbacks import IOCallbacksStorage
 
 from dots import terminalsize
 
+_, terminal_lines = terminalsize.get_terminal_size()
+default_debug_lines = int(terminal_lines*2/3)
+
 compat_debug_default = False
 try:
     import curses
@@ -45,6 +48,9 @@ class Default_IO_Callbacks(IOCallbacksStorage):
         self.debug_lines = debug_lines
         self.autostep_debug = autostep_debug
         self.head = head
+
+        self.compat_logging_buffer = ''
+        self.compat_logging_buffer_lines = terminal_lines-debug_lines-1
 
         self.tick_number = 0
 
@@ -108,8 +114,11 @@ class Default_IO_Callbacks(IOCallbacksStorage):
         if self.silent:
             return
 
-        if not self.debug or self.compat_debug:
+        if not self.debug:
             print(value, end='', flush=True)
+        elif self.compat_debug:
+            self.compat_logging_buffer += value
+            self.compat_logging_buffer = '\n'.join(self.compat_logging_buffer.split('\n')[:self.compat_logging_buffer_lines])
         else:
             self.logging_pad.addstr(self.logging_loc, self.logging_x, str(value))
             self.logging_pad.refresh(self.logging_loc - min(self.logging_loc, curses.LINES -
@@ -216,6 +225,9 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
                 display_y += 1
 
+        if self.compat_debug:
+            print('\n'+self.compat_logging_buffer, end='', flush=True)
+
         if self.ticks is not False:
             if self.tick_number > self.ticks:
                 self.on_output('QUITTING next step!\n')
@@ -224,10 +236,6 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                 sys.exit(0)
 
             self.tick_number += 1
-
-_, terminal_lines = terminalsize.get_terminal_size()
-default_debug_lines = int(terminal_lines*2/3)
-del terminal_lines
 
 @click.command()
 @click.argument('filename')
