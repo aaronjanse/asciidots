@@ -123,7 +123,7 @@ Some extra flags when debugging:
 This is how one might debug a program for 300 ticks while running it automatically with a delay of 0.05 seconds:
 
 ```bash
-$ python __main__.py ./samples/counter.dots -t 300 -d -a 0.05
+$ python3 __main__.py ./samples/counter.dots -t 300 -d -a 0.05
 ```
 
 ## Program Syntax
