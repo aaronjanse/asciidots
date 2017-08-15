@@ -13,7 +13,7 @@
 
 ```
 
-AsciiDots is an esoteric programming language based on ascii art! In this language, _dots_, represented by periods (`.`), travel down ascii art paths and undergo operations.
+AsciiDots is an esoteric programming language based on ascii art. In this language, _dots_, represented by periods (`.`), travel down ascii art paths and undergo operations.
 
 [Read comments on Hacker News](https://news.ycombinator.com/item?id=14947449)
 
