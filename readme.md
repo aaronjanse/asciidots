@@ -95,12 +95,12 @@ pip3 install click
 ...and run as shown in the next section:
 
 ## Using the Interpreter
-The interpreter for this language is the `__main__.py` file. It requires Python 3, and can be run from the terminal using the `python` command (or `python3` if necessary). The first argument is the `dots` file that you wish the interpreter to run.
+The interpreter for this language is the `__main__.py` file. It requires Python 3, and can be run from the terminal using the `python3` command. The first argument is the `dots` file that you wish the interpreter to run.
 
 Here's an example of running the counter sample program (the working directory is the dots repo folder):
 
 ```bash
-$ python __main__.py ./samples/counter.dots
+$ python3 __main__.py ./samples/counter.dots
 ```
 
 Here is the list if available flags:
