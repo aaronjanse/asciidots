@@ -211,8 +211,39 @@ Here's a fun example of using these special paths. Don't worry—we'll soon be a
 ```
 
 ### Addresses and Values
-`@` sets the address to the value after it following the direction of the line<br>
-`#` does the same except it sets the value
+`#` sets the value of the dot to the value after it<br>
+`@` does the same except it sets the _address_ of the dot
+
+The address has nothing to do with the value.  
+Yes this is very confusing (see [open issue about name change suggestions](https://github.com/aaronduino/asciidots/issues/18)).  
+
+The rationale behind having an `address` is so that dots can be differentiated without needing to reserve specific values as having special meaning (ex. saying `-1` that means `null`).  
+The `address` can be set to a special value to differentiate dots.  
+The common use case of this is having the last dot in a stream of dots have a different address than the rest, that way the program knows when the stream has ended.
+
+This sets the value of the dot to `7`:
+
+```
+.-#7-& `` We'll actually do things soon
+```
+
+This sets the address to `8`:
+
+```
+.-@8-&
+```
+
+By the end of this program, the dot's value is `3`:
+
+```
+.-#18-#0-#6-#148-#13-#3-&
+```
+
+By the end of this program, the dot's value is `13` and its address is `99`:
+
+```
+.-#7-#0-@278-#17-#8-@4-#0-@99-#1-#13-&
+```
 
 ### Interactive Console
 `$` is the output console. If there are single/double quotation marks (`'` or `"`), it outputs the text after it until there are closing quotation marks. `#` and `@` are substituted with the dot's value and address, respectively<br>
