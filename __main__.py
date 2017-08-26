@@ -155,10 +155,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                 time.sleep(self.autostep_debug)
             else:
                 if self.compat_debug:
-                    try:
-                        input("Press enter to step...")
-                    except SyntaxError:
-                        pass
+                    input("Press enter to step...")
                 else:
                     self.stdscr.getch()
 
