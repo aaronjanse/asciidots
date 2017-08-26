@@ -56,6 +56,9 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
         self.output_count = 0
 
+        if self.debug:
+            self.first_tick = True
+
         if self.debug and not self.compat_debug:
             self.logging_loc = 0
             self.logging_x = 1
@@ -82,8 +85,6 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                     sys.exit(0)
 
             signal.signal(signal.SIGINT, signal_handler)
-
-            self.first_tick = True
 
     def get_input(self):
         if not self.debug or self.compat_debug:
