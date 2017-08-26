@@ -157,7 +157,11 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                 if self.compat_debug:
                     input("Press enter to step...")
                 else:
-                    self.stdscr.getch()
+                    keycode = self.stdscr.getch()
+
+                    if keycode == 3 or keycode == 26:
+                        self.on_finish()
+                        sys.exit(0)
 
             d_l = []
             for idx in reversed(range(len(interpreter.get_all_dots()))):
