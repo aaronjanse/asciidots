@@ -223,6 +223,9 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
                 display_y += 1
 
+            if self.compat_debug:
+                print('\n'+self.compat_logging_buffer, end='', flush=True)
+
             if not self.first_tick:
                 if self.autostep_debug:
                     time.sleep(self.autostep_debug)
@@ -237,9 +240,6 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                             sys.exit(0)
             else:
                 self.first_tick = False
-
-        if self.compat_debug:
-            print('\n'+self.compat_logging_buffer, end='', flush=True)
 
         if self.ticks is not False:
             if self.tick_number > self.ticks:
