@@ -187,6 +187,9 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                 for x in range(len(interpreter.world._data_array[y])):
                     char = interpreter.world._data_array[y][x]
 
+                    if char == '\n':
+                        continue
+
                     #RGYB
 
                     if (x, y) in d_l:
@@ -209,8 +212,6 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                             print('\033[0;34m'+char+'\033[0m', end='') # Blue
                         else:
                             self.win_program.addstr(display_y, x, char, curses.color_pair(4))
-                    elif char == '\n':
-                        pass
                     else:
                         if self.compat_debug:
                             print(char, end='')
