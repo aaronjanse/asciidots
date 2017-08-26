@@ -83,6 +83,8 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
             signal.signal(signal.SIGINT, signal_handler)
 
+            self.first_tick = True
+
     def get_input(self):
         if not self.debug or self.compat_debug:
             if not sys.stdin.isatty():
@@ -151,18 +153,6 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
     def on_microtick(self, dot):
         if self.debug and not self.silent:
-            if self.autostep_debug:
-                time.sleep(self.autostep_debug)
-            else:
-                if self.compat_debug:
-                    input("Press enter to step...")
-                else:
-                    keycode = self.stdscr.getch()
-
-                    if keycode == 3 or keycode == 26:
-                        self.on_finish()
-                        sys.exit(0)
-
             d_l = []
             for idx in reversed(range(len(interpreter.get_all_dots()))):
                 d = interpreter.dots[idx]
@@ -232,6 +222,21 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                     print()
 
                 display_y += 1
+
+            if not self.first_tick:
+                if self.autostep_debug:
+                    time.sleep(self.autostep_debug)
+                else:
+                    if self.compat_debug:
+                        input("Press enter to step...")
+                    else:
+                        keycode = self.stdscr.getch()
+
+                        if keycode == 3 or keycode == 26:
+                            self.on_finish()
+                            sys.exit(0)
+            else:
+                self.first_tick = False
 
         if self.compat_debug:
             print('\n'+self.compat_logging_buffer, end='', flush=True)
