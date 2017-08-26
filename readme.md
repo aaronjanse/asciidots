@@ -131,7 +131,7 @@ $ python3 __main__.py ./samples/counter.dots -t 300 -d -a 0.05
 ### Basics
 
 ### Starting a program
-`.` (a period), or `•` (a bullet symbol), signifies the starting location of a *dot*, the name for this language's information-carrying unit. Each dot is initialized with both an [address and value](#addresses-and-values) of `0`.
+`.` (a period), or `•` (a bullet symbol), signifies the starting location of a *dot*, the name for this language's information-carrying unit. Each dot is initialized with both an [id and value](#ids-and-values) of `0`.
 
 ### Ending a program
 Interpretation of a dots program ends when a dot passes over an `&`. It also ends when all dots die (i.e. they all pass over the end of a path into nothingness)
@@ -210,16 +210,16 @@ Here's a fun example of using these special paths. Don't worry—we'll soon be a
     .    `` Start
 ```
 
-### Addresses and Values
+### IDs and Values
 `#` sets the value of the dot to the value after it<br>
-`@` does the same except it sets the _address_ of the dot
+`@` does the same except it sets the _id_ of the dot
 
-The address has nothing to do with the value.  
+The id has nothing to do with the value.  
 Yes this is very confusing (see [open issue about name change suggestions](https://github.com/aaronduino/asciidots/issues/18)).  
 
-The rationale behind having an `address` is so that dots can be differentiated without needing to reserve specific values as having special meaning (ex. saying `-1` that means `null`).  
-The `address` can be set to a special value to differentiate dots.  
-The common use case of this is having the last dot in a stream of dots have a different address than the rest, that way the program knows when the stream has ended.
+The rationale behind having an `id` is so that dots can be differentiated without needing to reserve specific values as having special meaning (ex. saying `-1` that means `null`).  
+The `id` can be set to a special value to differentiate dots.  
+The common use case of this is having the last dot in a stream of dots have a different id than the rest, that way the program knows when the stream has ended.
 
 This sets the value of the dot to `7`:
 
@@ -227,7 +227,7 @@ This sets the value of the dot to `7`:
 .-#7-& `` We'll actually do things soon
 ```
 
-This sets the address to `8`:
+This sets the id to `8`:
 
 ```
 .-@8-&
@@ -239,14 +239,14 @@ By the end of this program, the dot's value is `3`:
 .-#18-#0-#6-#148-#13-#3-&
 ```
 
-By the end of this program, the dot's value is `13` and its address is `99`:
+By the end of this program, the dot's value is `13` and its id is `99`:
 
 ```
 .-#7-#0-@278-#17-#8-@4-#0-@99-#1-#13-&
 ```
 
 ### Interactive Console
-`$` is the output console. If there are single/double quotation marks (`'` or `"`), it outputs the text after it until there are closing quotation marks. `#` and `@` are substituted with the dot's value and address, respectively<br>
+`$` is the output console. If there are single/double quotation marks (`'` or `"`), it outputs the text after it until there are closing quotation marks. `#` and `@` are substituted with the dot's value and id, respectively<br>
 &nbsp;&nbsp;&nbsp;&nbsp;When `_` follows a `$`, the program does not end printing with a [newline](https://en.wikipedia.org/wiki/Newline).<br>
 &nbsp;&nbsp;&nbsp;&nbsp;When not in quotes, if a `a` comes before a `#` or `@` symbol, the value is converted to ascii before it is printed
 
@@ -445,7 +445,7 @@ That can be done like so:
 %$X `` X could be replaced with a different character, if so desired
 ```
 
-It is recommended that you create warps for different sides of the char. Just look at the example code for the `val_to_addr.dots` library:
+It is recommended that you create warps for different sids of the char. Just look at the example code for the `val_to_addr.dots` library:
 
 ```
 %^X
@@ -484,11 +484,11 @@ Unused inputs are replaced with an underscore (`_`). So, if the upper input/outp
 
 The letters defined then work like warps in the rest of the code. Remember that direction is preserved!
 
-Here's the code for a library that accepts a dot coming from the left, sets its value to its address, and then outputs it to the right:
+Here's the code for a library that accepts a dot coming from the left, sets its value to its id, and then outputs it to the right:
 ```
 %+A_B_
 
-`` Set address to zero, then add the value to the address (which is 0)
+`` Set id to zero, then add the value to the id (which is 0)
 
 A-*-@0-@{+}-B
   |      |
