@@ -244,7 +244,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 @click.option('--ticks', '-t', default=False)
 @click.option('--silent', '-s', is_flag=True)
 @click.option('--debug', '-d', is_flag=True)
-@click.option('--compat_debug', '-w', is_flag=True, default=compat_debug_default)
+@click.option('--compat_debug', '-w', is_flag=True)
 @click.option('--debug_lines', '-l', default=default_debug_lines)
 @click.option('--autostep_debug', '-a', default=False)
 @click.option('--head', '-h', default=-1)
@@ -258,6 +258,8 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
         ticks = int(ticks)
 
     head = int(head)
+
+    compat_debug = compat_debug or compat_debug_default
 
     io_callbacks = Default_IO_Callbacks(ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head)
 
