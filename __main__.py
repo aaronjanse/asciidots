@@ -219,11 +219,16 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                             print('\033[0;34m'+char+'\033[0m', end='') # Blue
                         else:
                             self.win_program.addstr(display_y, x, char, curses.color_pair(4))
+                    elif char == '\n':
+                        pass
                     else:
                         if self.compat_debug:
                             print(char, end='')
                         else:
                             self.win_program.addstr(display_y, x, char)
+
+                if self.compat_debug:
+                    print()
 
                 display_y += 1
 
