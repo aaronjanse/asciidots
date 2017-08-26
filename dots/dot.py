@@ -1,5 +1,5 @@
 from .states import *
-
+import sys
 
 class Dot:
     def __init__(self, x, y, world, callbacks, func_to_create_dots, func_to_get_dots, address=None, value=None, direction=None, state=None, stack=None):
@@ -69,9 +69,10 @@ class Dot:
             char = self.world.getCharAt(self.x, self.y)
 
             if char == '&':
-                self.callbacks.on_finish()
-
                 self.state = DeadState(self)
+
+                self.callbacks.on_finish()
+                sys.exit(0)
                 return
 
             self.state = self.state.next(char)
