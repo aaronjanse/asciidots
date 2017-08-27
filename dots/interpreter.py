@@ -21,6 +21,7 @@ class AsciiDotsInterpreter(object):
         run_in_separate_thread -- If set to True, the program will be interpreted in a separate thread
         make_thread_daemon -- Controls whether a thread created by enabling in_seperate_thread will be run as daemon
         """
+
         if run_in_separate_thread is None:
             run_in_separate_thread = False
 
