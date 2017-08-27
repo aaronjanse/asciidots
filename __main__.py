@@ -35,7 +35,7 @@ debug_ = True
 autostep_debug_ = False
 
 
-class Default_IO_Callbacks(IOCallbacksStorage):
+class DefaultIOCallbacks(IOCallbacksStorage):
     def __init__(self, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head):
         super().__init__()
 
@@ -273,9 +273,9 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
 
     compat_debug = compat_debug or compat_debug_default
 
-    io_callbacks = Default_IO_Callbacks(ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head)
 
     file_path = sys.argv[1]
+    io_callbacks = DefaultIOCallbacks(ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head)
 
     program_dir = os.path.dirname(os.path.abspath(file_path))
 
