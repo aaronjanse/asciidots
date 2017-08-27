@@ -34,6 +34,7 @@ interpreter = None
 debug_ = True
 autostep_debug_ = False
 
+
 class Default_IO_Callbacks(IOCallbacksStorage):
     def __init__(self, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head):
         super().__init__()
@@ -47,7 +48,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
         self.head = head
 
         self.compat_logging_buffer = ''
-        self.compat_logging_buffer_lines = terminal_lines-debug_lines-1
+        self.compat_logging_buffer_lines = terminal_lines - debug_lines - 1
 
         self.tick_number = 0
 
@@ -77,8 +78,8 @@ class Default_IO_Callbacks(IOCallbacksStorage):
             self.logging_pad = curses.newpad(1000, curses.COLS - 1)
 
             def signal_handler(signal, frame):
-                    self.on_finish()
-                    sys.exit(0)
+                self.on_finish()
+                sys.exit(0)
 
             signal.signal(signal.SIGINT, signal_handler)
 
@@ -117,12 +118,13 @@ class Default_IO_Callbacks(IOCallbacksStorage):
             print(value, end='', flush=True)
         elif self.compat_debug:
             self.compat_logging_buffer += value
-            self.compat_logging_buffer = '\n'.join(self.compat_logging_buffer.split('\n')[:self.compat_logging_buffer_lines])
+            self.compat_logging_buffer = '\n'.join(
+                self.compat_logging_buffer.split('\n')[:self.compat_logging_buffer_lines])
         else:
             self.logging_pad.addstr(self.logging_loc, self.logging_x, str(value))
             self.logging_pad.refresh(self.logging_loc - min(self.logging_loc, curses.LINES -
-                                     self.debug_lines - 1), 0, self.debug_lines, 0,
-                                     curses.LINES - 1, curses.COLS - 1)
+                                                            self.debug_lines - 1),
+                                     0, self.debug_lines, 0, curses.LINES - 1, curses.COLS - 1)
 
             # FIXME: This should count the number of newlines instead
             if str(value).endswith('\n'):
@@ -148,6 +150,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
     def on_microtick(self, dot):
         if self.debug and not self.silent:
+
             d_l = []
             for idx in reversed(range(len(interpreter.get_all_dots()))):
                 d = interpreter.dots[idx]
@@ -186,26 +189,26 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                     if char == '\n':
                         continue
 
-                    #RGYB
+                    # RGYB
 
                     if (x, y) in d_l:
                         if self.compat_debug:
-                            print('\033[0;31m'+char+'\033[0m', end='') # Red
+                            print('\033[0;31m' + char + '\033[0m', end='')  # Red
                         else:
                             self.win_program.addstr(display_y, x, char, curses.color_pair(1))
                     elif char.isLibWarp():
                         if self.compat_debug:
-                            print('\033[0;32m'+char+'\033[0m', end='') # Green
+                            print('\033[0;32m' + char + '\033[0m', end='')  # Green
                         else:
                             self.win_program.addstr(display_y, x, char, curses.color_pair(2))
                     elif char.isWarp():
                         if self.compat_debug:
-                            print('\033[0;33m'+char+'\033[0m', end='') # Yellow
+                            print('\033[0;33m' + char + '\033[0m', end='')  # Yellow
                         else:
                             self.win_program.addstr(display_y, x, char, curses.color_pair(3))
                     elif char in '#@~' or char.isOper():
                         if self.compat_debug:
-                            print('\033[0;34m'+char+'\033[0m', end='') # Blue
+                            print('\033[0;34m' + char + '\033[0m', end='')  # Blue
                         else:
                             self.win_program.addstr(display_y, x, char, curses.color_pair(4))
                     else:
@@ -220,7 +223,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                 display_y += 1
 
             if self.compat_debug:
-                print('\n'+self.compat_logging_buffer, end='', flush=True)
+                print('\n' + self.compat_logging_buffer, end='', flush=True)
 
             if not self.first_tick:
                 if self.autostep_debug:
@@ -245,6 +248,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                 sys.exit(0)
 
             self.tick_number += 1
+
 
 @click.command()
 @click.argument('filename')
