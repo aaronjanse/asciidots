@@ -41,21 +41,6 @@ class Dot:
         past_locations = []
         while(True):
             self.callbacks.on_microtick(self)
-            # if debug:
-            #     render(self.inter_inst)
-            #
-            #     if step_manual:
-            #         if not (quick_debug and len(self.stack) > 0):
-            #             try:
-            #                 if compat_debug:
-            #                     input("")
-            #                 else:
-            #                     stdscr.getch()
-            #             except SyntaxError:
-            #                 pass
-            #     elif step_speed != 0:
-            #         sleep(step_speed)
-
             coords = (self.x, self.y,)
             if coords in past_locations:
                 return
