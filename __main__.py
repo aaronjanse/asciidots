@@ -21,7 +21,8 @@ from dots import terminalsize
 try:
     import curses
 except ImportError:
-    print('failed to import curses; running in compatibility mode')
+    curses = 'failed to import curses; running in compatibility mode'
+    print(curses)
     compat_debug_default = True
 else:
     compat_debug_default = False
