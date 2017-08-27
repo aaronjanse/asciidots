@@ -18,10 +18,10 @@ class World(object):
 
         self.program_dir = program_dir
 
-        self._data_array = self.map_from_raw(world_map)
+        self.map = self.map_from_raw(world_map)
 
         self._worldwide_warp_id_counter = 0
-        self._setup_warps_for(self._data_array)
+        self._setup_warps_for(self.map)
 
         self._import_libraries()
 
@@ -34,7 +34,7 @@ class World(object):
     def get_coords_of_dots(self):
         dot_coords = []
 
-        for y, line in enumerate(self._data_array):
+        for y, line in enumerate(self.map):
             if line[0] == '%':
                 continue
 
@@ -48,25 +48,31 @@ class World(object):
     # ✓
     # NOTE: _data_array has to be accesed using y, x due to the way it is created
     def getCharAt(self, x, y):
-        return self._data_array[y][x]
+        return self.map[y][x]
 
     # ✓
     def doesLocExist(self, x, y):
-        return 0 <= y < len(self._data_array) and 0 <= x < len(self._data_array[y])
+        return 0 <= y < len(self.map) and 0 <= x < len(self.map[y])
 
     # NOTE: Hopefully done?
-    def _import_libraries(self, char_obj_array=None):
-        if char_obj_array is None:
-            char_obj_array = self._data_array
+    def _import_libraries(self, map=None):
+        """
+        Import the library for a given map.
 
-        lib_filenames_for_chars = self._get_files_for_lib_chars_dict(char_obj_array)
+        :param str map: The map to import libraries from. Defaults to the world map.
+        """
+
+        if map is None:
+            map = self.map
+
+        lib_filenames_for_chars = self._get_files_for_lib_chars_dict(map)
         lib_chars = lib_filenames_for_chars.keys()
 
-        self._update_class_of_lib_chars(char_obj_array, lib_chars)
+        self._update_class_of_lib_chars(map, lib_chars)
 
         singleton_ids = {}
 
-        for y, line in enumerate(char_obj_array):
+        for y, line in enumerate(map):
             if line[0] == '%':
                 continue
 
@@ -75,7 +81,7 @@ class World(object):
                     if char not in singleton_ids:
                         this_warp_id = self._worldwide_warp_id_counter
 
-                        char_obj_array[y][x].set_id(this_warp_id)
+                        map[y][x].set_id(this_warp_id)
                         self._worldwide_warp_id_counter += 1
 
                         if char.isSingletonLibWarp():
@@ -84,9 +90,9 @@ class World(object):
                         if char in lib_filenames_for_chars:
                             filename = lib_filenames_for_chars[char]
 
-                            self._import_lib_file_with_warp_id(char_obj_array, filename, this_warp_id, is_singleton=char.isSingletonLibWarp())
+                            self._import_lib_file_with_warp_id(map, filename, this_warp_id, is_singleton=char.isSingletonLibWarp())
                     else:
-                        char_obj_array[y][x].set_id(singleton_ids[char])
+                        map[y][x].set_id(singleton_ids[char])
 
     # NOTE: Hopefully done?
     def _import_lib_file_with_warp_id(self, char_obj_array, filename, warp_id, is_singleton):
@@ -202,7 +208,7 @@ class World(object):
 
     # ✓
     def _connect_warps(self):
-        for y, line in enumerate(self._data_array):
+        for y, line in enumerate(self.map):
             if line[0] == '%':
                 continue
 
@@ -212,11 +218,11 @@ class World(object):
                     companion_warp_loc = self._find_companion_warp_char_loc_of(warp_id, x, y)
 
                     if companion_warp_loc is not None:
-                        self._data_array[y][x].set_dest_loc(*companion_warp_loc)
+                        self.map[y][x].set_dest_loc(*companion_warp_loc)
 
     # ✓
     def _find_companion_warp_char_loc_of(self, warp_id, orig_x, orig_y):
-        for y, line in enumerate(self._data_array):
+        for y, line in enumerate(self.map):
             if line[0] == '%':
                 continue
 
@@ -255,7 +261,7 @@ class World(object):
 
     # TODO check if the char is inside of a ascii dots text string
     def _update_class_of_dots(self):
-        for y, char_list in enumerate(self._data_array):
+        for y, char_list in enumerate(self.map):
             last_was_backtick = False
             for x, char in enumerate(char_list):
                 if char == '`':
@@ -265,17 +271,17 @@ class World(object):
                         break
 
                 if char == '.':
-                    self._data_array[y][x] = DotChar(char)
+                    self.map[y][x] = DotChar(char)
 
     # ✓
     def _setup_operators(self):
-        for y, line in enumerate(self._data_array):
+        for y, line in enumerate(self.map):
             for x, char in enumerate(line):
                 if x > 0 and x < len(line) - 1:
                     if line[x - 1] == '{' and line[x + 1] == '}':
-                        self._data_array[y][x] = CurlyOperChar(char)
+                        self.map[y][x] = CurlyOperChar(char)
                     elif line[x - 1] == '[' and line[x + 1] == ']':
-                        self._data_array[y][x] = SquareOperChar(char)
+                        self.map[y][x] = SquareOperChar(char)
 
     # ✓
     def _get_warp_chars_list_from(self, char_obj_array):
@@ -294,7 +300,7 @@ class World(object):
 
     # ✓
     def _init_data_array(self, char_array):
-        self._data_array = self.map_from_raw(char_array)
+        self.map = self.map_from_raw(char_array)
 
     # ✓
     def _char_obj_array_iter(self, obj_array):

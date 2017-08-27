@@ -192,11 +192,11 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             else:
                 self.win_program.refresh()
 
-            for y in range(len(interpreter.world._data_array)):
+            for y in range(len(interpreter.world.map)):
                 if display_y > self.debug_lines - 2:
                     break
 
-                if len(''.join(interpreter.world._data_array[y]).rstrip()) < 1:
+                if len(''.join(interpreter.world.map[y]).rstrip()) < 1:
                     if last_blank:
                         continue
                     else:
@@ -204,8 +204,8 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                 else:
                     last_blank = False
 
-                for x in range(len(interpreter.world._data_array[y])):
-                    char = interpreter.world._data_array[y][x]
+                for x in range(len(interpreter.world.map[y])):
+                    char = interpreter.world.map[y][x]
 
                     # RGYB
 
