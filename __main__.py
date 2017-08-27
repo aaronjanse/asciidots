@@ -1,7 +1,14 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import locale, codecs, os
+import codecs
+import locale
+import os
+import signal
+import sys
+import time
+
+import click
 
 if codecs.lookup(locale.getpreferredencoding()).name == 'ascii':
     os.environ['LANG'] = 'en_US.utf-8'
@@ -21,16 +28,6 @@ except Exception:
     print('failed to import curses; running in compatibility mode')
     compat_debug_default = True
 
-import click
-
-import sys
-import os
-
-import time
-
-import signal
-
-from dots.states import DeadState
 
 interpreter = None
 
