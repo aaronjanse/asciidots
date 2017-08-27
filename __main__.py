@@ -36,24 +36,23 @@ autostep_debug_ = False
 
 
 class DefaultIOCallbacks(IOCallbacksStorage):
-    def __init__(self, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head):
+    """The default class to manage the input and output of a dots program."""
+
+    def __init__(self, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit):
         super().__init__()
 
         # if it is zero or false, we don't want to stop
         self.ticks_left = ticks if ticks else float('inf')
+        self.outputs_left = output_limit if output_limit else float('inf')
 
         self.silent = silent
         self.debug = debug
         self.compat_debug = compat_debug
         self.debug_lines = debug_lines
         self.autostep_debug = autostep_debug
-        self.head = head
 
         self.compat_logging_buffer = ''
         self.compat_logging_buffer_lines = terminal_lines - debug_lines - 1
-
-
-        self.output_count = 0
 
         self.first_tick = True
 
@@ -106,9 +105,10 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         return input_val
 
     def on_output(self, value):
-        self.output_count += 1
+        self.outputs_left -= 1
 
-        if self.head != -1 and self.output_count > self.head:
+        # maximum output reached, we quit the prog
+        if self.outputs_left == 0:
             self.on_finish()
             return
 
@@ -252,26 +252,21 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 @click.argument('filename')
 @click.option('--debug', '-d', is_flag=True, help='Show the execution of the program and the course of the dots.')
 @click.option('--autostep_debug', '-a', default=False, help='The time between every tick')
-@click.option('--head', '-h', default=-1, help='Terminate the program after N outputs.')
-@click.option('--ticks', '-t', default=False, help='Terminate the program after N ticks.')
+@click.option('--output_limit', '-o', default=0, help='Terminate the program after N outputs.')
+@click.option('--ticks', '-t', default=0, help='Terminate the program after N ticks.')
 @click.option('--silent', '-s', is_flag=True, help='No printing, for benchmarking.')
 @click.option('--compat_debug', '-w', is_flag=True, help='Force the debug rendering without ncurses.')
 @click.option('--debug_lines', '-l', default=default_debug_lines, help='The size of the debug view.')
 @click.option('--run_in_parallel', '-p', is_flag=True, help='All dots move at the same time.')
-def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head, run_in_parallel):
+def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit, run_in_parallel):
     global interpreter
 
     if autostep_debug is not False:
         autostep_debug = float(autostep_debug)
 
-    if ticks is not False:
-        ticks = int(ticks)
-
-    head = int(head)
-
     compat_debug = compat_debug or compat_debug_default
 
-    io_callbacks = DefaultIOCallbacks(ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head)
+    io_callbacks = DefaultIOCallbacks(ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
 
     program_dir = os.path.dirname(os.path.abspath(filename))
 

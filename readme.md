@@ -106,7 +106,9 @@ $ python3 __main__.py ./samples/counter.dots
 Here is the list if available flags:
 
 ```
--t [ticks]        Run the program for a specified number of ticks
+-t [ticks]        Run the program for a specified number of ticks (Default to 0: no limit)
+
+-o [output-limit] Run the program for a specified number of outputs (Default to 0: no limit)
 
 -s                Run without printing ANYTHING to the console. Useful for benchmarking
 
