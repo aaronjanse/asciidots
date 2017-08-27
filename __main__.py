@@ -157,8 +157,6 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                 if not d.state.isDeadState():
                     d_l.append((d.x, d.y))
 
-            special_char = False
-
             last_blank = False
 
             display_y = 0
@@ -273,13 +271,11 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
 
     compat_debug = compat_debug or compat_debug_default
 
-
-    file_path = sys.argv[1]
     io_callbacks = DefaultIOCallbacks(ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head)
 
-    program_dir = os.path.dirname(os.path.abspath(file_path))
+    program_dir = os.path.dirname(os.path.abspath(filename))
 
-    with open(file_path, 'r') as file:
+    with open(filename, 'r') as file:
         program = file.readlines()
 
     try:
