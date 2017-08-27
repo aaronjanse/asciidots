@@ -252,14 +252,14 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
 @click.command()
 @click.argument('filename')
-@click.option('--ticks', '-t', default=False)
-@click.option('--silent', '-s', is_flag=True)
-@click.option('--debug', '-d', is_flag=True)
-@click.option('--compat_debug', '-w', is_flag=True)
-@click.option('--debug_lines', '-l', default=default_debug_lines)
-@click.option('--autostep_debug', '-a', default=False)
-@click.option('--head', '-h', default=-1)
-@click.option('--run_in_parallel', '-p', is_flag=True)
+@click.option('--debug', '-d', is_flag=True, help='Show the execution of the program and the course of the dots.')
+@click.option('--autostep_debug', '-a', default=False, help='The time between every tick')
+@click.option('--head', '-h', default=-1, help='Terminate the program after N outputs.')
+@click.option('--ticks', '-t', default=False, help='Terminate the program after N ticks.')
+@click.option('--silent', '-s', is_flag=True, help='No printing, for benchmarking.')
+@click.option('--compat_debug', '-w', is_flag=True, help='Force the debug rendering without ncurses.')
+@click.option('--debug_lines', '-l', default=default_debug_lines, help='The size of the debug view.')
+@click.option('--run_in_parallel', '-p', is_flag=True, help='All dots move at the same time.')
 def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head, run_in_parallel):
     global interpreter
 
