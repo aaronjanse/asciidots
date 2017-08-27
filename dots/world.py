@@ -170,20 +170,30 @@ class World(object):
             return os.path.join(interpreter_dir, "libs", filename)
 
     # ✓
-    def _get_files_for_lib_chars_dict(self, char_obj_array):
-        lib_files_for_chars = {}
+    def _get_files_for_lib_chars_dict(self, map):
+        """
+        Get the librairy files by alias char defined.
+        
+        :param List[List[Char]] map: The map to import
+        """
+        
+        filename_by_alias = {}
 
-        for char_list in char_obj_array:
-            line = ''.join(char_list).rstrip()
+        for row in map:
+            # get back the string from the Char array and remove the trailling white spaces
+            line = ''.join(row).rstrip()
 
-            if line[:2] == '%!':
+            # if it's an import
+            if line.startswith('%!'):
+                # Retrieve the filename and the alias from the line
                 pieces = line[2:].split(' ')
                 filename = pieces[0]
-                alias_char = pieces[1]
+                alias = pieces[1]
 
-                lib_files_for_chars[alias_char] = filename
+                # add it to the mapping
+                filename_by_alias[alias] = filename
 
-        return lib_files_for_chars
+        return filename_by_alias
 
     # ✓
     def _get_dict_of_is_singleton_for_lib_chars_in(self, char_obj_array):
