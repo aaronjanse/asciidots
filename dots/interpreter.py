@@ -7,6 +7,15 @@ from .states import DeadState
 
 class AsciiDotsInterpreter(object):
     def __init__(self, program, program_dir, io_callbacks, run_in_parallel):
+        """
+        Create a new instance of the interpreter to run the program.
+
+        :param str program: The code of the program
+        :param str program_dir: The path to the program directory
+        :param io_callbacks: The callbacks for the I/O. Must be a subclass of IOCallbacksStorage
+        :param bool run_in_parallel: temporarily, changes the way dots move : one by one or all at the same time
+        """
+
         self.world = World(program, program_dir)
         self.io_callbacks = io_callbacks
 

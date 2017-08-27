@@ -71,10 +71,12 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
             curses.noecho()
 
+            # hides the cursor
             curses.curs_set(False)
 
+            # defining the two main parts of the screen: the view of the program
             self.win_program = curses.newwin(self.debug_lines, curses.COLS - 1, 0, 0)
-
+            # and pad for the output of the prog
             self.logging_pad = curses.newpad(1000, curses.COLS - 1)
 
             def signal_handler(signal, frame):
@@ -84,6 +86,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             signal.signal(signal.SIGINT, signal_handler)
 
     def get_input(self):
+        """Get an input from the user."""
         if not self.debug or self.compat_debug:
             if not sys.stdin.isatty():
                 return input('')
@@ -92,15 +95,20 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         else:
             return self.curses_input(self.stdscr, curses.LINES - 3, 2, '?: ')
 
-    def curses_input(self, stdscr, r, c, prompt_string):
+    def curses_input(self, stdscr, row, col, prompt_string):
+        """
+        Get an input string with curses.
+
+        Row and col are the start position ot the prompt_string.
+        """
         curses.echo()
-        stdscr.addstr(r, c, str(prompt_string), curses.A_REVERSE)
-        stdscr.addstr(r + 1, c, " " * (curses.COLS - 1))
+        stdscr.addstr(row, col, str(prompt_string), curses.A_REVERSE)
+        stdscr.addstr(row + 1, col, " " * (curses.COLS - 1))
         stdscr.refresh()
         input_val = ""
 
         while len(input_val) <= 0:
-            input_val = stdscr.getstr(r + 1, c, 20)
+            input_val = stdscr.getstr(row + 1, col, 20)
 
         return input_val
 
@@ -112,16 +120,22 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             self.on_finish()
             return
 
+        # no printing mode
         if self.silent:
             return
 
         if not self.debug:
             print(value, end='', flush=True)
+
         elif self.compat_debug:
+            # we add the ouput to the buffer
             self.compat_logging_buffer += value
+            # and we keep the maximum number of line to compat_logging_buffer_lines
             self.compat_logging_buffer = '\n'.join(
                 self.compat_logging_buffer.split('\n')[:self.compat_logging_buffer_lines])
+
         else:
+            # add the output string to the pad
             self.logging_pad.addstr(self.logging_loc, self.logging_x, str(value))
             self.logging_pad.refresh(self.logging_loc - min(self.logging_loc, curses.LINES -
                                                             self.debug_lines - 1),
@@ -135,8 +149,10 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                 self.logging_x += len(value)
 
     def on_finish(self):
-        global interpreter
+        """Close cleanly the I/O."""
+        global interpreter  # beurk
 
+        # we need to close curses only if it was opened
         if self.debug and not self.compat_debug:
             curses.nocbreak()
             self.stdscr.keypad(False)
@@ -145,11 +161,14 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             curses.endwin()
 
     def on_error(self, error_text):
+        """Show the error and cleans the I/O."""
         self.on_output('error: {}'.format(error_text))
 
         self.on_finish()
 
     def on_microtick(self, dot):
+
+        # we want to show the program
         if self.debug and not self.silent:
 
             d_l = []
@@ -170,11 +189,11 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             else:
                 self.win_program.refresh()
 
-            for y in range(len(interpreter.world._data_array)):
+            for y in range(len(interpreter.world.map)):
                 if display_y > self.debug_lines - 2:
                     break
 
-                if len(''.join(interpreter.world._data_array[y]).rstrip()) < 1:
+                if len(''.join(interpreter.world.map[y]).rstrip()) < 1:
                     if last_blank:
                         continue
                     else:
@@ -182,8 +201,8 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                 else:
                     last_blank = False
 
-                for x in range(len(interpreter.world._data_array[y])):
-                    char = interpreter.world._data_array[y][x]
+                for x in range(len(interpreter.world.map[y])):
+                    char = interpreter.world.map[y][x]
 
                     if char == '\n':
                         continue
@@ -271,7 +290,7 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
     program_dir = os.path.dirname(os.path.abspath(filename))
 
     with open(filename, 'r') as file:
-        program = file.readlines()
+        program = file.read()
 
     try:
         interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks, run_in_parallel)
