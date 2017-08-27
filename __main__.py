@@ -53,8 +53,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
         self.output_count = 0
 
-        if self.debug:
-            self.first_tick = True
+        self.first_tick = True
 
         if self.debug and not self.compat_debug:
             self.logging_loc = 0
