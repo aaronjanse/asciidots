@@ -42,18 +42,16 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
         # if it is zero or false, we don't want to stop
         self.ticks_left = ticks if ticks else float('inf')
+        self.outputs_left = head
 
         self.silent = silent
         self.debug = debug
         self.compat_debug = compat_debug
         self.debug_lines = debug_lines
         self.autostep_debug = autostep_debug
-        self.head = head
 
         self.compat_logging_buffer = ''
         self.compat_logging_buffer_lines = terminal_lines - debug_lines - 1
-
-        self.output_count = 0
 
         if self.debug and not self.compat_debug:
             self.logging_loc = 0
@@ -108,12 +106,14 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         return input_val
 
     def on_output(self, value):
-        self.output_count += 1
+        self.outputs_left -= 1
 
-        if self.head != -1 and self.output_count > self.head:
+        # maximum output reached, we quit the prog
+        if self.outputs_left == 0:
             self.on_finish()
             return
 
+        # no printing mode
         if self.silent:
             return
 
@@ -125,9 +125,9 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                 self.compat_logging_buffer.split('\n')[:self.compat_logging_buffer_lines])
         else:
             self.logging_pad.addstr(self.logging_loc, self.logging_x, str(value))
-            self.logging_pad.refresh(self.logging_loc - min(self.logging_loc, curses.LINES -
-                                                            self.debug_lines - 1), 0, self.debug_lines, 0,
-                                     curses.LINES - 1, curses.COLS - 1)
+
+            self.logging_pad.refresh(self.logging_loc - min(self.logging_loc, curses.LINES - self.debug_lines - 1), 0,
+                                     self.debug_lines, 0, curses.LINES - 1, curses.COLS - 1)
 
             # FIXME: This should count the number of newlines instead
             if str(value).endswith('\n'):
@@ -238,13 +238,12 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             print('\n' + self.compat_logging_buffer, end='', flush=True)
 
         if self.ticks_left == 0:
-                self.on_output('QUITTING next step!\n')
+            self.on_output('QUITTING next step!\n')
 
-                self.on_finish()
-                sys.exit(0)
+            self.on_finish()
+            sys.exit(0)
 
         self.ticks_left -= 1
-
 
 
 @click.command()
