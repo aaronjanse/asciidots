@@ -38,13 +38,10 @@ class AsciiDotsInterpreter(object):
             self._dots_for_next_tick = []
 
             for dot in self.dots:
-                dot.simulate_tick(self.run_in_parallel)
+                dot.simulate_tick(not self.run_in_parallel)
 
                 if not dot.state.isDeadState():
                     self._dots_for_next_tick.append(dot)
-
-                if not self.run_in_parallel:
-                    self.io_callbacks.on_microtick(dot)
 
             if self.run_in_parallel:
                 self.io_callbacks.on_microtick(self.dots[0])
