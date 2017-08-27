@@ -37,6 +37,8 @@ autostep_debug_ = False
 
 
 class DefaultIOCallbacks(IOCallbacksStorage):
+    """The default class to manage the input and output of a dots program."""
+
     def __init__(self, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit):
         super().__init__()
 
@@ -68,10 +70,12 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
             curses.noecho()
 
+            # hides the cursor
             curses.curs_set(False)
 
+            # defining the two main parts of the screen: the view of the program
             self.win_program = curses.newwin(self.debug_lines, curses.COLS - 1, 0, 0)
-
+            # and pad for the output of the prog
             self.logging_pad = curses.newpad(1000, curses.COLS - 1)
 
             def signal_handler(signal, frame):
@@ -85,6 +89,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             self.first_tick = False
 
     def get_input(self):
+        """Get an input from the user."""
         if not self.debug or self.compat_debug:
             if not sys.stdin.isatty():
                 return input('')
@@ -94,6 +99,9 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             return self.curses_input(self.stdscr, curses.LINES - 3, 2, '?: ')
 
     def curses_input(self, stdscr, r, c, prompt_string):
+        """
+        Get an input string with curses.
+        """
         curses.echo()
         stdscr.addstr(r, c, str(prompt_string), curses.A_REVERSE)
         stdscr.addstr(r + 1, c, " " * (curses.COLS - 1))
@@ -119,11 +127,16 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
         if not self.debug:
             print(value, end='', flush=True)
+
         elif self.compat_debug:
+            # we add the ouput to the buffer
             self.compat_logging_buffer += value
+            # and we keep the maximum number of line to compat_logging_buffer_lines
             self.compat_logging_buffer = '\n'.join(
                 self.compat_logging_buffer.split('\n')[:self.compat_logging_buffer_lines])
+
         else:
+            # add the output string to the pad
             self.logging_pad.addstr(self.logging_loc, self.logging_x, str(value))
 
             self.logging_pad.refresh(self.logging_loc - min(self.logging_loc, curses.LINES - self.debug_lines - 1), 0,
