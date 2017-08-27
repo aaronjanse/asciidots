@@ -18,9 +18,6 @@ from dots.callbacks import IOCallbacksStorage
 
 from dots import terminalsize
 
-_, terminal_lines = terminalsize.get_terminal_size()
-default_debug_lines = int(terminal_lines*2/3)
-
 compat_debug_default = False
 try:
     import curses
@@ -28,6 +25,8 @@ except ImportError:
     print('failed to import curses; running in compatibility mode')
     compat_debug_default = True
 
+terminal_lines = terminalsize.get_terminal_size()[1]
+default_debug_lines = int(terminal_lines * 2 / 3)
 
 interpreter = None
 
