@@ -7,6 +7,15 @@ from .states import DeadState
 
 class AsciiDotsInterpreter(object):
     def __init__(self, program, program_dir, io_callbacks, run_in_parallel):
+        """
+        Create a new instance of the interpreter to run the program.
+
+        :param str program: The code of the program
+        :param str program_dir: The path to the program directory
+        :param io_callbacks: The callbacks for the I/O. Must be a subclass of IOCallbacksStorage
+        :param bool run_in_parallel: temporarily, changes the way dots move : one by one or all at the same time
+        """
+
         self.world = World(program, program_dir)
         self.io_callbacks = io_callbacks
 
@@ -21,6 +30,7 @@ class AsciiDotsInterpreter(object):
         run_in_separate_thread -- If set to True, the program will be interpreted in a separate thread
         make_thread_daemon -- Controls whether a thread created by enabling in_seperate_thread will be run as daemon
         """
+
         if run_in_separate_thread is None:
             run_in_separate_thread = False
 

@@ -8,10 +8,17 @@ import os
 
 
 class World(object):
-    def __init__(self, from_char_array, program_dir):
+    def __init__(self, world_map, program_dir):
+        """
+        Create a new world to do dots races !
+
+        :param str map: The string representing the world.
+        :param str program_dir: The directory of the program
+        """
+
         self.program_dir = program_dir
 
-        self._init_data_array(from_char_array)
+        self._data_array = self.map_from_raw(world_map)
 
         self._worldwide_warp_id_counter = 0
         self._setup_warps_for(self._data_array)
@@ -86,9 +93,9 @@ class World(object):
         path = self._get_path_of_lib_file(filename)
 
         with open(path, 'r') as lib_file:
-            lib_code = lib_file.readlines()
+            lib_code = lib_file.read()
 
-        lib_char_obj_array = self._convert_to_char_obj_array(lib_code)
+        lib_char_obj_array = self.map_from_raw(lib_code)
 
         exposed_char_str = None
 
@@ -287,24 +294,7 @@ class World(object):
 
     # ✓
     def _init_data_array(self, char_array):
-        self._data_array = self._convert_to_char_obj_array(char_array)
-
-    # ✓
-    def _convert_to_char_obj_array(self, from_char_array):
-        obj_array = []
-
-        for raw_line in from_char_array:
-            new_line = []
-            line = raw_line.split('``')[0] + ' '
-
-            for single_char in line:
-                new_char = Char(single_char)
-
-                new_line.append(new_char)
-
-            obj_array.append(new_line)
-
-        return obj_array
+        self._data_array = self.map_from_raw(char_array)
 
     # ✓
     def _char_obj_array_iter(self, obj_array):
@@ -317,3 +307,20 @@ class World(object):
         for y, char_list in enumerate(obj_array):
             for x, char in enumerate(char_list):
                 yield x, y, char
+
+    @staticmethod
+    def map_from_raw(raw_map: str):
+        """Convert a code in a string to a usable table."""
+        map = []
+
+        # for each line
+        for raw_line in raw_map.split('\n'):
+
+            # removing the comments
+            line = raw_line.partition('``')[0] + ' '
+            # Convert the str to a list of Char
+            line = [Char(c) for c in line]
+            # add aech row to the map
+            map.append(line)
+
+        return map

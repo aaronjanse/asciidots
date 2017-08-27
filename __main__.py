@@ -289,7 +289,7 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
     program_dir = os.path.dirname(os.path.abspath(filename))
 
     with open(filename, 'r') as file:
-        program = file.readlines()
+        program = file.read()
 
     try:
         interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks, run_in_parallel)
