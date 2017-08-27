@@ -90,5 +90,10 @@ ENV/
 # Rope project settings
 .ropeproject
 
+# Jetbrains
+.idea/
+
+ddorn/
+
 # MacOS
 */.DS_Store

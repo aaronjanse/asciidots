@@ -1,41 +1,38 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-import locale, codecs, os
+import codecs
+import locale
+import os
+import signal
+import sys
+import time
+
+import click
 
 if codecs.lookup(locale.getpreferredencoding()).name == 'ascii':
     os.environ['LANG'] = 'en_US.utf-8'
 
 from dots.interpreter import AsciiDotsInterpreter
 from dots.callbacks import IOCallbacksStorage
-
 from dots import terminalsize
 
-_, terminal_lines = terminalsize.get_terminal_size()
-default_debug_lines = int(terminal_lines*2/3)
-
-compat_debug_default = False
 try:
     import curses
 except Exception:
     print('failed to import curses; running in compatibility mode')
     compat_debug_default = True
+else:
+    compat_debug_default = False
 
-import click
-
-import sys
-import os
-
-import time
-
-import signal
-
-from dots.states import DeadState
+terminal_lines = terminalsize.get_terminal_size()[1]
+default_debug_lines = int(terminal_lines * 2 / 3)
 
 interpreter = None
 
 debug_ = True
 autostep_debug_ = False
+
 
 class Default_IO_Callbacks(IOCallbacksStorage):
     def __init__(self, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head):
@@ -50,14 +47,11 @@ class Default_IO_Callbacks(IOCallbacksStorage):
         self.head = head
 
         self.compat_logging_buffer = ''
-        self.compat_logging_buffer_lines = terminal_lines-debug_lines-1
+        self.compat_logging_buffer_lines = terminal_lines - debug_lines - 1
 
         self.tick_number = 0
 
         self.output_count = 0
-
-        if self.debug:
-            self.first_tick = True
 
         if self.debug and not self.compat_debug:
             self.logging_loc = 0
@@ -81,10 +75,14 @@ class Default_IO_Callbacks(IOCallbacksStorage):
             self.logging_pad = curses.newpad(1000, curses.COLS - 1)
 
             def signal_handler(signal, frame):
-                    self.on_finish()
-                    sys.exit(0)
+                self.on_finish()
+                sys.exit(0)
 
             signal.signal(signal.SIGINT, signal_handler)
+
+            self.first_tick = True
+        else:
+            self.first_tick = False
 
     def get_input(self):
         if not self.debug or self.compat_debug:
@@ -121,11 +119,12 @@ class Default_IO_Callbacks(IOCallbacksStorage):
             print(value, end='', flush=True)
         elif self.compat_debug:
             self.compat_logging_buffer += value
-            self.compat_logging_buffer = '\n'.join(self.compat_logging_buffer.split('\n')[:self.compat_logging_buffer_lines])
+            self.compat_logging_buffer = '\n'.join(
+                self.compat_logging_buffer.split('\n')[:self.compat_logging_buffer_lines])
         else:
             self.logging_pad.addstr(self.logging_loc, self.logging_x, str(value))
             self.logging_pad.refresh(self.logging_loc - min(self.logging_loc, curses.LINES -
-                                     self.debug_lines - 1), 0, self.debug_lines, 0,
+                                                            self.debug_lines - 1), 0, self.debug_lines, 0,
                                      curses.LINES - 1, curses.COLS - 1)
 
             # FIXME: This should count the number of newlines instead
@@ -187,31 +186,30 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                 for x in range(len(interpreter.world._data_array[y])):
                     char = interpreter.world._data_array[y][x]
 
-                    if char == '\n':
-                        continue
-
-                    #RGYB
+                    # RGYB
 
                     if (x, y) in d_l:
                         if self.compat_debug:
-                            print('\033[0;31m'+char+'\033[0m', end='') # Red
+                            print('\033[0;31m' + char + '\033[0m', end='')  # Red
                         else:
                             self.win_program.addstr(display_y, x, char, curses.color_pair(1))
                     elif char.isLibWarp():
                         if self.compat_debug:
-                            print('\033[0;32m'+char+'\033[0m', end='') # Green
+                            print('\033[0;32m' + char + '\033[0m', end='')  # Green
                         else:
                             self.win_program.addstr(display_y, x, char, curses.color_pair(2))
                     elif char.isWarp():
                         if self.compat_debug:
-                            print('\033[0;33m'+char+'\033[0m', end='') # Yellow
+                            print('\033[0;33m' + char + '\033[0m', end='')  # Yellow
                         else:
                             self.win_program.addstr(display_y, x, char, curses.color_pair(3))
                     elif char in '#@~' or char.isOper():
                         if self.compat_debug:
-                            print('\033[0;34m'+char+'\033[0m', end='') # Blue
+                            print('\033[0;34m' + char + '\033[0m', end='')  # Blue
                         else:
                             self.win_program.addstr(display_y, x, char, curses.color_pair(4))
+                    elif char == '\n':
+                        pass
                     else:
                         if self.compat_debug:
                             print(char, end='')
@@ -222,9 +220,6 @@ class Default_IO_Callbacks(IOCallbacksStorage):
                     print()
 
                 display_y += 1
-
-            if self.compat_debug:
-                print('\n'+self.compat_logging_buffer, end='', flush=True)
 
             if not self.first_tick:
                 if self.autostep_debug:
@@ -241,6 +236,9 @@ class Default_IO_Callbacks(IOCallbacksStorage):
             else:
                 self.first_tick = False
 
+        if self.compat_debug:
+            print('\n' + self.compat_logging_buffer, end='', flush=True)
+
         if self.ticks is not False:
             if self.tick_number > self.ticks:
                 self.on_output('QUITTING next step!\n')
@@ -250,17 +248,17 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
             self.tick_number += 1
 
+
 @click.command()
 @click.argument('filename')
-@click.option('--ticks', '-t', default=False)
-@click.option('--silent', '-s', is_flag=True)
-@click.option('--debug', '-d', is_flag=True)
-@click.option('--compat_debug', '-w', is_flag=True)
-@click.option('--debug_lines', '-l', default=default_debug_lines)
-@click.option('--autostep_debug', '-a', default=False)
-@click.option('--head', '-h', default=-1)
-@click.option('--run_in_parallel', '-p', is_flag=True)
-def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head, run_in_parallel):
+@click.option('--debug', '-d', is_flag=True, help='Show the execution of the program and the course of the dots.')
+@click.option('--autostep_debug', '-a', default=False, help='The time between every tick')
+@click.option('--head', '-h', default=-1, help='Terminate the program after N outputs.')
+@click.option('--ticks', '-t', default=False, help='Terminate the program after N ticks.')
+@click.option('--silent', '-s', is_flag=True, help='No printing, for benchmarking.')
+@click.option('--compat_debug', '-w', is_flag=True, help='Force the debug rendering without ncurses.')
+@click.option('--debug_lines', '-l', default=default_debug_lines, help='The size of the debug view.')
+def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head):
     global interpreter
 
     if autostep_debug is not False:
@@ -283,7 +281,7 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
         program = file.readlines()
 
     try:
-        interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks, run_in_parallel)
+        interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks)
         interpreter.run()
     except Exception as e:
         io_callbacks.on_finish()
