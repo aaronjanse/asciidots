@@ -37,7 +37,7 @@ class Dot:
     def __repr__(self):
         return '<Dot x={x}, y={y}, address={address}, value={value}, dir={dir}, stack={stack}>'.format(**self.__dict__)
 
-    def simulate_tick(self):
+    def simulate_tick(self, run_until_waiting):
         past_locations = []
         while(True):
             coords = (self.x, self.y,)
@@ -67,6 +67,9 @@ class Dot:
                 return
 
             if self.state.isWaiting:
+                break
+
+            if not run_until_waiting:
                 break
 
     def _calculate_direction(self):

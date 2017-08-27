@@ -6,11 +6,12 @@ from .states import DeadState
 
 
 class AsciiDotsInterpreter(object):
-    def __init__(self, program, program_dir, io_callbacks):
+    def __init__(self, program, program_dir, io_callbacks, run_in_parallel):
         self.world = World(program, program_dir)
         self.io_callbacks = io_callbacks
 
         self._setup_dots()
+        self.run_in_parallel = run_in_parallel
 
     def run(self, run_in_separate_thread=None, make_thread_daemon=None):
         """
@@ -37,12 +38,17 @@ class AsciiDotsInterpreter(object):
             self._dots_for_next_tick = []
 
             for dot in self.dots:
-                dot.simulate_tick()
+                dot.simulate_tick(self.run_in_parallel)
 
                 if not dot.state.isDeadState():
                     self._dots_for_next_tick.append(dot)
 
-                self.io_callbacks.on_microtick(dot)
+                if not self.run_in_parallel:
+                    self.io_callbacks.on_microtick(dot)
+
+            if self.run_in_parallel:
+                self.io_callbacks.on_microtick(self.dots[0])
+
             self.dots = self._dots_for_next_tick
 
         self.io_callbacks.on_finish()

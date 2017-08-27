@@ -259,7 +259,8 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 @click.option('--debug_lines', '-l', default=default_debug_lines)
 @click.option('--autostep_debug', '-a', default=False)
 @click.option('--head', '-h', default=-1)
-def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head):
+@click.option('--run_in_parallel', '-p', is_flag=True)
+def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head, run_in_parallel):
     global interpreter
 
     if autostep_debug is not False:
@@ -282,7 +283,7 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
         program = file.readlines()
 
     try:
-        interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks)
+        interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks, run_in_parallel)
         interpreter.run()
     except Exception as e:
         io_callbacks.on_finish()
