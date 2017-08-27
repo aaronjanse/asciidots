@@ -15,11 +15,12 @@ if codecs.lookup(locale.getpreferredencoding()).name == 'ascii':
 
 from dots.interpreter import AsciiDotsInterpreter
 from dots.callbacks import IOCallbacksStorage
+
 from dots import terminalsize
 
 try:
     import curses
-except Exception:
+except ImportError:
     print('failed to import curses; running in compatibility mode')
     compat_debug_default = True
 else:
@@ -151,6 +152,7 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
     def on_microtick(self, dot):
         if self.debug and not self.silent:
+
             d_l = []
             for idx in reversed(range(len(interpreter.get_all_dots()))):
                 d = interpreter.dots[idx]
@@ -221,20 +223,17 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 
                 display_y += 1
 
-            if not self.first_tick:
-                if self.autostep_debug:
-                    time.sleep(self.autostep_debug)
-                else:
-                    if self.compat_debug:
-                        input("Press enter to step...")
-                    else:
-                        keycode = self.stdscr.getch()
-
-                        if keycode == 3 or keycode == 26:
-                            self.on_finish()
-                            sys.exit(0)
+            if self.autostep_debug:
+                time.sleep(self.autostep_debug)
             else:
-                self.first_tick = False
+                if self.compat_debug:
+                    input("Press enter to step...")
+                else:
+                    keycode = self.stdscr.getch()
+
+                    if keycode == 3 or keycode == 26:
+                        self.on_finish()
+                        sys.exit(0)
 
         if self.compat_debug:
             print('\n' + self.compat_logging_buffer, end='', flush=True)
@@ -258,7 +257,8 @@ class Default_IO_Callbacks(IOCallbacksStorage):
 @click.option('--silent', '-s', is_flag=True, help='No printing, for benchmarking.')
 @click.option('--compat_debug', '-w', is_flag=True, help='Force the debug rendering without ncurses.')
 @click.option('--debug_lines', '-l', default=default_debug_lines, help='The size of the debug view.')
-def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head):
+@click.option('--run_in_parallel', '-p', is_flag=True, help='All dots move at the same time.')
+def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head, run_in_parallel):
     global interpreter
 
     if autostep_debug is not False:
@@ -281,7 +281,7 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
         program = file.readlines()
 
     try:
-        interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks)
+        interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks, run_in_parallel)
         interpreter.run()
     except Exception as e:
         io_callbacks.on_finish()
