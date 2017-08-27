@@ -42,7 +42,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
         # if it is zero or false, we don't want to stop
         self.ticks_left = ticks if ticks else float('inf')
-        self.outputs_left = output_limit
+        self.outputs_left = output_limit if output_limit else float('inf')
 
         self.silent = silent
         self.debug = debug
@@ -250,8 +250,8 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 @click.argument('filename')
 @click.option('--debug', '-d', is_flag=True, help='Show the execution of the program and the course of the dots.')
 @click.option('--autostep_debug', '-a', default=False, help='The time between every tick')
-@click.option('--output_limit', '-h', default=-1, help='Terminate the program after N outputs.')
-@click.option('--ticks', '-t', default=False, help='Terminate the program after N ticks.')
+@click.option('--output_limit', '-o', default=0, help='Terminate the program after N outputs.')
+@click.option('--ticks', '-t', default=0, help='Terminate the program after N ticks.')
 @click.option('--silent', '-s', is_flag=True, help='No printing, for benchmarking.')
 @click.option('--compat_debug', '-w', is_flag=True, help='Force the debug rendering without ncurses.')
 @click.option('--debug_lines', '-l', default=default_debug_lines, help='The size of the debug view.')
@@ -261,9 +261,6 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
 
     if autostep_debug is not False:
         autostep_debug = float(autostep_debug)
-
-    if ticks is not False:
-        ticks = int(ticks)
 
     compat_debug = compat_debug or compat_debug_default
 
