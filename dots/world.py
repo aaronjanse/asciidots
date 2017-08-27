@@ -46,8 +46,8 @@ class World(object):
         return dot_coords
 
     # ✓
-    # NOTE: _data_array has to be accesed using y, x due to the way it is created
     def getCharAt(self, x, y):
+        # NOTE: _data_array has to be accesed using y, x due to the way it is created
         return self.map[y][x]
 
     # ✓
@@ -65,7 +65,7 @@ class World(object):
         if map is None:
             map = self.map
 
-        lib_filenames_for_chars = self._get_files_for_lib_chars_dict(map)
+        lib_filenames_for_chars = self._get_lib_files_by_alias(map)
         lib_chars = lib_filenames_for_chars.keys()
 
         self._update_class_of_lib_chars(map, lib_chars)
@@ -169,8 +169,9 @@ class World(object):
             interpreter_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
             return os.path.join(interpreter_dir, "libs", filename)
 
-    # ✓
-    def _get_files_for_lib_chars_dict(self, map):
+    # ✓✓
+    @staticmethod
+    def _get_lib_files_by_alias(map):
         """
         Get the librairy files by alias char defined.
         
@@ -324,6 +325,7 @@ class World(object):
             for x, char in enumerate(char_list):
                 yield x, y, char
 
+    # ✓✓
     @staticmethod
     def map_from_raw(raw_map: str):
         """
@@ -333,7 +335,7 @@ class World(object):
         Creates a 2D array accessible by map[row][col].
         :param str raw_map: The program as it is stored in files.
         """
-        
+
         map = []
 
         # for each line
