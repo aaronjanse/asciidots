@@ -98,18 +98,20 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         else:
             return self.curses_input(self.stdscr, curses.LINES - 3, 2, '?: ')
 
-    def curses_input(self, stdscr, r, c, prompt_string):
+    def curses_input(self, stdscr, row, col, prompt_string):
         """
         Get an input string with curses.
+
+        Row and col are the start position ot the prompt_string.
         """
         curses.echo()
-        stdscr.addstr(r, c, str(prompt_string), curses.A_REVERSE)
-        stdscr.addstr(r + 1, c, " " * (curses.COLS - 1))
+        stdscr.addstr(row, col, str(prompt_string), curses.A_REVERSE)
+        stdscr.addstr(row + 1, col, " " * (curses.COLS - 1))
         stdscr.refresh()
         input_val = ""
 
         while len(input_val) <= 0:
-            input_val = stdscr.getstr(r + 1, c, 20)
+            input_val = stdscr.getstr(row + 1, col, 20)
 
         return input_val
 
