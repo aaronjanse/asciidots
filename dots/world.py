@@ -326,7 +326,14 @@ class World(object):
 
     @staticmethod
     def map_from_raw(raw_map: str):
-        """Convert a code in a string to a usable table."""
+        """
+        Convert a code in a string to a usable map.
+
+        This will suppress the comments and convert each chr of the string to the corresponding Char.
+        Creates a 2D array accessible by map[row][col].
+        :param str raw_map: The program as it is stored in files.
+        """
+        
         map = []
 
         # for each line
