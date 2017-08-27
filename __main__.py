@@ -39,7 +39,9 @@ class DefaultIOCallbacks(IOCallbacksStorage):
     def __init__(self, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, head):
         super().__init__()
 
-        self.ticks = ticks
+        # if it is zero or false, we don't want to stop
+        self.ticks_left = ticks if ticks else float('inf')
+
         self.silent = silent
         self.debug = debug
         self.compat_debug = compat_debug
@@ -50,7 +52,6 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         self.compat_logging_buffer = ''
         self.compat_logging_buffer_lines = terminal_lines - debug_lines - 1
 
-        self.tick_number = 0
 
         self.output_count = 0
 
@@ -238,14 +239,13 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             else:
                 self.first_tick = False
 
-        if self.ticks is not False:
-            if self.tick_number > self.ticks:
-                self.on_output('QUITTING next step!\n')
+        if self.ticks_left == 0:
+            self.on_output('QUITTING next step!\n')
 
-                self.on_finish()
-                sys.exit(0)
+            self.on_finish()
+            sys.exit(0)
 
-            self.tick_number += 1
+        self.ticks_left -= 1
 
 
 @click.command()
