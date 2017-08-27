@@ -24,7 +24,7 @@ default_debug_lines = int(terminal_lines*2/3)
 compat_debug_default = False
 try:
     import curses
-except Exception:
+except ImportError:
     print('failed to import curses; running in compatibility mode')
     compat_debug_default = True
 
