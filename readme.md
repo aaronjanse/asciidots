@@ -103,7 +103,7 @@ Here's an example of running the counter sample program (the working directory i
 $ python3 __main__.py ./samples/counter.dots
 ```
 
-Here is the list if available flags:
+Here is the list of available flags:
 
 ```
 -t [ticks]        Run the program for a specified number of ticks (Default to 0: no limit)
@@ -297,7 +297,7 @@ And this prints '%' using the ascii code 37:
 ```
 
 ### Control Flow
-` ~` (tilde) redirects dots going through it horizontally to the upward path if a dot waiting at the bottom has a value *not* equal to than `0`. Otherwise, the dot continues horizontally. If an exclamation point (`!`) is under it, then it redirects the dot upwards only if the value of the dot waiting *is* equal to zero.<br>
+` ~` (tilde) redirects dots going through it horizontally to the upward path if a dot waiting at the bottom has a value *not* equal to `0`. Otherwise, the dot continues horizontally. If an exclamation point (`!`) is under it, then it redirects the dot upwards only if the value of the dot waiting *is* equal to zero.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;`!` acts like a pipe. Special function described above
 
 This example prompts for a value then prints to the console whether the user provided value is equal to zero:
