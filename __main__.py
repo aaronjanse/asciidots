@@ -152,8 +152,10 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                 self.logging_x += len(value)
 
     def on_finish(self):
-        global interpreter
+        """Close cleanly the I/O."""
+        global interpreter  # beurk
 
+        # we need to close curses only if it was opened :P
         if self.debug and not self.compat_debug:
             curses.nocbreak()
             self.stdscr.keypad(False)
@@ -162,11 +164,14 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             curses.endwin()
 
     def on_error(self, error_text):
+        """Show the error and cleans the I/O."""
         self.on_output('error: {}'.format(error_text))
 
         self.on_finish()
 
     def on_microtick(self, dot):
+
+        # we want to show the program
         if self.debug and not self.silent:
 
             d_l = []
