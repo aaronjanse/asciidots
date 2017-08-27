@@ -40,7 +40,6 @@ class Dot:
     def simulate_tick(self):
         past_locations = []
         while(True):
-            self.callbacks.on_microtick(self)
             coords = (self.x, self.y,)
             if coords in past_locations:
                 return

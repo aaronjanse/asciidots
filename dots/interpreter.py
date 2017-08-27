@@ -42,6 +42,7 @@ class AsciiDotsInterpreter(object):
                 if not dot.state.isDeadState():
                     self._dots_for_next_tick.append(dot)
 
+                self.io_callbacks.on_microtick(dot)
             self.dots = self._dots_for_next_tick
 
         self.io_callbacks.on_finish()
