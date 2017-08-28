@@ -57,7 +57,7 @@ class AsciiDotsInterpreter(object):
             if self.run_in_parallel:
                 self.io_callbacks.on_microtick(self.dots[0])
 
-            self.dots = self._dots_for_next_tick
+            self.dots = self._dots_for_next_tick[:]
 
         self.io_callbacks.on_finish()
 
