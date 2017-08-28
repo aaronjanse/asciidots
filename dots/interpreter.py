@@ -14,7 +14,11 @@ class AsciiDotsInterpreter(object):
         :param bool run_in_parallel: temporarily, changes the way dots move : one by one or all at the same time
         """
 
+        self.dots = []
+        self._dots_for_next_tick = []
+
         self.needs_shutdown = False
+
         self.world = World(program, program_dir)
         self.io_callbacks = io_callbacks
 
@@ -42,7 +46,7 @@ class AsciiDotsInterpreter(object):
             return
 
         while not self.needs_shutdown and len(self.dots) > 0:
-            self._dots_for_next_tick = []
+            self._dots_for_next_tick.clear()
 
             for dot in self.dots:
                 dot.simulate_tick(not self.run_in_parallel)
