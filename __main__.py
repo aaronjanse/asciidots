@@ -42,8 +42,8 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         super().__init__()
 
         # if it is zero or false, we don't want to stop
-        self.ticks_left = ticks if ticks else float('inf')
-        self.outputs_left = output_limit if output_limit else float('inf')
+        self.ticks_left = ticks or float('inf')
+        self.outputs_left = output_limit or float('inf')
 
         self.silent = silent
         self.debug = debug
