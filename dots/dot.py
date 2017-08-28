@@ -1,8 +1,10 @@
 from .states import *
 import sys
 
+
 class Dot:
-    def __init__(self, x, y, world, callbacks, func_to_create_dots, func_to_get_dots, id_=None, value=None, direction=None, state=None, stack=None):
+    def __init__(self, x, y, world, callbacks, func_to_create_dots, func_to_get_dots, id_=None, value=None,
+                 direction=None, state=None, stack=None):
         self.x = x
         self.y = y
 
@@ -26,7 +28,7 @@ class Dot:
 
     def simulate_tick(self, run_until_waiting):
         past_locations = []
-        while(True):
+        while True:
             if run_until_waiting:
                 self.callbacks.on_microtick(self)
 
@@ -47,7 +49,6 @@ class Dot:
 
                 self.callbacks.on_finish()
                 sys.exit(0)
-                return
 
             self.state = self.state.next(char)
 

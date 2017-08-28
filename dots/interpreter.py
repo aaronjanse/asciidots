@@ -2,8 +2,6 @@ import threading
 from .world import World
 from .dot import Dot
 
-from .states import DeadState
-
 
 class AsciiDotsInterpreter(object):
     def __init__(self, program, program_dir, io_callbacks, run_in_parallel):
