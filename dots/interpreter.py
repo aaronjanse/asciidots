@@ -16,6 +16,7 @@ class AsciiDotsInterpreter(object):
         :param bool run_in_parallel: temporarily, changes the way dots move : one by one or all at the same time
         """
 
+        self.needs_shutdown = False
         self.world = World(program, program_dir)
         self.io_callbacks = io_callbacks
 
@@ -37,14 +38,12 @@ class AsciiDotsInterpreter(object):
         if make_thread_daemon is None:
             make_thread_daemon = False
 
-        self.needsShutdown = False
-
         if run_in_separate_thread:
             inter_thread = threading.Thread(target=self.run, daemon=make_thread_daemon)
             inter_thread.start()
             return
 
-        while not self.needsShutdown and len(self.dots) > 0:
+        while not self.needs_shutdown and len(self.dots) > 0:
             self._dots_for_next_tick = []
 
             for dot in self.dots:
@@ -61,7 +60,7 @@ class AsciiDotsInterpreter(object):
         self.io_callbacks.on_finish()
 
     def terminate(self):
-        self.needsShutdown = True
+        self.needs_shutdown = True
 
     def get_all_dots(self):
         return self.dots[:]
