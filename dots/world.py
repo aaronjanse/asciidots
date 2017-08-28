@@ -2,9 +2,9 @@
 
 # TODO: make the iters have a default arg of self._data_array?
 
-from .chars import *
-
 import os
+
+from .chars import *
 
 
 class World(object):
@@ -12,7 +12,7 @@ class World(object):
         """
         Create a new world to do dots races !
 
-        :param str map: The string representing the world.
+        :param str world_map: The string representing the world.
         :param str program_dir: The directory of the program
         """
 
@@ -90,7 +90,8 @@ class World(object):
                         if char in lib_filenames_for_chars:
                             filename = lib_filenames_for_chars[char]
 
-                            self._import_lib_file_with_warp_id(map, filename, this_warp_id, is_singleton=char.isSingletonLibWarp())
+                            self._import_lib_file_with_warp_id(map, filename, this_warp_id,
+                                                               is_singleton=char.isSingletonLibWarp())
                     else:
                         map[y][x].set_id(singleton_ids[char])
 
@@ -109,18 +110,18 @@ class World(object):
             line = ''.join(char_list).rstrip()
 
             if line[:2] == '%+':
-                print(('%+ notation has become replaced by a new notation\n'+
-                      'you now define a single warp char as an entry point to your code using %$\n'+
-                      'for this code, it is recommended that your replace\n\n'+
-                      '%+{0}{1}{2}{3}\n\n'+
-                      'with\n\n'+
-                      '%^X `` make sure that X doesn\'t conflict with anything\n'+
-                      '%${0}{1}{2}{3}\n\n'+
-                      '  {3}\n'+
-                      '  |\n'+
-                      '{2}-X-{0}\n'+
-                      '  |\n'+
-                      '  {1}\n').format(*line[2:]))
+                print(('%+ notation has become replaced by a new notation\n' +
+                       'you now define a single warp char as an entry point to your code using %$\n' +
+                       'for this code, it is recommended that your replace\n\n' +
+                       '%+{0}{1}{2}{3}\n\n' +
+                       'with\n\n' +
+                       '%^X `` make sure that X doesn\'t conflict with anything\n' +
+                       '%${0}{1}{2}{3}\n\n' +
+                       '  {3}\n' +
+                       '  |\n' +
+                       '{2}-X-{0}\n' +
+                       '  |\n' +
+                       '  {1}\n').format(*line[2:]))
 
                 raise Exception('obsolete code (unable to run)')
             elif line[:2] == '%^':
@@ -177,7 +178,7 @@ class World(object):
         
         :param List[List[Char]] map: The map to import
         """
-        
+
         filename_by_alias = {}
 
         for row in map:
@@ -340,7 +341,6 @@ class World(object):
 
         # for each line
         for raw_line in raw_map.split('\n'):
-
             # removing the comments
             line = raw_line.partition('``')[0] + ' '
             # Convert the str to a list of Char
