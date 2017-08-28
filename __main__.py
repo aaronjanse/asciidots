@@ -132,7 +132,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             self.compat_logging_buffer += value
             # and we keep the maximum number of line to compat_logging_buffer_lines
             self.compat_logging_buffer = '\n'.join(
-                self.compat_logging_buffer.split('\n')[:self.compat_logging_buffer_lines])
+                self.compat_logging_buffer.split('\n')[-self.compat_logging_buffer_lines:])
 
         else:
             # add the output string to the pad
@@ -264,6 +264,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         :param row: The y pos used with curses
         :param col: The x pos used with curses
         """
+
         if self.silent:
             return 42
 
