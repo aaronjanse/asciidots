@@ -53,10 +53,10 @@ class State(object):
     def __str__(self):
         return type(self).__name__
 
-    def is_dead_state(self):
+    def is_dead(self):
         return False
 
-    def is_two_dot_state(self):
+    def is_two_dots(self):
         return False
 
 
@@ -321,7 +321,7 @@ class TwoDotState(State):
         self.isWaiting = True
         self.age = 0
 
-    def is_two_dot_state(self):
+    def is_two_dots(self):
         return True
 
     def next(self, char):
@@ -344,7 +344,7 @@ class TwoDotState(State):
             self_y = self.parent.y
 
             for idx, dot in enumerate(self.parent.func_to_get_dots()):
-                if dot.x == self_x and dot.y == self_y and dot.state.is_two_dot_state():
+                if dot.x == self_x and dot.y == self_y and dot.state.is_two_dots():
                     if dot.state.isMaster:
                         if dot.state.age > self.age:
                             ready_to_operate = False
@@ -437,5 +437,5 @@ class DeadState(State):
     def run(self, char):
         pass
 
-    def is_dead_state(self):
+    def is_dead(self):
         return True

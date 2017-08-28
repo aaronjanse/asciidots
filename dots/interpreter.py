@@ -49,7 +49,7 @@ class AsciiDotsInterpreter(object):
             for dot in self.dots:
                 dot.simulate_tick(not self.run_in_parallel)
 
-                if not dot.state.is_dead_state():
+                if not dot.state.is_dead():
                     self._dots_for_next_tick.append(dot)
 
             if self.run_in_parallel:

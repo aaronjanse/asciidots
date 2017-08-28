@@ -174,7 +174,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             d_l = []
             for idx in reversed(range(len(interpreter.get_all_dots()))):
                 d = interpreter.dots[idx]
-                if not d.state.is_dead_state():
+                if not d.state.is_dead():
                     d_l.append((d.x, d.y))
 
             last_blank = False
