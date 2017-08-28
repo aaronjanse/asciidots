@@ -53,7 +53,7 @@ class Dot:
 
             self.state.run(char)
 
-            if self.state.isDeadState():
+            if self.state.is_dead_state():
                 return
 
             if self.state.isWaiting:
