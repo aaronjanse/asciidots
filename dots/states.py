@@ -67,7 +67,7 @@ class TravelState(State):
         elif char == '#':
             return ValueState(self.parent)
         elif char == '@':
-            return AddressState(self.parent)
+            return IdState(self.parent)
         elif char == '$':
             return PrintState(self.parent)
         elif char in ('[', ']',) and self.isParentMovingVert():
@@ -128,7 +128,7 @@ class TravelState(State):
                             and self.parent.world.getCharAt(abs_offset_x, abs_offset_y) != ' ':
 
                         from .dot import Dot
-                        new_dot = Dot(x=self.parent.x, y=self.parent.y, world=self.parent.world, callbacks=self.parent.callbacks, func_to_create_dots=self.parent.func_to_create_dots, func_to_get_dots=self.parent.func_to_get_dots, address=self.parent.address, value=self.parent.value, direction=[xoffset, yoffset], state=TravelState, stack=self.parent.stack[:])
+                        new_dot = Dot(x=self.parent.x, y=self.parent.y, world=self.parent.world, callbacks=self.parent.callbacks, func_to_create_dots=self.parent.func_to_create_dots, func_to_get_dots=self.parent.func_to_get_dots, id_=self.parent.id, value=self.parent.value, direction=[xoffset, yoffset], state=TravelState, stack=self.parent.stack[:])
 
                         # new_dot.state.moveParent()
 
@@ -171,7 +171,7 @@ class ValueState(State):
         self.moveParent()
 
 
-class AddressState(State):
+class IdState(State):
     def __init__(self, parent):
         State.__init__(self, parent)
         self.firstDigit = True
@@ -183,13 +183,13 @@ class AddressState(State):
             else:
                 return self
         elif char.isSquareOper():
-            return OperSquareState(self.parent, addressMode=True)
+            return OperSquareState(self.parent, idMode=True)
         elif char.isCurlyOper():
-            return OperCurlyState(self.parent, addressMode=True)
+            return OperCurlyState(self.parent, idMode=True)
         elif char.isdecimal() or char == '?':
             return self
         elif char == '~':
-            return TildeState(self.parent, addressMode=True)
+            return TildeState(self.parent, idMode=True)
         else:
             return TravelState(self.parent)
 
@@ -197,12 +197,12 @@ class AddressState(State):
     def run(self, char):
         if char.isdecimal():
             if self.firstDigit:
-                self.parent.address = int(char)
+                self.parent.id = int(char)
                 self.firstDigit = False
             else:
-                self.parent.address = self.parent.address * 10 + int(char)
+                self.parent.id = self.parent.id * 10 + int(char)
         elif char == '?':
-            self.parent.address = int(self.parent.callbacks.get_input())
+            self.parent.id = int(self.parent.callbacks.get_input())
         else:
             pass
 
@@ -244,7 +244,7 @@ class PrintState(State):
 
             self.parent.callbacks.on_output(data)
         elif char == '@':
-            data = self.parent.address
+            data = self.parent.id
 
             if self.asciiMode:
                 data = chr(data)
@@ -310,13 +310,13 @@ class PrintSingleQuoteState(State):
 
 
 class TwoDotState(State):
-    def __init__(self, parent, isMaster, addressMode=None):
+    def __init__(self, parent, isMaster, idMode=None):
         State.__init__(self, parent)
 
-        if addressMode is None:
-            self.addressMode = False
+        if idMode is None:
+            self.idMode = False
         else:
-            self.addressMode = addressMode
+            self.idMode = idMode
 
         self.isMaster = isMaster(self)
 
@@ -360,13 +360,13 @@ class TwoDotState(State):
             if ready_to_operate:
                 candidate = self.parent.func_to_get_dots()[candidate_index]
 
-                if candidate.state.addressMode:
-                    candidate_par = candidate.address
+                if candidate.state.idMode:
+                    candidate_par = candidate.id
                 else:
                     candidate_par = candidate.value
 
-                if self.addressMode:
-                    self_par = self.parent.address
+                if self.idMode:
+                    self_par = self.parent.id
                 else:
                     self_par = self.parent.value
 
@@ -393,39 +393,39 @@ class TwoDotState(State):
 
 
 class OperState(TwoDotState):
-    def __init__(self, parent, isMaster, addressMode=False):
-        TwoDotState.__init__(self, parent, isMaster, addressMode)
+    def __init__(self, parent, isMaster, idMode=False):
+        TwoDotState.__init__(self, parent, isMaster, idMode)
 
     def doOperation(self, char, self_par, candidate_par, candidate,
                     candidate_idx):
         result = char.calc(self_par, candidate_par) * 1
         # NOTE: the `* 1` converts a boolean into an integer
 
-        if self.addressMode:
-            self.parent.address = result
+        if self.idMode:
+            self.parent.id = result
         else:
             self.parent.value = result
 
 
 class OperSquareState(OperState):
-    def __init__(self, parent, addressMode=False):
+    def __init__(self, parent, idMode=False):
         OperState.__init__(self, parent,
                            isMaster=(lambda self: self.isParentMovingVert()),
-                           addressMode=addressMode)
+                           idMode=idMode)
 
 
 class OperCurlyState(OperState):
-    def __init__(self, parent, addressMode=False):
+    def __init__(self, parent, idMode=False):
         OperState.__init__(self, parent,
                            isMaster=(lambda self: self.isParentMovingHoriz()),
-                           addressMode=addressMode)
+                           idMode=idMode)
 
 
 class TildeState(TwoDotState):
-    def __init__(self, parent, addressMode=False):
+    def __init__(self, parent, idMode=False):
         TwoDotState.__init__(self, parent,
                              isMaster=(lambda self: self.isParentMovingHoriz()),
-                             addressMode=addressMode)
+                             idMode=idMode)
 
     def doOperation(self, char, self_par, candidate_par, candidate,
                     candidate_idx):

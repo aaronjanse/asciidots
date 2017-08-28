@@ -2,7 +2,7 @@ from .states import *
 import sys
 
 class Dot:
-    def __init__(self, x, y, world, callbacks, func_to_create_dots, func_to_get_dots, address=None, value=None, direction=None, state=None, stack=None):
+    def __init__(self, x, y, world, callbacks, func_to_create_dots, func_to_get_dots, id_=None, value=None, direction=None, state=None, stack=None):
         self.x = x
         self.y = y
 
@@ -12,7 +12,7 @@ class Dot:
         self.func_to_create_dots = func_to_create_dots
         self.func_to_get_dots = func_to_get_dots
 
-        self.address = address or 0
+        self.id = id_ or 0
         self.value = value or 0
         self.state = state(self) if state else TravelState(self)
         self.dir = direction or self._calculate_direction()
@@ -22,7 +22,7 @@ class Dot:
         self.y += self.dir[1]
 
     def __repr__(self):
-        return '<Dot x={x}, y={y}, address={address}, value={value}, dir={dir}, stack={stack}>'.format(**self.__dict__)
+        return '<Dot x={x}, y={y}, id={id}, value={value}, dir={dir}, stack={stack}>'.format(**self.__dict__)
 
     def simulate_tick(self, run_until_waiting):
         past_locations = []
