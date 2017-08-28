@@ -208,30 +208,15 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
                     # Printing each char with the right color
                     if (x, y) in dots_position_list:
-                        if self.compat_debug:
-                            print('\033[0;31m' + char + '\033[0m', end='')  # Red
-                        else:
-                            self.win_program.addstr(display_y, x, char, curses.color_pair(1))
+                        self.print_char(char, 1, display_y, x)
                     elif char.isLibWarp():
-                        if self.compat_debug:
-                            print('\033[0;32m' + char + '\033[0m', end='')  # Green
-                        else:
-                            self.win_program.addstr(display_y, x, char, curses.color_pair(2))
+                        self.print_char(char, 2, display_y, x)
                     elif char.isWarp():
-                        if self.compat_debug:
-                            print('\033[0;33m' + char + '\033[0m', end='')  # Yellow
-                        else:
-                            self.win_program.addstr(display_y, x, char, curses.color_pair(3))
+                        self.print_char(char, 3, display_y, x)
                     elif char in '#@~' or char.isOper():
-                        if self.compat_debug:
-                            print('\033[0;34m' + char + '\033[0m', end='')  # Blue
-                        else:
-                            self.win_program.addstr(display_y, x, char, curses.color_pair(4))
+                        self.print_char(char, 4, display_y, x)
                     else:
-                        if self.compat_debug:
-                            print(char, end='')
-                        else:
-                            self.win_program.addstr(display_y, x, char)
+                        self.print_char(char, 0, display_y, x)
 
                 if self.compat_debug:
                     print()
@@ -243,7 +228,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             if self.compat_debug:
                 print('\n' + self.compat_logging_buffer, end='', flush=True)
 
-            if not self.first_tick:
+            if not self.first_tick or True:
                 # step automatically or wait for input
                 if self.autostep_debug:
                     time.sleep(self.autostep_debug)
@@ -269,6 +254,27 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             self.on_finish()
             sys.exit(0)
 
+    def print_char(self, char, color_code, row=None, col=None):
+        """
+        Print one char to the screen with coloration.
+
+        In compat_debug this will just append the char to stdout. This checks for silent mode
+        :param char: The character to print
+        :param color_code: The colorcode 1234 = RGYB
+        :param row: The y pos used with curses
+        :param col: The x pos used with curses
+        """
+        if self.silent:
+            return 42
+
+        if self.compat_debug:
+            if not color_code:
+                # Zero is the regular print, but the code 33 will draw black over black and we dont want that
+                print(char, end='')
+            else:
+                print('\033[0;3', color_code, 'm', char, '\033[0m', sep='', end='')
+        else:
+            self.win_program.addstr(row, col, char, curses.color_pair(color_code))
 
 
 @click.command()
