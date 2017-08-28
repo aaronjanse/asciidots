@@ -10,6 +10,7 @@ def moveFirstTime(func):
             self.hasRun = True
         else:
             func(self, *args, **kwargs)
+
     return _decorator
 
 
@@ -123,11 +124,15 @@ class TravelState(State):
                 abs_offset_x = self.parent.x + xoffset
                 abs_offset_y = self.parent.y + yoffset
 
-                if self.parent.world.doesLocExist(abs_offset_x, abs_offset_y)\
+                if self.parent.world.doesLocExist(abs_offset_x, abs_offset_y) \
                         and self.parent.world.getCharAt(abs_offset_x, abs_offset_y) != ' ':
-
                     from .dot import Dot
-                    new_dot = Dot(x=self.parent.x, y=self.parent.y, world=self.parent.world, callbacks=self.parent.callbacks, func_to_create_dots=self.parent.func_to_create_dots, func_to_get_dots=self.parent.func_to_get_dots, id_=self.parent.id, value=self.parent.value, direction=[xoffset, yoffset], state=TravelState, stack=self.parent.stack[:])
+
+                    new_dot = Dot(x=self.parent.x, y=self.parent.y, world=self.parent.world,
+                                  callbacks=self.parent.callbacks, func_to_create_dots=self.parent.func_to_create_dots,
+                                  func_to_get_dots=self.parent.func_to_get_dots, id_=self.parent.id,
+                                  value=self.parent.value, direction=[xoffset, yoffset], state=TravelState,
+                                  stack=self.parent.stack[:])
 
                     # new_dot.state.move_parent()
 

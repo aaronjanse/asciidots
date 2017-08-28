@@ -72,7 +72,8 @@ class AsciiDotsInterpreter(object):
 
         self.dots = []
         for x, y in dot_locations:
-            new_dot = Dot(x, y, world=self.world, callbacks=self.io_callbacks, func_to_create_dots=self._add_dot, func_to_get_dots=self.get_all_dots)
+            new_dot = Dot(x, y, world=self.world, callbacks=self.io_callbacks, func_to_create_dots=self._add_dot,
+                          func_to_get_dots=self.get_all_dots)
             self.dots.append(new_dot)
 
     def _add_dot(self, dot):
