@@ -12,24 +12,11 @@ class Dot:
         self.func_to_create_dots = func_to_create_dots
         self.func_to_get_dots = func_to_get_dots
 
-        if address is None:
-            address = 0
-        self.address = address
-        if value is None:
-            value = 0
-        self.value = value
-
-        if state is None:
-            state = TravelState
-        self.state = state(self)
-
-        if direction is None:
-            direction = self._calculate_direction()
-        self.dir = direction
-
-        if stack is None:
-            stack = []
-        self.stack = stack
+        self.address = address or 0
+        self.value = value or 0
+        self.state = state(self) if state else TravelState(self)
+        self.dir = direction or self._calculate_direction()
+        self.stack = stack or []
 
         self.x += self.dir[0]
         self.y += self.dir[1]
