@@ -34,12 +34,6 @@ class AsciiDotsInterpreter(object):
         make_thread_daemon -- Controls whether a thread created by enabling in_seperate_thread will be run as daemon
         """
 
-        if run_in_separate_thread is None:
-            run_in_separate_thread = False
-
-        if make_thread_daemon is None:
-            make_thread_daemon = False
-
         if run_in_separate_thread:
             inter_thread = threading.Thread(target=self.run, daemon=make_thread_daemon)
             inter_thread.start()
@@ -52,7 +46,7 @@ class AsciiDotsInterpreter(object):
                 dot.simulate_tick(not self.run_in_parallel)
 
                 if not dot.state.is_dead():
-                    self._dots_for_next_tick.append(dot)
+                    self._add_dot(dot)
 
             if self.run_in_parallel:
                 self.io_callbacks.on_microtick(self.dots[0])
@@ -62,12 +56,15 @@ class AsciiDotsInterpreter(object):
         self.io_callbacks.on_finish()
 
     def terminate(self):
+        """The program will shut down at the next operation."""
         self.needs_shutdown = True
 
     def get_all_dots(self):
+        """Return a copy of the list of all dots"""
         return self.dots[:]
 
     def _setup_dots(self):
+        """Fill the dot list with dots from the starting points in the world."""
         dot_locations = self.world.get_coords_of_dots()
 
         self.dots = []
@@ -77,4 +74,5 @@ class AsciiDotsInterpreter(object):
             self.dots.append(new_dot)
 
     def _add_dot(self, dot):
+        """Add a dot that will run in the next tick."""
         self._dots_for_next_tick.append(dot)

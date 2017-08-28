@@ -32,7 +32,7 @@ class Dot:
             if run_until_waiting:
                 self.callbacks.on_microtick(self)
 
-            coords = (self.x, self.y,)
+            coords = (self.x, self.y)
             if coords in past_locations:
                 return
 
