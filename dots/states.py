@@ -1,4 +1,5 @@
-from dots.constants import DIRECTIONS
+from dots.constants import DIRECTIONS, RIGHT, LEFT, UP, DOWN
+
 
 def moveFirstTime(func):
     def _decorator(self, *args, **kwargs):
@@ -41,8 +42,8 @@ class State(object):
     def change_parent_dir_with_func(self, newDirLambda):
         self.parent.dir = list(newDirLambda(*self.parent.dir))
 
-    def set_parent_direction(self, newDirX, newDirY):
-        self.parent.dir = [newDirX, newDirY]
+    def set_parent_direction(self, direction):
+        self.parent.dir = direction
 
     def is_moving_vert(self):
         return self.parent.dir[1] != 0
@@ -97,21 +98,21 @@ class TravelState(State):
         elif char == '/':
             self.change_parent_dir_with_func(lambda x, y: (-y, -x))
         elif char == '(':
-            self.set_parent_direction(1, 0)
+            self.set_parent_direction(RIGHT)
         elif char == ')':
-            self.set_parent_direction(-1, 0)
+            self.set_parent_direction(LEFT)
         elif char == '>':
             if self.is_moving_vert():
-                self.set_parent_direction(1, 0)
+                self.set_parent_direction(RIGHT)
         elif char == '<':
             if self.is_moving_vert():
-                self.set_parent_direction(-1, 0)
+                self.set_parent_direction(LEFT)
         elif char == '^':
             if self.is_moving_horiz():
-                self.set_parent_direction(0, -1)
+                self.set_parent_direction(UP)
         elif char == 'v':
             if self.is_moving_horiz():
-                self.set_parent_direction(0, 1)
+                self.set_parent_direction(DOWN)
         elif char == '*':
             for xoffset, yoffset in DIRECTIONS:
 
@@ -427,7 +428,7 @@ class TildeState(TwoDotState):
     def do_operation(self, char, self_par, candidate_par, candidate,
                      candidate_idx):
         if candidate_par != 0:
-            self.set_parent_direction(0, -1)
+            self.set_parent_direction(UP)
 
 
 class DeadState(State):
