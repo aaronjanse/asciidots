@@ -171,45 +171,43 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         # we want to show the program
         if self.debug and not self.silent:
 
-            d_l = []
-            for idx in reversed(range(len(interpreter.get_all_dots()))):
-                d = interpreter.dots[idx]
-                if not d.state.is_dead():
-                    d_l.append((d.x, d.y))
-
-            last_blank = False
-
             display_y = 0
+            last_line_is_empty = False
+            dots_position_list = [(d.x, d.y) for d in interpreter.dots if not d.state.is_dead()]
 
+            # cleaning the screen
             if self.compat_debug:
                 if os.name == 'nt':
                     os.system('cls')  # For Windows
                 else:
                     os.system('clear')  # For Linux/OS X
             else:
+                # Sync the screen with the previous changes
                 self.win_program.refresh()
 
-            for y in range(len(interpreter.world.map)):
+            for y, line in enumerate(interpreter.world.map):
+                # don't show more lines than the debug view has
                 if display_y > self.debug_lines - 2:
                     break
 
-                if len(''.join(interpreter.world.map[y]).rstrip()) < 1:
-                    if last_blank:
+                # if the line is empty
+                # The aim of this is to skip blocks of white lines (ie. if there is a lot of comments)
+                if not ''.join(line).rstrip():
+                    if last_line_is_empty:
                         continue
                     else:
-                        last_blank = True
+                        last_line_is_empty = True
                 else:
-                    last_blank = False
+                    last_line_is_empty = False
 
-                for x in range(len(interpreter.world.map[y])):
-                    char = interpreter.world.map[y][x]
+                for x, char in enumerate(line):
 
                     if char == '\n':
+                        # The new line in printed only in compat mode, at the end of the loop
                         continue
 
-                    # RGYB
-
-                    if (x, y) in d_l:
+                    # Printing each char with the right color
+                    if (x, y) in dots_position_list:
                         if self.compat_debug:
                             print('\033[0;31m' + char + '\033[0m', end='')  # Red
                         else:
@@ -238,33 +236,39 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                 if self.compat_debug:
                     print()
 
+                # The line pos. NB: This is different to y because we can skip lines)
                 display_y += 1
 
+            # we print the output part
             if self.compat_debug:
                 print('\n' + self.compat_logging_buffer, end='', flush=True)
 
             if not self.first_tick:
+                # step automatically or wait for input
                 if self.autostep_debug:
                     time.sleep(self.autostep_debug)
                 else:
                     if self.compat_debug:
                         input("Press enter to step...")
                     else:
+                        # we need to get the key pressed and check if it is ^C to quit, because
+                        # curses will intercept those inputs who wont go in the python interpreter
+                        # Who will stop the execution
                         keycode = self.stdscr.getch()
 
-                        if keycode == 3 or keycode == 26:
+                        if keycode in (3, 26):
                             self.on_finish()
                             sys.exit(0)
             else:
                 self.first_tick = False
 
+        self.ticks_left -= 1
         if self.ticks_left == 0:
             self.on_output('QUITTING next step!\n')
 
             self.on_finish()
             sys.exit(0)
 
-        self.ticks_left -= 1
 
 
 @click.command()
