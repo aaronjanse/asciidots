@@ -70,12 +70,11 @@ Semi-compact factorial calculator:
  \-#0----/
 ```
 
-Code-golfed counter (16 bytes):
+Code-golfed counter (15 bytes) by @ddorn:
 
 ```
-/#$<.
-*-[+]
-\#1/
+/.*$#-\
+\{+}1#/
 ```
 
 ## Installing
