@@ -65,25 +65,21 @@ class Dot:
                 break
 
     def _calculate_direction(self):
-        up_dir = (0, -1)
-        down_dir = (0, 1)
-        left_dir = (-1, 0)
-        right_dir = (1, 0)
 
-        up_loc = (up_dir[0] + self.x, up_dir[1] + self.y)
-        down_loc = (down_dir[0] + self.x, down_dir[1] + self.y)
-        left_loc = (left_dir[0] + self.x, left_dir[1] + self.y)
-        right_loc = (right_dir[0] + self.x, right_dir[1] + self.y)
+        up_loc = (UP[0] + self.x, UP[1] + self.y)
+        down_loc = (DOWN[0] + self.x, DOWN[1] + self.y)
+        left_loc = (LEFT[0] + self.x, LEFT[1] + self.y)
+        right_loc = (RIGHT[0] + self.x, RIGHT[1] + self.y)
 
-        for direction, location in zip([up_dir, down_dir], [up_loc, down_loc]):
+        for direction, location in zip([UP, DOWN], [up_loc, down_loc]):
             if self.world.doesLocExist(*location) and self.world.getCharAt(*location) == '|':
                 return list(direction)
 
-        for direction, location in zip([right_dir, left_dir], [right_loc, left_loc]):
+        for direction, location in zip([RIGHT, LEFT], [right_loc, left_loc]):
             if self.world.doesLocExist(*location) and self.world.getCharAt(*location) == '-':
                 return list(direction)
 
-        all_possible_directions = [up_dir, right_dir, down_dir, left_dir]
+        all_possible_directions = [UP, RIGHT, DOWN, LEFT]
         all_possible_locations = [up_loc, right_loc, down_loc, left_loc]
 
         valid_chars = ('\\', '/', '*', '^', 'v', '>', '<', '+')
