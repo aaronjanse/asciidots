@@ -65,10 +65,9 @@ class AsciiDotsInterpreter(object):
 
     def _setup_dots(self):
         """Fill the dot list with dots from the starting points in the world."""
-        dot_locations = self.world.get_coords_of_dots()
 
         self.dots = []
-        for x, y in dot_locations:
+        for x, y in self.world.get_coords_of_dots():
             new_dot = Dot(x, y, world=self.world, callbacks=self.io_callbacks, func_to_create_dots=self._add_dot,
                           func_to_get_dots=self.get_all_dots)
             self.dots.append(new_dot)

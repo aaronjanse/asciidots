@@ -32,18 +32,14 @@ class World(object):
         self._update_class_of_dots()
 
     def get_coords_of_dots(self):
-        dot_coords = []
-
+        """Yiels the cordinates of every dot char in the world."""
         for y, line in enumerate(self.map):
             if line[0] == '%':
                 continue
 
             for x, char in enumerate(line):
                 if char.isDot():
-                    coords = (x, y)
-                    dot_coords.append(coords)
-
-        return dot_coords
+                    yield x, y
 
     # ✓
     def getCharAt(self, x, y):
