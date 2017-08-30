@@ -311,10 +311,6 @@ class World(object):
         return warp_chars
 
     # ✓
-    def _init_data_array(self, char_array):
-        self.map = self.map_from_raw(char_array)
-
-    # ✓
     def _char_obj_array_iter(self, obj_array):
         for char_list in obj_array:
             for char in char_list:
