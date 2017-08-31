@@ -9,6 +9,8 @@ import time
 
 import click
 
+from environement import Env
+
 if codecs.lookup(locale.getpreferredencoding()).name == 'ascii':
     os.environ['LANG'] = 'en_US.utf-8'
 
@@ -37,8 +39,19 @@ autostep_debug_ = False
 class DefaultIOCallbacks(IOCallbacksStorage):
     """The default class to manage the input and output of a dots program."""
 
-    def __init__(self, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit):
-        super().__init__()
+    def __init__(self, env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit):
+        """
+
+        :param dots.environement.Env env: The env of the interpreter
+        :param int ticks: The max number of ticks for the program
+        :param bool silent: True to turn off all outputs
+        :param bool debug: True to show the execution of the program
+        :param bool compat_debug: True to show the debug with only builtin functions
+        :param int debug_lines: The number of lines to show the debug
+        :param float autostep_debug: The timebetween automatic ticks. 0 disables the auto ticks.
+        :param int output_limit: The max number of outputs for the program
+        """
+        super().__init__(env)
 
         # if it is zero or false, we don't want to stop
         self.ticks_left = ticks or float('inf')
@@ -289,10 +302,11 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
 
     compat_debug = compat_debug or compat_debug_default
 
-    io_callbacks = DefaultIOCallbacks(ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
+    env = Env()
+
+    io_callbacks = DefaultIOCallbacks(env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
 
     program_dir = os.path.dirname(os.path.abspath(filename))
-
     with open(filename, 'r') as file:
         program = file.read()
 
