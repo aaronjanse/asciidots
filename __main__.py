@@ -9,8 +9,7 @@ import time
 
 import click
 
-from dots.world import World
-from environement import Env
+from dots.environement import Env
 
 if codecs.lookup(locale.getpreferredencoding()).name == 'ascii':
     os.environ['LANG'] = 'en_US.utf-8'
@@ -157,8 +156,6 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
     def on_finish(self):
         """Close cleanly the I/O."""
-        global interpreter  # beurk
-
         # we need to close curses only if it was opened
         if self.debug and not self.compat_debug:
             curses.nocbreak()
@@ -180,7 +177,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
             display_y = 0
             last_line_is_empty = False
-            dots_position_list = [(d.x, d.y) for d in interpreter.dots if not d.state.is_dead()]
+            dots_position_list = [(d.x, d.y) for d in self.env.dots if not d.state.is_dead()]
 
             # cleaning the screen
             if self.compat_debug:
@@ -304,7 +301,6 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
     compat_debug = compat_debug or compat_debug_default
 
     env = Env()
-
     io_callbacks = DefaultIOCallbacks(env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
 
     program_dir = os.path.dirname(os.path.abspath(filename))

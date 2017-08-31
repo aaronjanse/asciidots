@@ -26,6 +26,15 @@ class AsciiDotsInterpreter(object):
         self._setup_dots()
         self.run_in_parallel = run_in_parallel
 
+    def _setup_dots(self):
+        """Fill the dot list with dots from the starting points in the world."""
+
+        self.env.dots = []
+        for x, y in self.env.world.get_coords_of_dots():
+            new_dot = Dot(self.env, x, y)
+
+            self.env.dots.append(new_dot)
+
     def run(self, run_in_separate_thread=None, make_thread_daemon=None):
         """
         Start executing the AsciiDots code
@@ -40,19 +49,19 @@ class AsciiDotsInterpreter(object):
             inter_thread.start()
             return
 
-        while not self.needs_shutdown and len(self.dots) > 0:
+        while not self.needs_shutdown and len(self.env.dots) > 0:
             self._dots_for_next_tick.clear()
 
-            for dot in self.dots:
+            for dot in self.env.dots:
                 dot.simulate_tick(not self.run_in_parallel)
 
                 if not dot.state.is_dead():
                     self._add_dot(dot)
 
             if self.run_in_parallel:
-                self.env.io.on_microtick(self.dots[0])
+                self.env.io.on_microtick(self.env.dots[0])
 
-            self.dots = self._dots_for_next_tick[:]
+            self.env.dots = self._dots_for_next_tick[:]
 
         self.env.io.on_finish()
 
@@ -62,16 +71,7 @@ class AsciiDotsInterpreter(object):
 
     def get_all_dots(self):
         """Return a copy of the list of all dots"""
-        return self.dots[:]
-
-    def _setup_dots(self):
-        """Fill the dot list with dots from the starting points in the world."""
-
-        self.dots = []
-        for x, y in self.env.world.get_coords_of_dots():
-            new_dot = Dot(x, y, world=self.env.world, callbacks=self.env.io, func_to_create_dots=self._add_dot,
-                          func_to_get_dots=self.get_all_dots)
-            self.dots.append(new_dot)
+        return self.env.dots[:]
 
     def _add_dot(self, dot):
         """Add a dot that will run in the next tick."""

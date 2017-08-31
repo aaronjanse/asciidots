@@ -16,17 +16,25 @@ def moveFirstTime(func):
 
 class State(object):
     def __init__(self, parent):
-        self.parent = parent
-        self.hasRun = False
+        """
+        Describe the state of a dot with functions to get to the next state ofthe state machine.
 
+        :param dots.dot.Dot parent:
+        """
+
+        self.env = parent.env
+        self.parent = parent
+
+        self.hasRun = False
         self.isWaiting = False
+        self.idMode = False
 
     def next(self, char):
-        self.parent.callbacks.on_finish()
+        self.env.io.on_finish()
         raise Exception("State Next Method Not Implemented!")
 
     def run(self, char):
-        self.parent.callbacks.on_finish()
+        self.env.io.on_finish()
         raise Exception("State Run Method Not Implemented!")
 
     def set_parent_state(self, newState):
@@ -124,19 +132,16 @@ class TravelState(State):
                 abs_offset_x = self.parent.x + xoffset
                 abs_offset_y = self.parent.y + yoffset
 
-                if self.parent.world.doesLocExist(abs_offset_x, abs_offset_y) \
-                        and self.parent.world.getCharAt(abs_offset_x, abs_offset_y) != ' ':
+                if self.env.world.doesLocExist(abs_offset_x, abs_offset_y) \
+                        and self.env.world.getCharAt(abs_offset_x, abs_offset_y) != ' ':
                     from .dot import Dot
 
-                    new_dot = Dot(x=self.parent.x, y=self.parent.y, world=self.parent.world,
-                                  callbacks=self.parent.callbacks, func_to_create_dots=self.parent.func_to_create_dots,
-                                  func_to_get_dots=self.parent.func_to_get_dots, id_=self.parent.id,
+                    new_dot = Dot(self.env, self.parent.x, self.parent.y, id_=self.parent.id,
                                   value=self.parent.value, direction=[xoffset, yoffset], state=TravelState,
                                   stack=self.parent.stack[:])
 
                     # new_dot.state.move_parent()
-
-                    self.parent.func_to_create_dots(new_dot)
+                    self.env.dots.append(new_dot)
         elif char.isSingletonLibReturnWarp():
             (self.parent.x, self.parent.y) = self.parent.stack.pop()
         elif char.isWarp():
@@ -152,7 +157,7 @@ class TravelState(State):
 
 class ValueState(State):
     def __init__(self, parent):
-        State.__init__(self, parent)
+        super().__init__(parent)
         self.first_digit = True
 
     def next(self, char):
@@ -170,14 +175,14 @@ class ValueState(State):
             else:
                 self.parent.value = self.parent.value * 10 + int(char)
         elif char == '?':
-            self.parent.value = int(self.parent.callbacks.get_input())
+            self.parent.value = int(self.env.io.get_input())
 
         self.move_parent()
 
 
 class IdState(State):
     def __init__(self, parent):
-        State.__init__(self, parent)
+        super().__init__(parent)
         self.first_digit = True
 
     def next(self, char):
@@ -206,7 +211,7 @@ class IdState(State):
             else:
                 self.parent.id = self.parent.id * 10 + int(char)
         elif char == '?':
-            self.parent.id = int(self.parent.callbacks.get_input())
+            self.parent.id = int(self.env.io.get_input())
         else:
             pass
 
@@ -215,7 +220,7 @@ class IdState(State):
 
 class PrintState(State):
     def __init__(self, parent):
-        State.__init__(self, parent)
+        super().__init__(parent)
         self.newline = True
         self.asciiMode = False
 
@@ -246,7 +251,7 @@ class PrintState(State):
             if self.newline:
                 data = str(data) + '\n'
 
-            self.parent.callbacks.on_output(data)
+            self.env.io.on_output(data)
         elif char == '@':
             data = self.parent.id
 
@@ -256,7 +261,7 @@ class PrintState(State):
             if self.newline:
                 data = str(data) + '\n'
 
-            self.parent.callbacks.on_output(data)
+            self.env.io.on_output(data)
         else:
             pass
 
@@ -265,7 +270,7 @@ class PrintState(State):
 
 class PrintDoubleQuoteState(State):
     def __init__(self, parent, newline=True):
-        State.__init__(self, parent)
+        super().__init__(parent)
         self.newline = newline
         self.pendingExit = False
 
@@ -279,18 +284,18 @@ class PrintDoubleQuoteState(State):
     def run(self, char):
         if char == '"':
             if self.newline:
-                self.parent.callbacks.on_output('\n')
+                self.env.io.on_output('\n')
 
             self.pendingExit = True
         else:
-            self.parent.callbacks.on_output(char)
+            self.env.io.on_output(char)
 
         self.move_parent()
 
 
 class PrintSingleQuoteState(State):
     def __init__(self, parent, newline=True):
-        State.__init__(self, parent)
+        super().__init__(parent)
         self.newline = newline
         self.pendingExit = False
 
@@ -304,18 +309,18 @@ class PrintSingleQuoteState(State):
     def run(self, char):
         if char == "'":
             if self.newline:
-                self.parent.callbacks.on_output('\n')
+                self.env.io.on_output('\n')
 
             self.pendingExit = True
         else:
-            self.parent.callbacks.on_output(char)
+            self.env.io.on_output(char)
 
         self.move_parent()
 
 
 class TwoDotState(State):
     def __init__(self, parent, isMaster, idMode=None):
-        State.__init__(self, parent)
+        super().__init__(parent)
 
         if idMode is None:
             self.idMode = False
@@ -349,7 +354,7 @@ class TwoDotState(State):
             self_x = self.parent.x
             self_y = self.parent.y
 
-            for idx, dot in enumerate(self.parent.func_to_get_dots()):
+            for idx, dot in enumerate(self.env.dots):
                 if dot.x == self_x and dot.y == self_y and dot.state.is_two_dots():
                     if dot.state.isMaster:
                         if dot.state.age > self.age:
@@ -362,7 +367,7 @@ class TwoDotState(State):
                             ready_to_operate = True
 
             if ready_to_operate:
-                candidate = self.parent.func_to_get_dots()[candidate_index]
+                candidate = self.env.dots[candidate_index]
 
                 if candidate.state.idMode:
                     candidate_par = candidate.id
