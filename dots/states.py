@@ -1,7 +1,7 @@
 from dots.constants import DIRECTIONS, RIGHT, LEFT, UP, DOWN
 
 
-def moveFirstTime(func):
+def move_first_time(func):
     def _decorator(self, *args, **kwargs):
         # print('self is {0}'.format(self))
         # print(self.a)
@@ -27,7 +27,7 @@ class State(object):
 
         self.hasRun = False
         self.isWaiting = False
-        self.idMode = False
+        self.id_mode = False
 
     def next(self, char):
         self.env.io.on_finish()
@@ -37,8 +37,8 @@ class State(object):
         self.env.io.on_finish()
         raise Exception("State Run Method Not Implemented!")
 
-    def set_parent_state(self, newState):
-        self.parent.state = newState(self.parent)
+    def set_parent_state(self, new_state):
+        self.parent.state = new_state(self.parent)
 
     def move_parent(self, direction=None):
         if direction is None:
@@ -166,7 +166,7 @@ class ValueState(State):
         else:
             return self
 
-    @moveFirstTime
+    @move_first_time
     def run(self, char):
         if char.isdecimal():
             if self.first_digit:
@@ -192,17 +192,17 @@ class IdState(State):
             else:
                 return self
         elif char.isSquareOper():
-            return OperSquareState(self.parent, idMode=True)
+            return OperSquareState(self.parent, id_mode=True)
         elif char.isCurlyOper():
-            return OperCurlyState(self.parent, idMode=True)
+            return OperCurlyState(self.parent, id_mode=True)
         elif char.isdecimal() or char == '?':
             return self
         elif char == '~':
-            return TildeState(self.parent, idMode=True)
+            return TildeState(self.parent, id_mode=True)
         else:
             return TravelState(self.parent)
 
-    @moveFirstTime
+    @move_first_time
     def run(self, char):
         if char.isdecimal():
             if self.first_digit:
@@ -236,7 +236,7 @@ class PrintState(State):
         else:
             return TravelState(self.parent)
 
-    @moveFirstTime
+    @move_first_time
     def run(self, char):
         if char == '_':
             self.newline = False
@@ -280,7 +280,7 @@ class PrintDoubleQuoteState(State):
         else:
             return self
 
-    @moveFirstTime
+    @move_first_time
     def run(self, char):
         if char == '"':
             if self.newline:
@@ -305,7 +305,7 @@ class PrintSingleQuoteState(State):
         else:
             return self
 
-    @moveFirstTime
+    @move_first_time
     def run(self, char):
         if char == "'":
             if self.newline:
@@ -319,13 +319,13 @@ class PrintSingleQuoteState(State):
 
 
 class TwoDotState(State):
-    def __init__(self, parent, isMaster, idMode=None):
+    def __init__(self, parent, isMaster, id_mode=None):
         super().__init__(parent)
 
-        if idMode is None:
-            self.idMode = False
+        if id_mode is None:
+            self.id_mode = False
         else:
-            self.idMode = idMode
+            self.id_mode = id_mode
 
         self.isMaster = isMaster(self)
 
@@ -369,12 +369,12 @@ class TwoDotState(State):
             if ready_to_operate:
                 candidate = self.env.dots[candidate_index]
 
-                if candidate.state.idMode:
+                if candidate.state.id_mode:
                     candidate_par = candidate.id
                 else:
                     candidate_par = candidate.value
 
-                if self.idMode:
+                if self.id_mode:
                     self_par = self.parent.id
                 else:
                     self_par = self.parent.value
@@ -402,38 +402,38 @@ class TwoDotState(State):
 
 
 class OperState(TwoDotState):
-    def __init__(self, parent, isMaster, idMode=False):
-        TwoDotState.__init__(self, parent, isMaster, idMode)
+    def __init__(self, parent, isMaster, id_mode=False):
+        TwoDotState.__init__(self, parent, isMaster, id_mode)
 
     def do_operation(self, char, self_par, candidate_par, candidate, candidate_idx):
         result = char.calc(self_par, candidate_par) * 1
         # NOTE: the `* 1` converts a boolean into an integer
 
-        if self.idMode:
+        if self.id_mode:
             self.parent.id = result
         else:
             self.parent.value = result
 
 
 class OperSquareState(OperState):
-    def __init__(self, parent, idMode=False):
+    def __init__(self, parent, id_mode=False):
         OperState.__init__(self, parent,
                            isMaster=(lambda self: self.is_moving_vert()),
-                           idMode=idMode)
+                           id_mode=id_mode)
 
 
 class OperCurlyState(OperState):
-    def __init__(self, parent, idMode=False):
+    def __init__(self, parent, id_mode=False):
         OperState.__init__(self, parent,
                            isMaster=(lambda self: self.is_moving_horiz()),
-                           idMode=idMode)
+                           id_mode=id_mode)
 
 
 class TildeState(TwoDotState):
-    def __init__(self, parent, idMode=False):
+    def __init__(self, parent, id_mode=False):
         TwoDotState.__init__(self, parent,
                              isMaster=(lambda self: self.is_moving_horiz()),
-                             idMode=idMode)
+                             id_mode=id_mode)
 
     def do_operation(self, char, self_par, candidate_par, candidate,
                      candidate_idx):
