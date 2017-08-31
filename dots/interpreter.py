@@ -19,8 +19,6 @@ class AsciiDotsInterpreter(object):
         self.env.world = World(env, program, program_dir)
         self.env.dots = []
 
-        self._dots_for_next_tick = []
-
         self.needs_shutdown = False
 
         self._setup_dots()
@@ -50,29 +48,21 @@ class AsciiDotsInterpreter(object):
             return
 
         while not self.needs_shutdown and len(self.env.dots) > 0:
-            self._dots_for_next_tick.clear()
+            next_tick_dots = []
 
             for dot in self.env.dots:
                 dot.simulate_tick(not self.run_in_parallel)
 
                 if not dot.state.is_dead():
-                    self._add_dot(dot)
+                    next_tick_dots += dot,
 
             if self.run_in_parallel:
                 self.env.io.on_microtick(self.env.dots[0])
 
-            self.env.dots = self._dots_for_next_tick[:]
+            self.env.dots = next_tick_dots
 
         self.env.io.on_finish()
 
     def terminate(self):
         """The program will shut down at the next operation."""
         self.needs_shutdown = True
-
-    def get_all_dots(self):
-        """Return a copy of the list of all dots"""
-        return self.env.dots[:]
-
-    def _add_dot(self, dot):
-        """Add a dot that will run in the next tick."""
-        self._dots_for_next_tick.append(dot)
