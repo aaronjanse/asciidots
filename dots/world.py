@@ -8,13 +8,17 @@ from .chars import *
 
 
 class World(object):
-    def __init__(self, world_map, program_dir):
+    def __init__(self, env, world_map, program_dir):
         """
         Create a new world to do dots races !
 
+        :param dots.environement.Env env: The environement for the program
         :param str world_map: The string representing the world.
         :param str program_dir: The directory of the program
         """
+
+        self.env = env
+        self.env.world = self
 
         self.program_dir = program_dir
 

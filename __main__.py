@@ -9,6 +9,7 @@ import time
 
 import click
 
+from dots.world import World
 from environement import Env
 
 if codecs.lookup(locale.getpreferredencoding()).name == 'ascii':
@@ -191,7 +192,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                 # Sync the screen with the previous changes
                 self.win_program.refresh()
 
-            for y, line in enumerate(interpreter.world.map):
+            for y, line in enumerate(self.env.world.map):
                 # don't show more lines than the debug view has
                 if display_y > self.debug_lines - 2:
                     break
@@ -311,7 +312,7 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
         program = file.read()
 
     try:
-        interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks, run_in_parallel)
+        interpreter = AsciiDotsInterpreter(env, program, program_dir, run_in_parallel)
         interpreter.run()
     except Exception as e:
         io_callbacks.on_finish()

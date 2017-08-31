@@ -7,6 +7,7 @@ class IOCallbacksStorage(object):
         :type env: dots.environement.Env
         """
         self.env = env
+        self.env.io = self
 
     def get_input(self):
         """ This function should return an integer from stdin, the user, etc """

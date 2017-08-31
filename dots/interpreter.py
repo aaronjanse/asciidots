@@ -4,23 +4,24 @@ from .dot import Dot
 
 
 class AsciiDotsInterpreter(object):
-    def __init__(self, program, program_dir, io_callbacks, run_in_parallel):
+    def __init__(self, env, program, program_dir, run_in_parallel):
         """
         Create a new instance of the interpreter to run the program.
 
+        :param dots.environement.Env env: The environement for the program
         :param str program: The code of the program
         :param str program_dir: The path to the program directory
-        :param io_callbacks: The callbacks for the I/O. Must be a subclass of IOCallbacksStorage
         :param bool run_in_parallel: temporarily, changes the way dots move : one by one or all at the same time
         """
 
-        self.dots = []
+        self.env = env
+        self.env.interpreter = self
+        self.env.world = World(env, program, program_dir)
+        self.env.dots = []
+
         self._dots_for_next_tick = []
 
         self.needs_shutdown = False
-
-        self.world = World(program, program_dir)
-        self.io_callbacks = io_callbacks
 
         self._setup_dots()
         self.run_in_parallel = run_in_parallel
@@ -49,11 +50,11 @@ class AsciiDotsInterpreter(object):
                     self._add_dot(dot)
 
             if self.run_in_parallel:
-                self.io_callbacks.on_microtick(self.dots[0])
+                self.env.io.on_microtick(self.dots[0])
 
             self.dots = self._dots_for_next_tick[:]
 
-        self.io_callbacks.on_finish()
+        self.env.io.on_finish()
 
     def terminate(self):
         """The program will shut down at the next operation."""
@@ -67,8 +68,8 @@ class AsciiDotsInterpreter(object):
         """Fill the dot list with dots from the starting points in the world."""
 
         self.dots = []
-        for x, y in self.world.get_coords_of_dots():
-            new_dot = Dot(x, y, world=self.world, callbacks=self.io_callbacks, func_to_create_dots=self._add_dot,
+        for x, y in self.env.world.get_coords_of_dots():
+            new_dot = Dot(x, y, world=self.env.world, callbacks=self.env.io, func_to_create_dots=self._add_dot,
                           func_to_get_dots=self.get_all_dots)
             self.dots.append(new_dot)
 
