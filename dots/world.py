@@ -8,13 +8,17 @@ from .chars import *
 
 
 class World(object):
-    def __init__(self, world_map, program_dir):
+    def __init__(self, env, world_map, program_dir):
         """
         Create a new world to do dots races !
 
+        :param dots.environement.Env env: The environement for the program
         :param str world_map: The string representing the world.
         :param str program_dir: The directory of the program
         """
+
+        self.env = env
+        self.env.world = self
 
         self.program_dir = program_dir
 
@@ -32,18 +36,14 @@ class World(object):
         self._update_class_of_dots()
 
     def get_coords_of_dots(self):
-        dot_coords = []
-
+        """Yiels the cordinates of every dot char in the world."""
         for y, line in enumerate(self.map):
             if line[0] == '%':
                 continue
 
             for x, char in enumerate(line):
                 if char.isDot():
-                    coords = (x, y)
-                    dot_coords.append(coords)
-
-        return dot_coords
+                    yield x, y
 
     # ✓
     def getCharAt(self, x, y):
@@ -309,10 +309,6 @@ class World(object):
                 warp_chars.extend(list_with_chars)
 
         return warp_chars
-
-    # ✓
-    def _init_data_array(self, char_array):
-        self.map = self.map_from_raw(char_array)
 
     # ✓
     def _char_obj_array_iter(self, obj_array):

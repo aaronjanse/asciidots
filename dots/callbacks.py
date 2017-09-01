@@ -1,5 +1,14 @@
 class IOCallbacksStorage(object):
     """ This class stores user-defined callbacks. Feel free to inherit this! """
+    def __init__(self, env):
+        """
+        The base interface for inputs and outputs for a asciidots program.
+
+        :type env: dots.environement.Env
+        """
+        self.env = env
+        self.env.io = self
+
     def get_input(self):
         """ This function should return an integer from stdin, the user, etc """
         raise Exception('get_input: not implemented')

@@ -4,26 +4,34 @@ from .dot import Dot
 
 
 class AsciiDotsInterpreter(object):
-    def __init__(self, program, program_dir, io_callbacks, run_in_parallel):
+    def __init__(self, env, program, program_dir, run_in_parallel):
         """
         Create a new instance of the interpreter to run the program.
 
+        :param dots.environement.Env env: The environement for the program
         :param str program: The code of the program
         :param str program_dir: The path to the program directory
-        :param io_callbacks: The callbacks for the I/O. Must be a subclass of IOCallbacksStorage
         :param bool run_in_parallel: temporarily, changes the way dots move : one by one or all at the same time
         """
 
-        self.dots = []
-        self._dots_for_next_tick = []
+        self.env = env
+        self.env.interpreter = self
+        self.env.world = World(env, program, program_dir)
+        self.env.dots = []
 
         self.needs_shutdown = False
 
-        self.world = World(program, program_dir)
-        self.io_callbacks = io_callbacks
-
         self._setup_dots()
         self.run_in_parallel = run_in_parallel
+
+    def _setup_dots(self):
+        """Fill the dot list with dots from the starting points in the world."""
+
+        self.env.dots = []
+        for x, y in self.env.world.get_coords_of_dots():
+            new_dot = Dot(self.env, x, y)
+
+            self.env.dots.append(new_dot)
 
     def run(self, run_in_separate_thread=None, make_thread_daemon=None):
         """
@@ -39,40 +47,22 @@ class AsciiDotsInterpreter(object):
             inter_thread.start()
             return
 
-        while not self.needs_shutdown and len(self.dots) > 0:
-            self._dots_for_next_tick.clear()
+        while not self.needs_shutdown and len(self.env.dots) > 0:
+            next_tick_dots = []
 
-            for dot in self.dots:
+            for dot in self.env.dots:
                 dot.simulate_tick(not self.run_in_parallel)
 
                 if not dot.state.is_dead():
-                    self._add_dot(dot)
+                    next_tick_dots += dot,
 
             if self.run_in_parallel:
-                self.io_callbacks.on_microtick(self.dots[0])
+                self.env.io.on_microtick(self.env.dots[0])
 
-            self.dots = self._dots_for_next_tick[:]
+            self.env.dots = next_tick_dots
 
-        self.io_callbacks.on_finish()
+        self.env.io.on_finish()
 
     def terminate(self):
         """The program will shut down at the next operation."""
         self.needs_shutdown = True
-
-    def get_all_dots(self):
-        """Return a copy of the list of all dots"""
-        return self.dots[:]
-
-    def _setup_dots(self):
-        """Fill the dot list with dots from the starting points in the world."""
-        dot_locations = self.world.get_coords_of_dots()
-
-        self.dots = []
-        for x, y in dot_locations:
-            new_dot = Dot(x, y, world=self.world, callbacks=self.io_callbacks, func_to_create_dots=self._add_dot,
-                          func_to_get_dots=self.get_all_dots)
-            self.dots.append(new_dot)
-
-    def _add_dot(self, dot):
-        """Add a dot that will run in the next tick."""
-        self._dots_for_next_tick.append(dot)

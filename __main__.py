@@ -4,11 +4,12 @@
 import codecs
 import locale
 import os
-import signal
 import sys
 import time
 
 import click
+
+from dots.environement import Env
 
 if codecs.lookup(locale.getpreferredencoding()).name == 'ascii':
     os.environ['LANG'] = 'en_US.utf-8'
@@ -38,8 +39,19 @@ autostep_debug_ = False
 class DefaultIOCallbacks(IOCallbacksStorage):
     """The default class to manage the input and output of a dots program."""
 
-    def __init__(self, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit):
-        super().__init__()
+    def __init__(self, env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit):
+        """
+
+        :param dots.environement.Env env: The env of the interpreter
+        :param int ticks: The max number of ticks for the program
+        :param bool silent: True to turn off all outputs
+        :param bool debug: True to show the execution of the program
+        :param bool compat_debug: True to show the debug with only builtin functions
+        :param int debug_lines: The number of lines to show the debug
+        :param float autostep_debug: The timebetween automatic ticks. 0 disables the auto ticks.
+        :param int output_limit: The max number of outputs for the program
+        """
+        super().__init__(env)
 
         # if it is zero or false, we don't want to stop
         self.ticks_left = ticks or float('inf')
@@ -78,12 +90,6 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             self.win_program = curses.newwin(self.debug_lines, curses.COLS - 1, 0, 0)
             # and pad for the output of the prog
             self.logging_pad = curses.newpad(1000, curses.COLS - 1)
-
-            def signal_handler(signal, frame):
-                self.on_finish()
-                sys.exit(0)
-
-            signal.signal(signal.SIGINT, signal_handler)
 
     def get_input(self):
         """Get an input from the user."""
@@ -150,8 +156,6 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
     def on_finish(self):
         """Close cleanly the I/O."""
-        global interpreter  # beurk
-
         # we need to close curses only if it was opened
         if self.debug and not self.compat_debug:
             curses.nocbreak()
@@ -173,7 +177,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
             display_y = 0
             last_line_is_empty = False
-            dots_position_list = [(d.x, d.y) for d in interpreter.dots if not d.state.is_dead()]
+            dots_position_list = [(d.x, d.y) for d in self.env.dots if not d.state.is_dead()]
 
             # cleaning the screen
             if self.compat_debug:
@@ -185,7 +189,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                 # Sync the screen with the previous changes
                 self.win_program.refresh()
 
-            for y, line in enumerate(interpreter.world.map):
+            for y, line in enumerate(self.env.world.map):
                 # don't show more lines than the debug view has
                 if display_y > self.debug_lines - 2:
                     break
@@ -296,15 +300,15 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
 
     compat_debug = compat_debug or compat_debug_default
 
-    io_callbacks = DefaultIOCallbacks(ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
+    env = Env()
+    io_callbacks = DefaultIOCallbacks(env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
 
     program_dir = os.path.dirname(os.path.abspath(filename))
-
     with open(filename, 'r') as file:
         program = file.read()
 
     try:
-        interpreter = AsciiDotsInterpreter(program, program_dir, io_callbacks, run_in_parallel)
+        interpreter = AsciiDotsInterpreter(env, program, program_dir, run_in_parallel)
         interpreter.run()
     except Exception as e:
         io_callbacks.on_finish()
