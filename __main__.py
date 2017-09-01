@@ -4,6 +4,7 @@
 import codecs
 import locale
 import os
+import signal
 import sys
 import time
 
@@ -90,6 +91,12 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             self.win_program = curses.newwin(self.debug_lines, curses.COLS - 1, 0, 0)
             # and pad for the output of the prog
             self.logging_pad = curses.newpad(1000, curses.COLS - 1)
+
+            def signal_handler(signal, frame):
+                self.on_finish()
+                sys.exit(0)
+
+            signal.signal(signal.SIGINT, signal_handler)
 
     def get_input(self):
         """Get an input from the user."""
