@@ -53,7 +53,7 @@ class World(object):
         return self.map[pos.row][pos.col]
 
     # ✓
-    def doesLocExist(self, loc: Pos):
+    def does_loc_exist(self, loc: Pos):
         """True if this location exists on the map."""
         return 0 <= loc.row < len(self.map) and 0 <= loc.col < len(self.map[loc.row])
 

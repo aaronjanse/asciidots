@@ -47,7 +47,7 @@ class Dot:
 
             past_locations.append(self.pos)
 
-            if not self.env.world.doesLocExist(self.pos):
+            if not self.env.world.does_loc_exist(self.pos):
                 self.state = DeadState(self)
                 return
 
@@ -80,7 +80,7 @@ class Dot:
             loc = self.pos + direction
 
             # we have no interest in chars outside
-            if not self.env.world.doesLocExist(loc):
+            if not self.env.world.does_loc_exist(loc):
                 continue
 
             if direction in (UP, DOWN) and self.env.world.getCharAt(loc) == '|':

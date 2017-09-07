@@ -135,7 +135,7 @@ class TravelState(State):
 
                 next_pos = self.parent.pos + dir
 
-                if self.env.world.doesLocExist(next_pos) and self.env.world.getCharAt(next_pos) != ' ':
+                if self.env.world.does_loc_exist(next_pos) and self.env.world.getCharAt(next_pos) != ' ':
                     from .dot import Dot
 
                     new_dot = Dot(self.env, self.parent.pos, id_=self.parent.id,
