@@ -77,7 +77,6 @@ class Dot:
         valid_chars = ('\\', '/', '*', '^', 'v', '>', '<', '+')
 
         for direction in DIRECTIONS:
-            direction = Pos(*direction)
             loc = self.pos + direction
 
             # we have no interest in chars outside
