@@ -247,8 +247,6 @@ class World(object):
 
     # ✓
     def _setup_warps_for(self, char_obj_array):
-        warp_list = self._get_warp_chars_list_from(char_obj_array)
-
         self._correct_class_of_warp_chars_in(char_obj_array)
 
         # {letter: id}
@@ -292,7 +290,7 @@ class World(object):
     def _setup_operators(self):
         for y, line in enumerate(self.map):
             for x, char in enumerate(line):
-                if x > 0 and x < len(line) - 1:
+                if 0 < x < len(line) - 1:
                     if line[x - 1] == '{' and line[x + 1] == '}':
                         self.map[y][x] = CurlyOperChar(char)
                     elif line[x - 1] == '[' and line[x + 1] == ']':
