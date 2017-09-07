@@ -74,7 +74,7 @@ class Dot:
 
     def _calculate_direction(self):
 
-        valid_chars = ('\\', '/', '*', '^', 'v', '>', '<', '+')
+        valid_chars = r'\/*^v><+'
 
         for direction in DIRECTIONS:
             loc = self.pos + direction
