@@ -51,7 +51,7 @@ class Dot:
                 self.state = DeadState(self)
                 return
 
-            char = self.env.world.getCharAt(self.pos)
+            char = self.env.world.get_char_at(self.pos)
 
             if char == '&':
                 self.state = DeadState(self)
@@ -83,13 +83,13 @@ class Dot:
             if not self.env.world.does_loc_exist(loc):
                 continue
 
-            if direction in (UP, DOWN) and self.env.world.getCharAt(loc) == '|':
+            if direction in (UP, DOWN) and self.env.world.get_char_at(loc) == '|':
                 return direction
 
-            if direction in (LEFT, RIGHT) and self.env.world.getCharAt(loc) == '-':
+            if direction in (LEFT, RIGHT) and self.env.world.get_char_at(loc) == '-':
                 return direction
 
-            if self.env.world.getCharAt(loc) in valid_chars:
+            if self.env.world.get_char_at(loc) in valid_chars:
                 return direction
 
         # If we get here without returning, the dot can't find a direction to go!

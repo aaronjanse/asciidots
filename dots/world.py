@@ -47,7 +47,7 @@ class World(object):
                     yield Pos(x, y)
 
     # ✓
-    def getCharAt(self, pos: Pos):
+    def get_char_at(self, pos: Pos):
         """Get the Char at the given position."""
         # NOTE: _data_array has to be accesed using y, x due to the way it is created
         return self.map[pos.row][pos.col]
