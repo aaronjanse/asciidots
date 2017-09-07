@@ -4,6 +4,7 @@
 
 import os
 
+from dots.vector import Pos
 from .chars import *
 
 
@@ -43,16 +44,18 @@ class World(object):
 
             for x, char in enumerate(line):
                 if char.isDot():
-                    yield x, y
+                    yield Pos(x, y)
 
     # ✓
-    def getCharAt(self, x, y):
+    def getCharAt(self, pos: Pos):
+        """Get the Char at the given position."""
         # NOTE: _data_array has to be accesed using y, x due to the way it is created
-        return self.map[y][x]
+        return self.map[pos.row][pos.col]
 
     # ✓
-    def doesLocExist(self, x, y):
-        return 0 <= y < len(self.map) and 0 <= x < len(self.map[y])
+    def doesLocExist(self, loc: Pos):
+        """True if this location exists on the map."""
+        return 0 <= loc.row < len(self.map) and 0 <= loc.col < len(self.map[loc.row])
 
     # NOTE: Hopefully done?
     def _import_libraries(self, map=None):
@@ -227,20 +230,20 @@ class World(object):
             for x, char in enumerate(line):
                 if char.isWarp() and not char.isSingletonLibReturnWarp():
                     warp_id = char.get_id()
-                    companion_warp_loc = self._find_companion_warp_char_loc_of(warp_id, x, y)
+                    companion_warp_loc = self._find_companion_warp_char_loc_of(warp_id, Pos(x, y))
 
                     if companion_warp_loc is not None:
-                        self.map[y][x].set_dest_loc(*companion_warp_loc)
+                        self.map[y][x].set_dest_loc(companion_warp_loc)
 
     # ✓
-    def _find_companion_warp_char_loc_of(self, warp_id, orig_x, orig_y):
+    def _find_companion_warp_char_loc_of(self, warp_id, orig_pos: Pos):
         for y, line in enumerate(self.map):
             if line[0] == '%':
                 continue
 
             for x, char in enumerate(line):
-                if char.isWarp() and char.get_id() == warp_id and x != orig_x and y != orig_y:
-                    return x, y
+                if char.isWarp() and char.get_id() == warp_id and orig_pos != (x, y):
+                    return Pos(x, y)
 
     # ✓
     def _setup_warps_for(self, char_obj_array):
@@ -251,7 +254,7 @@ class World(object):
         # {letter: id}
         assigned_ids_for_letters = {}
 
-        for x, y, char in self._char_obj_array_iter_with_coords(char_obj_array):
+        for (x, y), char in self._char_obj_array_iter_with_coords(char_obj_array):
             if char.isWarp() and char.get_id() is None:
                 if char in assigned_ids_for_letters:
                     char_obj_array[y][x].set_id(assigned_ids_for_letters[char])
@@ -320,7 +323,7 @@ class World(object):
     def _char_obj_array_iter_with_coords(self, obj_array):
         for y, char_list in enumerate(obj_array):
             for x, char in enumerate(char_list):
-                yield x, y, char
+                yield Pos(x, y), char
 
     # ✓✓
     @staticmethod

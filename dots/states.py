@@ -40,25 +40,29 @@ class State(object):
     def set_parent_state(self, new_state):
         self.parent.state = new_state(self.parent)
 
-    def move_parent(self, direction=None):
-        if direction is None:
-            direction = self.parent.dir
+    def move_parent(self):
+        self.parent.move()
 
-        self.parent.x += direction[0]
-        self.parent.y += direction[1]
-
-    # define lambda like this: lambda x, y: (your func or constant)
+    # define lambda like this: lambda dir: (your func or constant)
     def change_parent_dir_with_func(self, newDirLambda):
-        self.parent.dir = list(newDirLambda(*self.parent.dir))
+        self.parent.dir = newDirLambda(self.parent.dir)
 
     def set_parent_direction(self, direction):
+        """
+        Sets the direction of the dot
+
+        :param dots.vector.Pos direction: The new direction of the dot.
+        """
+
         self.parent.dir = direction
 
     def is_moving_vert(self):
-        return self.parent.dir[1] != 0
+        """True if the dot is moving verticaly."""
+        return self.parent.dir.y != 0
 
     def is_moving_horiz(self):
-        return self.parent.dir[0] != 0
+        """True if the dot is moving horizontally."""
+        return self.parent.dir.x != 0
 
     def __str__(self):
         return type(self).__name__
@@ -82,9 +86,9 @@ class TravelState(State):
             return IdState(self.parent)
         elif char == '$':
             return PrintState(self.parent)
-        elif char in ('[', ']',) and self.is_moving_vert():
+        elif char in '[]' and self.is_moving_vert():
             return DeadState(self.parent)
-        elif char in ('{', '}',) and self.is_moving_vert():
+        elif char in '{}' and self.is_moving_vert():
             return DeadState(self.parent)
         elif char.isSquareOper():
             return OperSquareState(self.parent)
@@ -103,9 +107,9 @@ class TravelState(State):
 
     def run(self, char):
         if char == '\\':
-            self.change_parent_dir_with_func(lambda x, y: (y, x))
+            self.change_parent_dir_with_func(lambda dir: Pos(dir.y, dir.x))
         elif char == '/':
-            self.change_parent_dir_with_func(lambda x, y: (-y, -x))
+            self.change_parent_dir_with_func(lambda dir: Pos(-dir.y, -dir.x))
         elif char == '(':
             self.set_parent_direction(RIGHT)
         elif char == ')':
@@ -123,32 +127,29 @@ class TravelState(State):
             if self.is_moving_horiz():
                 self.set_parent_direction(DOWN)
         elif char == '*':
-            for xoffset, yoffset in DIRECTIONS:
+            for dir in DIRECTIONS:
 
-                if [-xoffset, -yoffset] == list(self.parent.dir) or \
-                                [xoffset, yoffset] == list(self.parent.dir):
+                if self.parent.dir in (dir, -dir):
                     continue
 
-                abs_offset_x = self.parent.x + xoffset
-                abs_offset_y = self.parent.y + yoffset
+                next_pos = self.parent.pos + dir
 
-                if self.env.world.doesLocExist(abs_offset_x, abs_offset_y) \
-                        and self.env.world.getCharAt(abs_offset_x, abs_offset_y) != ' ':
+                if self.env.world.doesLocExist(next_pos) and self.env.world.getCharAt(next_pos) != ' ':
                     from .dot import Dot
 
-                    new_dot = Dot(self.env, self.parent.x, self.parent.y, id_=self.parent.id,
-                                  value=self.parent.value, direction=[xoffset, yoffset], state=TravelState,
+                    new_dot = Dot(self.env, self.parent.pos, id_=self.parent.id,
+                                  value=self.parent.value, direction=dir, state=TravelState,
                                   stack=self.parent.stack[:])
 
                     # new_dot.state.move_parent()
                     self.env.dots.append(new_dot)
         elif char.isSingletonLibReturnWarp():
-            (self.parent.x, self.parent.y) = self.parent.stack.pop()
+            self.parent.pos = self.parent.stack.pop()
         elif char.isWarp():
             if char.isSingletonLibWarp():
-                self.parent.stack.append((self.parent.x, self.parent.y))
+                self.parent.stack.append(self.parent.pos)
 
-            (self.parent.x, self.parent.y) = char.get_dest_loc()
+            self.parent.pos = char.get_dest_loc()
         else:
             pass
 
@@ -186,7 +187,7 @@ class IdState(State):
         self.first_digit = True
 
     def next(self, char):
-        if char in ('[', ']', '{', '}'):
+        if char in '[]{}':
             if self.is_moving_vert():
                 return DeadState(self.parent)
             else:
@@ -225,7 +226,7 @@ class PrintState(State):
         self.asciiMode = False
 
     def next(self, char):
-        if char in ('$', '_', 'a', '#', '@',):
+        if char in '$_a#@':
             return self
         elif char == ' ':
             return DeadState(self.parent)
@@ -351,11 +352,8 @@ class TwoDotState(State):
 
             ready_to_operate = False
 
-            self_x = self.parent.x
-            self_y = self.parent.y
-
             for idx, dot in enumerate(self.env.dots):
-                if dot.x == self_x and dot.y == self_y and dot.state.is_two_dots():
+                if dot.pos == self.parent.pos and dot.state.is_two_dots():
                     if dot.state.isMaster:
                         if dot.state.age > self.age:
                             ready_to_operate = False
