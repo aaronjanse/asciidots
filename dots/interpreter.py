@@ -1,6 +1,7 @@
 import threading
-from .world import World
+
 from .dot import Dot
+from .world import World
 
 
 class AsciiDotsInterpreter(object):
@@ -28,8 +29,8 @@ class AsciiDotsInterpreter(object):
         """Fill the dot list with dots from the starting points in the world."""
 
         self.env.dots = []
-        for x, y in self.env.world.get_coords_of_dots():
-            new_dot = Dot(self.env, x, y)
+        for pos in self.env.world.get_coords_of_dots():
+            new_dot = Dot(self.env, pos)
 
             self.env.dots.append(new_dot)
 

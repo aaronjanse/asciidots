@@ -184,7 +184,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
             display_y = 0
             last_line_is_empty = False
-            dots_position_list = [(d.x, d.y) for d in self.env.dots if not d.state.is_dead()]
+            dots_position_list = [d.pos for d in self.env.dots if not d.state.is_dead()]
 
             # cleaning the screen
             if self.compat_debug:
