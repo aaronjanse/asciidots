@@ -144,7 +144,7 @@ Everything after ` `` ` (two back ticks) is a comment and is ignored by the inte
 `|` (vertical pipe symbol) is a vertical path that dots travel along<br>
 `-` is a horizontal path that dots travel along
 
-*Note*: Only one path should be adjacent to a starting dot location, so that there is no question where it should go
+*Note*: For the sake of clarity, only one path should be adjacent to a starting dot location, so that there is no question where it should go. The interpreter doesn't make a fuss if you disregard this
 
 Here's an example program that just starts then ends (note that programs aren't always written and run top-to-bottom):
 
