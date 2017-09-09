@@ -62,16 +62,16 @@ class Dot:
 
             char = self.env.world.get_char_at(self.pos)
 
+            # update the dot
+            self.state = self.state.next(char)
+            self.state.run(char)
+
             # end of execution
-            if char == '&':
+            if char == '&' and not char.isOper() and not isinstance(self.state, OperState):
                 self.state = DeadState(self)
 
                 self.env.io.on_finish()
                 sys.exit(0)
-
-            # update the dot
-            self.state = self.state.next(char)
-            self.state.run(char)
 
             if self.state.is_dead():
                 return
