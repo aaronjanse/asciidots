@@ -48,7 +48,6 @@ class OperChar(Char):
                 '-': (lambda x, y: x - y),
                 '*': (lambda x, y: x * y),
                 '/': (lambda x, y: x / y),
-                '÷': (lambda x, y: x / y),
                 '^': (lambda x, y: x ** y),
                 '%': (lambda x, y: x % y),
 
@@ -58,7 +57,6 @@ class OperChar(Char):
                 '!': (lambda x, y: x != y),
 
                 '=': (lambda x, y: x == y),
-                '≠': (lambda x, y: x != y),
                 '>': (lambda x, y: x > y),
                 'G': (lambda x, y: x >= y),
                 '<': (lambda x, y: x < y),
