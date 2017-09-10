@@ -325,7 +325,6 @@ Other operations work similarly but with a different symbol in the middle. This 
 `%`: modulus<br>
 `^`: exponent<br>
 `&`: boolean AND<br>
-`!`: boolean NOT<br>
 `o`: boolean OR<br>
 `x`: boolean XOR<br>
 `>`: greater than<br>
@@ -333,6 +332,7 @@ Other operations work similarly but with a different symbol in the middle. This 
 `<`: less than<br>
 `≤`: less than or equal to<br>
 `=`: equal to<br>
+`!`: not equal to<br>
 `≠`: not equal to<br>
 
 Boolean operations return a dot with a value of `1` if the expression evaluates to true and `0` if false.
