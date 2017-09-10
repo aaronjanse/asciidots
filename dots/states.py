@@ -134,13 +134,11 @@ class TravelState(State):
                 next_pos = self.parent.pos + dir
 
                 if self.env.world.does_loc_exist(next_pos) and self.env.world.get_char_at(next_pos) != ' ':
-                    from .dot import Dot
 
-                    new_dot = Dot(self.env, self.parent.pos, id_=self.parent.id,
-                                  value=self.parent.value, direction=dir, state=TravelState,
-                                  stack=self.parent.stack[:])
+                    new_dot = self.parent.copy()
+                    new_dot.dir = dir
+                    new_dot.move()
 
-                    # new_dot.state.move_parent()
                     self.env.dots.append(new_dot)
         elif char.isSingletonLibReturnWarp():
             self.parent.pos = self.parent.stack.pop()
