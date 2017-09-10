@@ -1,5 +1,6 @@
 import sys
 
+from dots.exceptions import DotsExit
 from .states import *
 
 
@@ -70,8 +71,7 @@ class Dot:
             if char == '&' and not char.isOper():
                 self.state = DeadState(self)
 
-                self.env.io.on_finish()
-                sys.exit(0)
+                raise DotsExit
 
             if self.state.is_dead():
                 return

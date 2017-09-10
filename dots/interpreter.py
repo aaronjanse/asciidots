@@ -1,5 +1,6 @@
 import threading
 
+from dots.exceptions import DotsExit
 from .dot import Dot
 from .world import World
 
@@ -62,7 +63,7 @@ class AsciiDotsInterpreter(object):
 
             self.env.dots = next_tick_dots
 
-        self.env.io.on_finish()
+        raise DotsExit
 
     def terminate(self):
         """The program will shut down at the next operation."""

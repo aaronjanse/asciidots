@@ -31,11 +31,9 @@ class State(object):
         self.id_mode = False
 
     def next(self, char):
-        self.env.io.on_finish()
         raise Exception("State Next Method Not Implemented!")
 
     def run(self, char):
-        self.env.io.on_finish()
         raise Exception("State Run Method Not Implemented!")
 
     def set_parent_state(self, new_state):
