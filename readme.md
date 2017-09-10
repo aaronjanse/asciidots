@@ -328,9 +328,9 @@ Other operations work similarly but with a different symbol in the middle. This 
 `o`: boolean OR<br>
 `x`: boolean XOR<br>
 `>`: greater than<br>
-`≥`: greater than or equal to<br>
+`G`: greater than or equal to<br>
 `<`: less than<br>
-`≤`: less than or equal to<br>
+`L`: less than or equal to<br>
 `=`: equal to<br>
 `!`: not equal to<br>
 `≠`: not equal to<br>
