@@ -67,7 +67,7 @@ class Dot:
             self.state.run(char)
 
             # end of execution
-            if char == '&' and not char.isOper() and not isinstance(self.state, OperState):
+            if char == '&' and not char.isOper():
                 self.state = DeadState(self)
 
                 self.env.io.on_finish()
