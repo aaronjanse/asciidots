@@ -157,23 +157,35 @@ class ValueState(State):
     def __init__(self, parent):
         super().__init__(parent)
         self.first_digit = True
+        self.neg = False
 
     def next(self, char):
-        if not char.isdecimal() and char != '?':
-            return autodetect_next_state(self.parent, char)
-        else:
+        if char.isdecimal() or char == '?':
             return self
+        elif char == '-' and self.first_digit and not self.neg:
+            return self
+        else:
+            return autodetect_next_state(self.parent, char)
 
     @move_first_time
     def run(self, char):
         if char.isdecimal():
             if self.first_digit:
-                self.parent.value = int(char)
+                if self.neg:
+                    self.parent.value = -int(char)
+                else:
+                    self.parent.value = int(char)
                 self.first_digit = False
             else:
-                self.parent.value = self.parent.value * 10 + int(char)
+                if self.neg:
+                    self.parent.value = self.parent.value * 10 - int(char)
+                else:
+                    self.parent.value = self.parent.value * 10 + int(char)
         elif char == '?':
             self.parent.value = int(self.env.io.get_input())
+        elif char == '-' and self.first_digit and not self.neg:
+            self.neg = True
+
 
         self.move_parent()
 
