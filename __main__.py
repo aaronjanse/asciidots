@@ -11,6 +11,7 @@ import time
 import click
 
 from dots.environement import Env
+from dots.exceptions import DotsExit
 
 if codecs.lookup(locale.getpreferredencoding()).name == 'ascii':
     os.environ['LANG'] = 'en_US.utf-8'
@@ -130,8 +131,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
         # maximum output reached, we quit the prog
         if self.outputs_left == 0:
-            self.on_finish()
-            return
+            raise DotsExit
 
         # no printing mode
         if self.silent:
@@ -175,7 +175,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         """Show the error and cleans the I/O."""
         self.on_output('error: {}'.format(error_text))
 
-        self.on_finish()
+        raise DotsExit
 
     def on_microtick(self, dot):
 
@@ -253,8 +253,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                         keycode = self.stdscr.getch()
 
                         if keycode in (3, 26):
-                            self.on_finish()
-                            sys.exit(0)
+                            raise DotsExit
             else:
                 self.first_tick = False
 
@@ -262,8 +261,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         if self.ticks_left == 0:
             self.on_output('QUITTING next step!\n')
 
-            self.on_finish()
-            sys.exit(0)
+            raise DotsExit
 
     def print_char(self, char, color_code, row=None, col=None):
         """
@@ -319,6 +317,9 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
     try:
         interpreter = AsciiDotsInterpreter(env, program, program_dir, run_in_parallel)
         interpreter.run()
+    except DotsExit:
+        io_callbacks.on_finish()
+        interpreter.terminate()
     except Exception as e:
         io_callbacks.on_finish()
         interpreter.terminate()

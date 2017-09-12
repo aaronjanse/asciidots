@@ -1,5 +1,6 @@
 import sys
 
+from dots.exceptions import DotsExit
 from .states import *
 
 
@@ -26,14 +27,21 @@ class Dot:
         self.dir = direction or self._calculate_direction()
         self.stack = stack or []
 
-        self.move()
-
     def __repr__(self):
         return '<Dot pos={pos}, id={id}, value={value}, dir={dir}, stack={stack}>'.format(**self.__dict__)
 
     def move(self):
         """Move the dot according to its direction."""
         self.pos += self.dir
+
+    def copy(self):
+        """
+        Create a copy of the dot.
+
+        :remark: The copy doesn't share any variable (by reference) to the old one. (except env of course)
+        """
+
+        return Dot(self.env, self.pos, self.id, self.value, self.dir, type(self.state), self.stack[:])
 
     def simulate_tick(self, run_until_waiting):
         """
@@ -70,8 +78,7 @@ class Dot:
             if char == '&' and not char.isOper():
                 self.state = DeadState(self)
 
-                self.env.io.on_finish()
-                sys.exit(0)
+                raise DotsExit
 
             if self.state.is_dead():
                 return

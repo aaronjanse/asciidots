@@ -15,6 +15,9 @@ def move_first_time(func):
     return _decorator
 
 
+def autodetect_next_state(dot, char):
+    return TravelState(dot).next(char)
+
 class State(object):
     def __init__(self, parent):
         """
@@ -31,15 +34,10 @@ class State(object):
         self.id_mode = False
 
     def next(self, char):
-        self.env.io.on_finish()
         raise Exception("State Next Method Not Implemented!")
 
     def run(self, char):
-        self.env.io.on_finish()
         raise Exception("State Run Method Not Implemented!")
-
-    def set_parent_state(self, new_state):
-        self.parent.state = new_state(self.parent)
 
     def move_parent(self):
         self.parent.move()
@@ -136,13 +134,11 @@ class TravelState(State):
                 next_pos = self.parent.pos + dir
 
                 if self.env.world.does_loc_exist(next_pos) and self.env.world.get_char_at(next_pos) != ' ':
-                    from .dot import Dot
 
-                    new_dot = Dot(self.env, self.parent.pos, id_=self.parent.id,
-                                  value=self.parent.value, direction=dir, state=TravelState,
-                                  stack=self.parent.stack[:])
+                    new_dot = self.parent.copy()
+                    new_dot.dir = dir
+                    new_dot.move()
 
-                    # new_dot.state.move_parent()
                     self.env.dots.append(new_dot)
         elif char.isSingletonLibReturnWarp():
             self.parent.pos = self.parent.stack.pop()
@@ -161,23 +157,35 @@ class ValueState(State):
     def __init__(self, parent):
         super().__init__(parent)
         self.first_digit = True
+        self.neg = False
 
     def next(self, char):
-        if not char.isdecimal() and char != '?':
-            return TravelState(self.parent)
-        else:
+        if char.isdecimal() or char == '?':
             return self
+        elif char == '-' and self.first_digit and not self.neg:
+            return self
+        else:
+            return autodetect_next_state(self.parent, char)
 
     @move_first_time
     def run(self, char):
         if char.isdecimal():
             if self.first_digit:
-                self.parent.value = int(char)
+                if self.neg:
+                    self.parent.value = -int(char)
+                else:
+                    self.parent.value = int(char)
                 self.first_digit = False
             else:
-                self.parent.value = self.parent.value * 10 + int(char)
+                if self.neg:
+                    self.parent.value = self.parent.value * 10 - int(char)
+                else:
+                    self.parent.value = self.parent.value * 10 + int(char)
         elif char == '?':
             self.parent.value = int(self.env.io.get_input())
+        elif char == '-' and self.first_digit and not self.neg:
+            self.neg = True
+
 
         self.move_parent()
 
@@ -202,7 +210,7 @@ class IdState(State):
         elif char == '~':
             return TildeState(self.parent, id_mode=True)
         else:
-            return TravelState(self.parent)
+            return autodetect_next_state(self.parent, char)
 
     @move_first_time
     def run(self, char):
@@ -225,9 +233,12 @@ class PrintState(State):
         super().__init__(parent)
         self.newline = True
         self.asciiMode = False
+        self.pendingExit = False
 
     def next(self, char):
-        if char in '$_a#@':
+        if self.pendingExit:
+            return autodetect_next_state(self.parent, char)
+        elif char in '$_a#@':
             return self
         elif char == ' ':
             return DeadState(self.parent)
@@ -236,7 +247,7 @@ class PrintState(State):
         elif char == "'":
             return PrintSingleQuoteState(self.parent, newline=self.newline)
         else:
-            return TravelState(self.parent)
+            return autodetect_next_state(self.parent, char)
 
     @move_first_time
     def run(self, char):
@@ -254,6 +265,7 @@ class PrintState(State):
                 data = str(data) + '\n'
 
             self.env.io.on_output(data)
+            self.pendingExit = True
         elif char == '@':
             data = self.parent.id
 
@@ -264,6 +276,7 @@ class PrintState(State):
                 data = str(data) + '\n'
 
             self.env.io.on_output(data)
+            self.pendingExit = True
         else:
             pass
 
@@ -278,7 +291,7 @@ class PrintDoubleQuoteState(State):
 
     def next(self, char):
         if self.pendingExit:
-            return TravelState(self.parent)
+            return autodetect_next_state(self.parent, char)
         else:
             return self
 
@@ -303,7 +316,7 @@ class PrintSingleQuoteState(State):
 
     def next(self, char):
         if self.pendingExit:
-            return TravelState(self.parent)
+            return autodetect_next_state(self.parent, char)
         else:
             return self
 
@@ -341,7 +354,7 @@ class TwoDotState(State):
         if self.isWaiting:
             return self
         else:
-            return TravelState(self.parent)
+            return autodetect_next_state(self.parent, char)
 
     def run(self, char):
         if self.isMaster:
