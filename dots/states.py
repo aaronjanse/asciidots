@@ -277,6 +277,7 @@ class PrintDoubleQuoteState(State):
         super().__init__(parent)
         self.newline = newline
         self.pendingExit = False
+        self.text_buffer = ''
 
     def next(self, char):
         if self.pendingExit:
@@ -288,11 +289,13 @@ class PrintDoubleQuoteState(State):
     def run(self, char):
         if char == '"':
             if self.newline:
-                self.env.io.on_output('\n')
+                self.text_buffer += '\n'
+
+            self.env.io.on_output(self.text_buffer)
 
             self.pendingExit = True
         else:
-            self.env.io.on_output(char)
+            self.text_buffer += char
 
         self.move_parent()
 
