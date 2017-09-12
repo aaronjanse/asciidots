@@ -221,9 +221,12 @@ class PrintState(State):
         super().__init__(parent)
         self.newline = True
         self.asciiMode = False
+        self.pendingExit = False
 
     def next(self, char):
-        if char in '$_a#@':
+        if self.pendingExit:
+            return autodetect_next_state(self.parent, char)
+        elif char in '$_a#@':
             return self
         elif char == ' ':
             return DeadState(self.parent)
@@ -250,6 +253,7 @@ class PrintState(State):
                 data = str(data) + '\n'
 
             self.env.io.on_output(data)
+            self.pendingExit = True
         elif char == '@':
             data = self.parent.id
 
@@ -260,6 +264,7 @@ class PrintState(State):
                 data = str(data) + '\n'
 
             self.env.io.on_output(data)
+            self.pendingExit = True
         else:
             pass
 
@@ -270,7 +275,6 @@ class PrintDoubleQuoteState(State):
     def __init__(self, parent, newline=True):
         super().__init__(parent)
         self.newline = newline
-        self.pendingExit = False
 
     def next(self, char):
         if self.pendingExit:
@@ -295,7 +299,6 @@ class PrintSingleQuoteState(State):
     def __init__(self, parent, newline=True):
         super().__init__(parent)
         self.newline = newline
-        self.pendingExit = False
 
     def next(self, char):
         if self.pendingExit:
