@@ -275,6 +275,7 @@ class PrintDoubleQuoteState(State):
     def __init__(self, parent, newline=True):
         super().__init__(parent)
         self.newline = newline
+        self.pendingExit = False
 
     def next(self, char):
         if self.pendingExit:
@@ -299,6 +300,7 @@ class PrintSingleQuoteState(State):
     def __init__(self, parent, newline=True):
         super().__init__(parent)
         self.newline = newline
+        self.pendingExit = False
 
     def next(self, char):
         if self.pendingExit:
