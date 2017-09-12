@@ -48,7 +48,6 @@ class OperChar(Char):
                 '-': (lambda x, y: x - y),
                 '*': (lambda x, y: x * y),
                 '/': (lambda x, y: x / y),
-                '÷': (lambda x, y: x / y),
                 '^': (lambda x, y: x ** y),
                 '%': (lambda x, y: x % y),
 
@@ -58,11 +57,10 @@ class OperChar(Char):
                 '!': (lambda x, y: x != y),
 
                 '=': (lambda x, y: x == y),
-                '≠': (lambda x, y: x != y),
                 '>': (lambda x, y: x > y),
-                '≥': (lambda x, y: x >= y),
+                'G': (lambda x, y: x >= y),
                 '<': (lambda x, y: x < y),
-                '≤': (lambda x, y: x <= y)
+                'L': (lambda x, y: x <= y)
             }
 
             self.func = function_dict[self]

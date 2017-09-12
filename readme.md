@@ -319,21 +319,19 @@ This example prompts for a value then prints to the console whether the user pro
 Other operations work similarly but with a different symbol in the middle. This is the key to these symbols:<br>
 `*`: multiplication<br>
 `/`: division<br>
-`÷`: also division<br>
 `+`: addition<br>
 `-`: subtraction<br>
 `%`: modulus<br>
 `^`: exponent<br>
 `&`: boolean AND<br>
-`!`: boolean NOT<br>
 `o`: boolean OR<br>
 `x`: boolean XOR<br>
 `>`: greater than<br>
-`≥`: greater than or equal to<br>
+`G`: greater than or equal to<br>
 `<`: less than<br>
-`≤`: less than or equal to<br>
+`L`: less than or equal to<br>
 `=`: equal to<br>
-`≠`: not equal to<br>
+`!`: not equal to<br>
 
 Boolean operations return a dot with a value of `1` if the expression evaluates to true and `0` if false.
 
