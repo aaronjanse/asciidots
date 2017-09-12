@@ -12,3 +12,9 @@ LEFT = Pos(-1, 0)
 RIGHT = Pos(1, 0)
 
 DIRECTIONS = (UP, RIGHT, DOWN, LEFT)
+
+
+# Defining Chars
+COMMENT_START = '``'
+ID_MODE = '@'
+VALUE = '#'

@@ -15,6 +15,9 @@ def move_first_time(func):
     return _decorator
 
 
+def autodetect_next_state(dot, char):
+    return TravelState(dot).next(char)
+
 class State(object):
     def __init__(self, parent):
         """
@@ -35,9 +38,6 @@ class State(object):
 
     def run(self, char):
         raise Exception("State Run Method Not Implemented!")
-
-    def set_parent_state(self, new_state):
-        self.parent.state = new_state(self.parent)
 
     def move_parent(self):
         self.parent.move()
@@ -160,7 +160,7 @@ class ValueState(State):
 
     def next(self, char):
         if not char.isdecimal() and char != '?':
-            return TravelState(self.parent)
+            return autodetect_next_state(self.parent, char)
         else:
             return self
 
@@ -198,7 +198,7 @@ class IdState(State):
         elif char == '~':
             return TildeState(self.parent, id_mode=True)
         else:
-            return TravelState(self.parent)
+            return autodetect_next_state(self.parent, char)
 
     @move_first_time
     def run(self, char):
@@ -232,7 +232,7 @@ class PrintState(State):
         elif char == "'":
             return PrintSingleQuoteState(self.parent, newline=self.newline)
         else:
-            return TravelState(self.parent)
+            return autodetect_next_state(self.parent, char)
 
     @move_first_time
     def run(self, char):
@@ -274,7 +274,7 @@ class PrintDoubleQuoteState(State):
 
     def next(self, char):
         if self.pendingExit:
-            return TravelState(self.parent)
+            return autodetect_next_state(self.parent, char)
         else:
             return self
 
@@ -299,7 +299,7 @@ class PrintSingleQuoteState(State):
 
     def next(self, char):
         if self.pendingExit:
-            return TravelState(self.parent)
+            return autodetect_next_state(self.parent, char)
         else:
             return self
 
@@ -337,7 +337,7 @@ class TwoDotState(State):
         if self.isWaiting:
             return self
         else:
-            return TravelState(self.parent)
+            return autodetect_next_state(self.parent, char)
 
     def run(self, char):
         if self.isMaster:
