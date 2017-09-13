@@ -1,4 +1,5 @@
 from dots.constants import DIRECTIONS, RIGHT, LEFT, UP, DOWN
+from dots.exceptions import DotsExit
 from dots.vector import Pos
 
 
@@ -77,6 +78,8 @@ class TravelState(State):
     def next(self, char):
         if char == ' ':
             return DeadState(self.parent)
+        elif char == '&':
+            return ExitState(self.parent)
         elif char == '~':
             return TildeState(self.parent)
         elif char == '#':
@@ -462,3 +465,11 @@ class DeadState(State):
 
     def is_dead(self):
         return True
+
+
+class ExitState(State):
+    def next(self, char):
+        raise DotsExit
+
+    def run(self, char):
+        raise DotsExit

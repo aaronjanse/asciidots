@@ -74,12 +74,6 @@ class Dot:
             self.state = self.state.next(char)
             self.state.run(char)
 
-            # end of execution
-            if char == '&' and not char.isOper():
-                self.state = DeadState(self)
-
-                raise DotsExit
-
             if self.state.is_dead():
                 return
 
