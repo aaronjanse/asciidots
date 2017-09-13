@@ -89,7 +89,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             curses.curs_set(False)
 
             # defining the two main parts of the screen: the view of the program
-            self.win_program = curses.newwin(self.debug_lines, curses.COLS - 1, 0, 0)
+            self.win_program = curses.newwin(self.debug_lines, curses.COLS, 0, 0)
             # and pad for the output of the prog
             self.logging_pad = curses.newpad(1000, curses.COLS - 1)
 
@@ -213,6 +213,9 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                     last_line_is_empty = False
 
                 for x, char in enumerate(line):
+                    # curses crash when you try to print outside the screen so don't
+                    if x > curses.COLS - 1:
+                        break
 
                     if char == '\n':
                         # The new line in printed only in compat mode, at the end of the loop
