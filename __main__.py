@@ -219,7 +219,11 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
                     # Printing each char with the right color
                     if (x, y) in dots_position_list:
-                        self.print_char(char, 1, display_y, x)
+                        # We want to always see the dot, so if is on a space (printing) we render a .
+                        if char == ' ':
+                            self.print_char('.', 1, display_y, x)
+                        else:
+                            self.print_char(char, 1, display_y, x)
                     elif char.isLibWarp():
                         self.print_char(char, 2, display_y, x)
                     elif char.isWarp():
