@@ -93,6 +93,8 @@ ENV/
 # Jetbrains
 .idea/
 
+# VS Code
+.vscode/
 ddorn/
 
 # MacOS
