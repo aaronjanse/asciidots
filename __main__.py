@@ -127,6 +127,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         return input_val
 
     def on_output(self, value):
+        value = str(value)
         self.outputs_left -= 1
 
         # maximum output reached, we quit the prog
