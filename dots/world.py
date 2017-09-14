@@ -57,6 +57,12 @@ class World(object):
         """True if this location exists on the map."""
         return 0 <= loc.row < len(self.map) and 0 <= loc.col < len(self.map[loc.row])
 
+    def is_char_at(self, pos, char):
+        """True iff the pos exists and is the char is the same."""
+        if not self.does_loc_exist(pos):
+            return False
+        return self.get_char_at(pos) == char
+
     # NOTE: Hopefully done?
     def _import_libraries(self, map=None):
         """
