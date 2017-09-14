@@ -63,6 +63,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         self.debug = debug
         self.compat_debug = compat_debug
         self.debug_lines = debug_lines
+        self.debug_cols = terminalsize.get_terminal_size()[0] -1
         self.autostep_debug = autostep_debug
 
         self.compat_logging_buffer = ''
@@ -214,7 +215,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
                 for x, char in enumerate(line):
                     # curses crash when you try to print outside the screen so don't
-                    if x > curses.COLS - 1:
+                    if x > self.debug_cols - 1:
                         break
 
                     if char == '\n':
