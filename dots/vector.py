@@ -14,7 +14,7 @@ class Pos(tuple):
         return Pos(-self[0], -self[1])
 
     def __sub__(self, other):
-        return self + -other
+        return self + -Pos(*other)
 
     def __rsub__(self, other):
         return -self + other
