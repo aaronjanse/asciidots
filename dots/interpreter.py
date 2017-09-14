@@ -26,6 +26,17 @@ class AsciiDotsInterpreter(object):
         self._setup_dots()
         self.run_in_parallel = run_in_parallel
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.terminate()
+        self.env.io.on_finish()
+
+        if isinstance(exc_tb, DotsExit):
+            # we don't want the exception re-raised
+            return True
+
     def _setup_dots(self):
         """Fill the dot list with dots from the starting points in the world."""
 

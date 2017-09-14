@@ -63,7 +63,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         self.debug = debug
         self.compat_debug = compat_debug
         self.debug_lines = debug_lines
-        self.debug_cols = terminalsize.get_terminal_size()[0] -1
+        self.debug_cols = terminalsize.get_terminal_size()[0] - 1
         self.autostep_debug = autostep_debug
 
         self.compat_logging_buffer = ''
@@ -317,22 +317,14 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
     run_in_parallel = not async
 
     env = Env()
-    io_callbacks = DefaultIOCallbacks(env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
+    env.io = DefaultIOCallbacks(env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
 
     program_dir = os.path.dirname(os.path.abspath(filename))
     with open(filename, 'r') as file:
         program = file.read()
 
-    try:
-        interpreter = AsciiDotsInterpreter(env, program, program_dir, run_in_parallel)
+    with AsciiDotsInterpreter(env, program, program_dir, run_in_parallel) as interpreter:
         interpreter.run()
-    except DotsExit:
-        io_callbacks.on_finish()
-        interpreter.terminate()
-    except Exception as e:
-        io_callbacks.on_finish()
-        interpreter.terminate()
-        raise e
 
 
 if __name__ == "__main__":
