@@ -60,21 +60,22 @@ class AsciiDotsInterpreter(object):
             inter_thread.start()
             return
 
-        while not self.needs_shutdown and len(self.env.dots) > 0:
-            next_tick_dots = []
+        with self:
+            while not self.needs_shutdown and len(self.env.dots) > 0:
+                next_tick_dots = []
 
-            for dot in self.env.dots:
-                dot.simulate_tick(not self.run_in_parallel)
+                for dot in self.env.dots:
+                    dot.simulate_tick(not self.run_in_parallel)
 
-                if not dot.state.is_dead():
-                    next_tick_dots += dot,
+                    if not dot.state.is_dead():
+                        next_tick_dots += dot,
 
-            if self.run_in_parallel:
-                self.env.io.on_microtick(self.env.dots[0])
+                if self.run_in_parallel:
+                    self.env.io.on_microtick(self.env.dots[0])
 
-            self.env.dots = next_tick_dots
+                self.env.dots = next_tick_dots
 
-        raise DotsExit
+            raise DotsExit
 
     def terminate(self):
         """The program will shut down at the next operation."""

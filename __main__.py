@@ -323,8 +323,8 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
     with open(filename, 'r') as file:
         program = file.read()
 
-    with AsciiDotsInterpreter(env, program, program_dir, run_in_parallel) as interpreter:
-        interpreter.run()
+    interpreter = AsciiDotsInterpreter(env, program, program_dir, run_in_parallel)
+    interpreter.run()
 
 
 if __name__ == "__main__":
