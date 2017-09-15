@@ -1,5 +1,7 @@
 class Pos(tuple):
-    def __new__(cls, x, y):
+    def __new__(cls, x, y=None):
+        if y is None:
+            return tuple.__new__(cls, x)
         return tuple.__new__(cls, (x, y))
 
     def __str__(self):
