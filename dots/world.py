@@ -247,6 +247,9 @@ class World(object):
             if line[0] == '%':
                 continue
 
+            if orig_pos.y == y:
+                continue
+
             for x, char in enumerate(line):
                 if char.isWarp() and char.get_id() == warp_id and orig_pos != (x, y):
                     return Pos(x, y)
