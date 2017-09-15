@@ -95,7 +95,7 @@ ENV/
 
 # VS Code
 .vscode/
-ddorn/
+ddorn
 
 # MacOS
 */.DS_Store

@@ -197,9 +197,14 @@ class IdState(State):
     def __init__(self, parent):
         super().__init__(parent)
         self.first_digit = True
+        self.setting_id = False
 
     def next(self, char):
-        if char in '[]{}':
+        if char.isdecimal() or char == '?':
+            return self
+        elif self.setting_id:
+            return autodetect_next_state(self.parent, char)
+        elif char in '[]{}':
             if self.is_moving_vert():
                 return DeadState(self.parent)
             else:
@@ -208,8 +213,6 @@ class IdState(State):
             return OperSquareState(self.parent, id_mode=True)
         elif char.isCurlyOper():
             return OperCurlyState(self.parent, id_mode=True)
-        elif char.isdecimal() or char == '?':
-            return self
         elif char == '~':
             return TildeState(self.parent, id_mode=True)
         else:
@@ -218,6 +221,7 @@ class IdState(State):
     @move_first_time
     def run(self, char):
         if char.isdecimal():
+            self.setting_id = True
             if self.first_digit:
                 self.parent.id = int(char)
                 self.first_digit = False
