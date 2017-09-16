@@ -70,7 +70,7 @@ class AsciiDotsInterpreter(object):
                         self.env.dots.remove(dot)
 
                 if self.run_in_parallel:
-                    self.env.io.on_microtick(self.env.dots[0])
+                    self.env.io.on_microtick(None)
 
             raise DotsExit
 
