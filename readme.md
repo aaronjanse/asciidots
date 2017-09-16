@@ -38,7 +38,7 @@ Hello world:
 [Quine](https://en.wikipedia.org/wiki/Quine_(computing)):
 
 ```
- ($'.-#40-$_a#-#35-$_a#-#39-$_a#)
+ ($'.-#40-$_a#-#36-$_a#-#39-$_a#)
 ```
 
 Counter:
