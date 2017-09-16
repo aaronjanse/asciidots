@@ -77,6 +77,10 @@ class Dot:
             if self.state.is_dead():
                 return
 
+            if not self.env.world.does_loc_exist(self.pos) or self.env.world.is_char_at(self.pos, ' '):
+                self.state = DeadState(self)
+                return
+
             if self.state.isWaiting:
                 break
 
