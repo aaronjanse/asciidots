@@ -165,8 +165,6 @@ class ValueState(State):
     def next(self, char):
         if char.isdecimal() or char == '?':
             return self
-        elif char == '-' and self.first_digit and not self.neg:
-            return self
         else:
             return autodetect_next_state(self.parent, char)
 
@@ -174,21 +172,12 @@ class ValueState(State):
     def run(self, char):
         if char.isdecimal():
             if self.first_digit:
-                if self.neg:
-                    self.parent.value = -int(char)
-                else:
-                    self.parent.value = int(char)
+                self.parent.value = int(char)
                 self.first_digit = False
             else:
-                if self.neg:
-                    self.parent.value = self.parent.value * 10 - int(char)
-                else:
-                    self.parent.value = self.parent.value * 10 + int(char)
+                self.parent.value = self.parent.value * 10 + int(char)
         elif char == '?':
             self.parent.value = int(self.env.io.get_input())
-        elif char == '-' and self.first_digit and not self.neg:
-            self.neg = True
-
 
         self.move_parent()
 
@@ -295,6 +284,7 @@ class PrintDoubleQuoteState(State):
         super().__init__(parent)
         self.newline = newline
         self.pendingExit = False
+        self.text_buffer = ''
 
     def next(self, char):
         if self.pendingExit:
@@ -306,11 +296,13 @@ class PrintDoubleQuoteState(State):
     def run(self, char):
         if char == '"':
             if self.newline:
-                self.env.io.on_output('\n')
+                self.text_buffer += '\n'
+
+            self.env.io.on_output(self.text_buffer)
 
             self.pendingExit = True
         else:
-            self.env.io.on_output(char)
+            self.text_buffer += char
 
         self.move_parent()
 
