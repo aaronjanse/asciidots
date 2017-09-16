@@ -26,6 +26,17 @@ class AsciiDotsInterpreter(object):
         self._setup_dots()
         self.run_in_parallel = run_in_parallel
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.terminate()
+        self.env.io.on_finish()
+
+        if isinstance(exc_tb, DotsExit):
+            # we don't want the exception re-raised
+            return True
+
     def _setup_dots(self):
         """Fill the dot list with dots from the starting points in the world."""
 
@@ -49,21 +60,19 @@ class AsciiDotsInterpreter(object):
             inter_thread.start()
             return
 
-        while not self.needs_shutdown and len(self.env.dots) > 0:
-            next_tick_dots = []
+        with self:
+            while not self.needs_shutdown and len(self.env.dots) > 0:
 
-            for dot in self.env.dots:
-                dot.simulate_tick(not self.run_in_parallel)
+                for dot in self.env.dots[:]:
+                    dot.simulate_tick(not self.run_in_parallel)
 
-                if not dot.state.is_dead():
-                    next_tick_dots += dot,
+                    if dot.state.is_dead():
+                        self.env.dots.remove(dot)
 
-            if self.run_in_parallel:
-                self.env.io.on_microtick(self.env.dots[0])
+                if self.run_in_parallel:
+                    self.env.io.on_microtick(None)
 
-            self.env.dots = next_tick_dots
-
-        raise DotsExit
+            raise DotsExit
 
     def terminate(self):
         """The program will shut down at the next operation."""

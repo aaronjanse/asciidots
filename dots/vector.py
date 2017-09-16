@@ -1,5 +1,7 @@
 class Pos(tuple):
-    def __new__(cls, x, y):
+    def __new__(cls, x, y=None):
+        if y is None:
+            return tuple.__new__(cls, x)
         return tuple.__new__(cls, (x, y))
 
     def __str__(self):
@@ -14,13 +16,16 @@ class Pos(tuple):
         return Pos(-self[0], -self[1])
 
     def __sub__(self, other):
-        return self + -other
+        return self + -Pos(*other)
 
     def __rsub__(self, other):
         return -self + other
 
     def __eq__(self, other):
         return self[0] == other[0] and self[1] == other[1]
+
+    def __hash__(self):
+        return (self.x, self.y).__hash__()
 
     @property
     def x(self):

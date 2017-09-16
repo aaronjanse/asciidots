@@ -74,13 +74,15 @@ class Dot:
             self.state = self.state.next(char)
             self.state.run(char)
 
-            # end of execution
-            if char == '&' and not char.isOper():
-                self.state = DeadState(self)
-
-                raise DotsExit
-
             if self.state.is_dead():
+                return
+
+            if not self.env.world.does_loc_exist(self.pos):
+                self.state = DeadState(self)
+                return
+
+            if self.env.world.is_char_at(self.pos, ' ') and not isinstance(self.state, PrintState):
+                self.state = DeadState(self)
                 return
 
             if self.state.isWaiting:

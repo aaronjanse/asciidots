@@ -1,4 +1,5 @@
 from dots.constants import DIRECTIONS, RIGHT, LEFT, UP, DOWN
+from dots.exceptions import DotsExit
 from dots.vector import Pos
 
 
@@ -77,6 +78,8 @@ class TravelState(State):
     def next(self, char):
         if char == ' ':
             return DeadState(self.parent)
+        elif char == '&':
+            return ExitState(self.parent)
         elif char == '~':
             return TildeState(self.parent)
         elif char == '#':
@@ -183,9 +186,14 @@ class IdState(State):
     def __init__(self, parent):
         super().__init__(parent)
         self.first_digit = True
+        self.setting_id = False
 
     def next(self, char):
-        if char in '[]{}':
+        if char.isdecimal() or char == '?':
+            return self
+        elif self.setting_id:
+            return autodetect_next_state(self.parent, char)
+        elif char in '[]{}':
             if self.is_moving_vert():
                 return DeadState(self.parent)
             else:
@@ -194,8 +202,6 @@ class IdState(State):
             return OperSquareState(self.parent, id_mode=True)
         elif char.isCurlyOper():
             return OperCurlyState(self.parent, id_mode=True)
-        elif char.isdecimal() or char == '?':
-            return self
         elif char == '~':
             return TildeState(self.parent, id_mode=True)
         else:
@@ -204,6 +210,7 @@ class IdState(State):
     @move_first_time
     def run(self, char):
         if char.isdecimal():
+            self.setting_id = True
             if self.first_digit:
                 self.parent.id = int(char)
                 self.first_digit = False
@@ -218,9 +225,9 @@ class IdState(State):
 
 
 class PrintState(State):
-    def __init__(self, parent):
+    def __init__(self, parent, newline=True):
         super().__init__(parent)
-        self.newline = True
+        self.newline = newline
         self.asciiMode = False
         self.pendingExit = False
 
@@ -272,11 +279,9 @@ class PrintState(State):
         self.move_parent()
 
 
-class PrintDoubleQuoteState(State):
+class PrintDoubleQuoteState(PrintState):
     def __init__(self, parent, newline=True):
-        super().__init__(parent)
-        self.newline = newline
-        self.pendingExit = False
+        super().__init__(parent, newline)
         self.text_buffer = ''
 
     def next(self, char):
@@ -300,11 +305,7 @@ class PrintDoubleQuoteState(State):
         self.move_parent()
 
 
-class PrintSingleQuoteState(State):
-    def __init__(self, parent, newline=True):
-        super().__init__(parent)
-        self.newline = newline
-        self.pendingExit = False
+class PrintSingleQuoteState(PrintState):
 
     def next(self, char):
         if self.pendingExit:
@@ -454,3 +455,11 @@ class DeadState(State):
 
     def is_dead(self):
         return True
+
+
+class ExitState(State):
+    def next(self, char):
+        raise DotsExit
+
+    def run(self, char):
+        raise DotsExit

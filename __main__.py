@@ -63,6 +63,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         self.debug = debug
         self.compat_debug = compat_debug
         self.debug_lines = debug_lines
+        self.debug_cols = terminalsize.get_terminal_size()[0] - 1
         self.autostep_debug = autostep_debug
 
         self.compat_logging_buffer = ''
@@ -89,7 +90,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             curses.curs_set(False)
 
             # defining the two main parts of the screen: the view of the program
-            self.win_program = curses.newwin(self.debug_lines, curses.COLS - 1, 0, 0)
+            self.win_program = curses.newwin(self.debug_lines, curses.COLS, 0, 0)
             # and pad for the output of the prog
             self.logging_pad = curses.newpad(1000, curses.COLS - 1)
 
@@ -127,6 +128,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         return input_val
 
     def on_output(self, value):
+        value = str(value)
         self.outputs_left -= 1
 
         # maximum output reached, we quit the prog
@@ -212,6 +214,9 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                     last_line_is_empty = False
 
                 for x, char in enumerate(line):
+                    # curses crash when you try to print outside the screen so don't
+                    if x > self.debug_cols - 1:
+                        break
 
                     if char == '\n':
                         # The new line in printed only in compat mode, at the end of the loop
@@ -219,7 +224,11 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
                     # Printing each char with the right color
                     if (x, y) in dots_position_list:
-                        self.print_char(char, 1, display_y, x)
+                        # We want to always see the dot, so if is on a space (printing) we render a .
+                        if char == ' ':
+                            self.print_char('.', 1, display_y, x)
+                        else:
+                            self.print_char(char, 1, display_y, x)
                     elif char.isLibWarp():
                         self.print_char(char, 2, display_y, x)
                     elif char.isWarp():
@@ -308,22 +317,14 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
     run_in_parallel = not async
 
     env = Env()
-    io_callbacks = DefaultIOCallbacks(env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
+    env.io = DefaultIOCallbacks(env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
 
     program_dir = os.path.dirname(os.path.abspath(filename))
     with open(filename, 'r') as file:
         program = file.read()
 
-    try:
-        interpreter = AsciiDotsInterpreter(env, program, program_dir, run_in_parallel)
-        interpreter.run()
-    except DotsExit:
-        io_callbacks.on_finish()
-        interpreter.terminate()
-    except Exception as e:
-        io_callbacks.on_finish()
-        interpreter.terminate()
-        raise e
+    interpreter = AsciiDotsInterpreter(env, program, program_dir, run_in_parallel)
+    interpreter.run()
 
 
 if __name__ == "__main__":

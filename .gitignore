@@ -93,7 +93,9 @@ ENV/
 # Jetbrains
 .idea/
 
-ddorn/
+# VS Code
+.vscode/
+ddorn
 
 # MacOS
 */.DS_Store
