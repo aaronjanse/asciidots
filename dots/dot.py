@@ -77,7 +77,11 @@ class Dot:
             if self.state.is_dead():
                 return
 
-            if not self.env.world.does_loc_exist(self.pos) or self.env.world.is_char_at(self.pos, ' '):
+            if not self.env.world.does_loc_exist(self.pos):
+                self.state = DeadState(self)
+                return
+
+            if self.env.world.is_char_at(self.pos, ' ') and not isinstance(self.state, PrintState):
                 self.state = DeadState(self)
                 return
 

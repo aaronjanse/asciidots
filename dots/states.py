@@ -225,9 +225,9 @@ class IdState(State):
 
 
 class PrintState(State):
-    def __init__(self, parent):
+    def __init__(self, parent, newline=False):
         super().__init__(parent)
-        self.newline = True
+        self.newline = newline
         self.asciiMode = False
         self.pendingExit = False
 
@@ -279,11 +279,9 @@ class PrintState(State):
         self.move_parent()
 
 
-class PrintDoubleQuoteState(State):
+class PrintDoubleQuoteState(PrintState):
     def __init__(self, parent, newline=True):
-        super().__init__(parent)
-        self.newline = newline
-        self.pendingExit = False
+        super().__init__(parent, newline)
         self.text_buffer = ''
 
     def next(self, char):
@@ -307,11 +305,7 @@ class PrintDoubleQuoteState(State):
         self.move_parent()
 
 
-class PrintSingleQuoteState(State):
-    def __init__(self, parent, newline=True):
-        super().__init__(parent)
-        self.newline = newline
-        self.pendingExit = False
+class PrintSingleQuoteState(PrintState):
 
     def next(self, char):
         if self.pendingExit:
