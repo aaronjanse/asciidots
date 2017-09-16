@@ -43,7 +43,7 @@ class Dot:
 
         return Dot(self.env, self.pos, self.id, self.value, self.dir, type(self.state), self.stack[:])
 
-    def simulate_tick(self, run_until_waiting, a=True):
+    def simulate_tick(self, run_until_waiting):
         """
         Update the dot to its next state.
 
