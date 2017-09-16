@@ -251,6 +251,8 @@ By the end of this program, the dot's value is `13` and its id is `99`:
 &nbsp;&nbsp;&nbsp;&nbsp;When `_` follows a `$`, the program does not end printing with a [newline](https://en.wikipedia.org/wiki/Newline).<br>
 &nbsp;&nbsp;&nbsp;&nbsp;When not in quotes, if a `a` comes before a `#` or `@` symbol, the value is converted to ascii before it is printed
 
+_Note_: Double quotes (`"`) are buffered. Single quotes (`'`) are not buffered. The advantage of buffering is that it prevents race conditions from interleaving text.
+
 Here's how to set and then print a dot's value:
 
 ```
