@@ -91,6 +91,31 @@ class Dot:
             if not run_until_waiting:
                 break
 
+    def next(self):
+        """Update the state of this dot accoding to the char it is in."""
+        if not self.env.world.does_loc_exist(self.pos):
+            self.state = DeadState(self)
+            return
+
+        char = self.env.world.get_char_at(self.pos)
+        self.state = self.state.next(char)
+
+        if char == ' ' and not isinstance(self.state, PrintState):
+            self.state = DeadState(self)
+
+    def run(self):
+        """Perform the state action on this char."""
+        if not self.env.world.does_loc_exist(self.pos):
+            self.state = DeadState(self)
+            return
+
+        self.state.run(self.env.world.get_char_at(self.pos))
+
+        if not self.env.world.does_loc_exist(self.pos):
+            self.state = DeadState(self)
+        if self.env.world.is_char_at(self.pos, ' ') and not isinstance(self.state, PrintState):
+            self.state = DeadState(self)
+
     def _calculate_direction(self):
         """Calculate the inial direction of a just created dot."""
         valid_chars = r'\/*^v><+'

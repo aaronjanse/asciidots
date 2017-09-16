@@ -320,7 +320,7 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
     env.io = DefaultIOCallbacks(env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
 
     program_dir = os.path.dirname(os.path.abspath(filename))
-    with open(filename, 'r') as file:
+    with open(filename, encoding='utf-8') as file:
         program = file.read()
 
     interpreter = AsciiDotsInterpreter(env, program, program_dir, run_in_parallel)

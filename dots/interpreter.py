@@ -63,16 +63,36 @@ class AsciiDotsInterpreter(object):
         with self:
             while not self.needs_shutdown and len(self.env.dots) > 0:
 
-                for dot in self.env.dots[:]:
-                    dot.simulate_tick(not self.run_in_parallel)
-
-                    if dot.state.is_dead():
-                        self.env.dots.remove(dot)
-
                 if self.run_in_parallel:
-                    self.env.io.on_microtick(None)
+                    self.parallel_tick()
+                else:
+                    self.async_tick()
 
             raise DotsExit
+
+    def parallel_tick(self):
+        """Simulate a tick in parallele mode"""
+
+        dots = self.env.dots[:]
+        for dot in dots:
+            dot.next()
+
+        for dot in dots:
+            dot.run()
+
+        for dot in dots:
+            if dot.state.is_dead():
+                self.env.dots.remove(dot)
+
+        self.env.io.on_microtick(None)
+
+    def async_tick(self):
+        """Simulate a tick in async mode."""
+        for dot in self.env.dots[:]:
+            dot.simulate_tick(not self.run_in_parallel)
+
+            if dot.state.is_dead():
+                self.env.dots.remove(dot)
 
     def terminate(self):
         """The program will shut down at the next operation."""
