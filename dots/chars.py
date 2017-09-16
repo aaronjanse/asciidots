@@ -88,10 +88,6 @@ class WarpChar(Char):
     def isWarp(self):
         return True
 
-    def is_connected(self):
-        """True if the wrap is actually connected."""
-        return self._dest_loc is not None
-
     def set_id(self, teleporter_id):
         self._teleporter_id = teleporter_id
 

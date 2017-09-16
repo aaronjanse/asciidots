@@ -145,7 +145,7 @@ class TravelState(State):
                     self.env.dots.append(new_dot)
         elif char.isSingletonLibReturnWarp():
             self.parent.pos = self.parent.stack.pop()
-        elif char.isWarp() and char.is_connected():
+        elif char.isWarp():
             if char.isSingletonLibWarp():
                 self.parent.stack.append(self.parent.pos)
 

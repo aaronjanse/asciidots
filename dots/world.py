@@ -262,7 +262,7 @@ class World(object):
         assigned_ids_for_letters = {}
 
         for (x, y), char in self._char_obj_array_iter_with_coords(char_obj_array):
-            if char.isWarp() and not char.is_connected():
+            if char.isWarp() and char.get_id() is None:
                 if char in assigned_ids_for_letters:
                     char_obj_array[y][x].set_id(assigned_ids_for_letters[char])
                 else:
