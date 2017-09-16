@@ -225,7 +225,7 @@ class IdState(State):
 
 
 class PrintState(State):
-    def __init__(self, parent, newline=False):
+    def __init__(self, parent, newline=True):
         super().__init__(parent)
         self.newline = newline
         self.asciiMode = False
