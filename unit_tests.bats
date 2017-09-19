@@ -40,3 +40,9 @@
   [ "$status" -eq 0 ]
   [ "$output" = "$(seq 5)" ]
 }
+
+@test "and" {
+  run python3 . ./tests/and.dots
+  [ "$status" -eq 0 ]
+  [ "$output" = "Good" ]
+}
