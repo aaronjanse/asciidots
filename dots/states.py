@@ -78,7 +78,7 @@ class TravelState(State):
     def next(self, char):
         if char == ' ':
             return DeadState(self.parent)
-        elif char == '&':
+        elif char == '&' and not char.isOper():
             return ExitState(self.parent)
         elif char == '~':
             return TildeState(self.parent)
