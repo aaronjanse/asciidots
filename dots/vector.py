@@ -20,12 +20,9 @@ class Pos(tuple):
 
     def __rsub__(self, other):
         return -self + other
-
-    def __eq__(self, other):
-        return self[0] == other[0] and self[1] == other[1]
-
+    
     def __hash__(self):
-        return (self.x, self.y).__hash__()
+        return super().__hash__()
 
     @property
     def x(self):
