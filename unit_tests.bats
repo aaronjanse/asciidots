@@ -1,13 +1,13 @@
 #!/usr/bin/env bats
 
 @test "count to 100" {
-  run python3 . ./tests/count_to_100.dots
+  run sudo python3 . ./tests/count_to_100.dots
   [ "$status" -eq 0 ]
   [ "$output" = "$(seq 100)" ]
 }
 
 @test "use for in range library" {
-  run python3 . ./tests/use_for_in_range.dots
+  run sudo python3 . ./tests/use_for_in_range.dots
   [ "$status" -eq 0 ]
   [ "$output" = "$(seq 10)" ]
 }
