@@ -1,2 +1,0 @@
-class DotsExit(SystemExit):
-    pass

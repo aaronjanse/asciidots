@@ -1,8 +1,0 @@
-
-  . `` This dot is the data carrier
-  | `` Travel along these vertical paths
-  # `` Set the value...
-  3 ``   ... to 3
-  | `` Continue down the path
-  $ `` Output to the console...
-  # ``   ... the dot's value
