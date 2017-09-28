@@ -1,0 +1,11 @@
+`` makes sure that parallel mode timing doesn't change too much
+
+%!lock_lib.dots L
+
+  /-\
+  0 |/---1#\
+  # ||  /--/
+.-* *>L-+-$#-------&
+  \-+-^ |
+    | | |
+    \-*-/

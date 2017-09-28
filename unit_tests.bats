@@ -46,3 +46,9 @@
   [ "$status" -eq 0 ]
   [ "$output" = "Good" ]
 }
+
+@test "timing" {
+  run python3 . ./tests/lock.dots
+  [ "$status" -eq 0 ]
+  [ "$output" = "1" ]
+}
