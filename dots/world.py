@@ -141,7 +141,7 @@ class World(object):
                 for x, char in enumerate(char_list):
                     if char == exposed_char_str:
                         if is_singleton:
-                            lib_char_obj_array[y][x] = SingletonLibReturnWarpChar(char)
+                            lib_char_obj_array[y][x] = SingletonLibInnerWarpChar(char)
                         else:
                             lib_char_obj_array[y][x] = LibWarpChar(char)
 
@@ -164,7 +164,7 @@ class World(object):
             for x, char in enumerate(line):
                 if char in lib_chars:
                     if is_singleton_dict[char]:
-                        char_obj_array[y][x] = SingletonLibWarpChar(char)
+                        char_obj_array[y][x] = SingletonLibOuterWarpChar(char)
                     else:
                         char_obj_array[y][x] = LibWarpChar(char)
 
@@ -184,7 +184,7 @@ class World(object):
     def _get_lib_files_by_alias(map):
         """
         Get the librairy files by alias char defined.
-        
+
         :param List[List[Char]] map: The map to import
         """
 
@@ -234,24 +234,24 @@ class World(object):
                 continue
 
             for x, char in enumerate(line):
-                if char.isWarp() and not char.isSingletonLibReturnWarp():
+                if char.isWarp() and not isinstance(char, SingletonLibInnerWarpChar):
                     warp_id = char.get_id()
-                    companion_warp_loc = self._find_companion_warp_char_loc_of(warp_id, Pos(x, y))
+                    companion_warp_loc = self._find_companion_warp_char_loc_of(char, warp_id, Pos(x, y))
 
                     if companion_warp_loc is not None:
                         self.map[y][x].set_dest_loc(companion_warp_loc)
 
     # ✓
-    def _find_companion_warp_char_loc_of(self, warp_id, orig_pos: Pos):
+    def _find_companion_warp_char_loc_of(self, orig_char, warp_id, orig_pos: Pos):
         for y, line in enumerate(self.map):
             if line[0] == '%':
                 continue
 
-            if orig_pos.y == y:
-                continue
-
             for x, char in enumerate(line):
                 if char.isWarp() and char.get_id() == warp_id and orig_pos != (x, y):
+                    if isinstance(orig_char, SingletonLibOuterWarpChar):
+                        if not isinstance(char, SingletonLibInnerWarpChar):
+                            continue
                     return Pos(x, y)
 
     # ✓

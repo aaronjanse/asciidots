@@ -1,6 +1,7 @@
 from dots.constants import DIRECTIONS, RIGHT, LEFT, UP, DOWN
 from dots.exceptions import DotsExit
 from dots.vector import Pos
+from dots.chars import SingletonLibInnerWarpChar
 
 
 def move_first_time(func):
@@ -18,6 +19,7 @@ def move_first_time(func):
 
 def autodetect_next_state(dot, char):
     return TravelState(dot).next(char)
+
 
 class State(object):
     def __init__(self, parent):
@@ -143,7 +145,7 @@ class TravelState(State):
                     new_dot.move()
 
                     self.env.dots.append(new_dot)
-        elif char.isSingletonLibReturnWarp():
+        elif isinstance(char, SingletonLibInnerWarpChar):
             self.parent.pos = self.parent.stack.pop()
         elif char.isWarp():
             if char.isSingletonLibWarp():
