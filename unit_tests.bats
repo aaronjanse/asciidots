@@ -41,6 +41,12 @@
   [ "$output" = "$(seq 5)" ]
 }
 
+@test "singleton in/out" {
+  run python3 . ./tests/singleton_2.dots
+  [ "$status" -eq 0 ]
+  [ "$output" = "$(echo -e "-1\n1")" ]
+}
+
 @test "and" {
   run python3 . ./tests/and.dots
   [ "$status" -eq 0 ]
