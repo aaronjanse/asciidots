@@ -149,7 +149,7 @@ class World(object):
 
         self._setup_warps_for(lib_char_obj_array)
 
-        # self._import_libraries(lib_char_obj_array)
+        self._import_libraries(lib_char_obj_array)
 
         char_obj_array.extend(lib_char_obj_array)
 
