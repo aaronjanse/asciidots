@@ -16,11 +16,11 @@ class Pos(tuple):
         return Pos(-self[0], -self[1])
 
     def __sub__(self, other):
-        return self + -Pos(*other)
+        return Pos(self[0] - other[0], self[1] - other[1])
 
     def __rsub__(self, other):
-        return -self + other
-    
+        return Pos(other[0] - self[0], other[1] - self[1])
+
     def __hash__(self):
         return super().__hash__()
 
