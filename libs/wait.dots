@@ -1,0 +1,30 @@
+`` Make the dot comming from L wait for B number of ticks before going to R
+`` It will wait at least 22 ticks and then by multiples of 33.
+`` 
+`` L: Entry for the waiting dot
+`` R: output the L dot after wait
+`` B: Number of ticks to wait.
+`` This number is changed to the first following number of the form 22 + 33k with k positive integer)
+`` 
+`` L-X-R
+``   |
+``   B
+``
+
+%^X
+%$LRB
+%$w
+ B                                                          
+RXL                 /R                                      
+                   L~                                       
+                   w*                                       
+                   /~*----\                                 
+                   */|    @                                 
+                /@[<]\#33[+]    
+                \--*<-{+}-*                           
+                   \2--~  |                                 
+                    2  ^1#/                                 
+                    @  ^0#w                                 
+                    B                                        
+                                                            
+                                                            
