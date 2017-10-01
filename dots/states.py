@@ -352,55 +352,43 @@ class TwoDotState(State):
             return autodetect_next_state(self.parent, char)
 
     def run(self, char):
+        self.isWaiting = True
+
         if self.isMaster:
             # We want to find the companion dot that has been waiting the
             # longest. At the same time, if we find a dot that is also a master
             # that has been waiting longer than this, keep on waiting
-            candidate_index = -1
-            best_candidate_age = -1
 
-            ready_to_operate = False
+            wait_here = [d for  d in self.env.dots if d.pos == self.parent.pos and d.state.is_two_dots()]
+            masters_here = [d for d in wait_here if d.state.isMaster]
+            other_here = [d for d in wait_here if not d.state.isMaster]
 
-            for idx, dot in enumerate(self.env.dots):
-                if dot.pos == self.parent.pos and dot.state.is_two_dots():
-                    if dot.state.isMaster:
-                        if dot.state.age > self.age:
-                            ready_to_operate = False
-                            break
+            if masters_here and other_here:
+                oldest_master = max(masters_here, key=lambda d:d.state.age)
+                oldest_other = max(other_here, key=lambda d:d.state.age)
+
+                if oldest_master is self.parent:
+                    candidate = oldest_other
+
+                    if candidate.state.id_mode:
+                        candidate_par = candidate.id
                     else:
-                        age = dot.state.age
-                        if age > best_candidate_age:
-                            candidate_index = idx
-                            ready_to_operate = True
+                        candidate_par = candidate.value
 
-            if ready_to_operate:
-                candidate = self.env.dots[candidate_index]
+                    if self.id_mode:
+                        self_par = self.parent.id
+                    else:
+                        self_par = self.parent.value
 
-                if candidate.state.id_mode:
-                    candidate_par = candidate.id
-                else:
-                    candidate_par = candidate.value
+                    self.do_operation(char, self_par, candidate_par, candidate)
 
-                if self.id_mode:
-                    self_par = self.parent.id
-                else:
-                    self_par = self.parent.value
+                    candidate.state = DeadState(candidate)
 
-                self.do_operation(char, self_par, candidate_par, candidate,
-                                  candidate_index)
+                    # FIXME: This is not a good idea...
+                    self.parent.state = TravelState(self.parent)
+                    self.move_parent()
 
-                candidate.state = DeadState(candidate)
-
-                # FIXME: This is not a good idea...
-                self.parent.state = TravelState(self.parent)
-
-                self.move_parent()
-
-                self.isWaiting = False
-            else:
-                self.isWaiting = True
-        else:
-            self.isWaiting = True
+                    self.isWaiting = False
 
         self.age += 1
 
@@ -412,7 +400,7 @@ class OperState(TwoDotState):
     def __init__(self, parent, isMaster, id_mode=False):
         TwoDotState.__init__(self, parent, isMaster, id_mode)
 
-    def do_operation(self, char, self_par, candidate_par, candidate, candidate_idx):
+    def do_operation(self, char, self_par, candidate_par, candidate):
         result = char.calc(self_par, candidate_par) * 1
         # NOTE: the `* 1` converts a boolean into an integer
 
@@ -442,8 +430,7 @@ class TildeState(TwoDotState):
                              isMaster=(lambda self: self.is_moving_horiz()),
                              id_mode=id_mode)
 
-    def do_operation(self, char, self_par, candidate_par, candidate,
-                     candidate_idx):
+    def do_operation(self, char, self_par, candidate_par, candidate):
         if candidate_par != 0:
             self.set_parent_direction(UP)
 
