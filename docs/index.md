@@ -2,5 +2,5 @@
 
 You can find here ressources about:
 - The [language](language.md) itself
-- All [librairies](librairies.md)
+- All [librairies](libs/index.md)
 - The [interpreter](interpreter.md)
