@@ -17,6 +17,7 @@ This librairy simulate a list to store an arbitrary number of values. Note that 
 - `F`: Different function are performed depending on the id of the the dot. See [functions](#functions).
 
 ##### Functions
+
 | Function | Id |        Value        |                      Description                      |
 |---------:|:--:|:-------------------:|:------------------------------------------------------|
 |   Append | 0  | The value to append | Adds a dot at the end of the list                     |
