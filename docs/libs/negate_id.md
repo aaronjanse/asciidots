@@ -1,4 +1,4 @@
-[Back to docs home](../../index.md) - [Back to libs](index.md#Simple%20operations%20on%20dots)
+[Back to docs home](../../index.md) - [Back to libs](index.md#simple-operations-on-dots)
 # negate_id.dots
 
 ### Purpose
@@ -37,4 +37,4 @@ Since there is no way to set a dot's id to a negative number directly, this libr
 The source code is availaible [here](https://github.com/ddorn/asciidots/blob/master/libs/negate_id.dots)
 . If something doesn't work, do not hesitate to [open an issue](https://github.com/ddorn/asciidots/issues/new?title=Bug%20in%20negate_id%20librairy:%20).
 
-[Back to docs home](../../index.md) - [Back to libs](index.md#Simple%20operations%20on%20dots)
+[Back to docs home](../../index.md) - [Back to libs](index.md#simple-operations-on-dots)
