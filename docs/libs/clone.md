@@ -1,5 +1,5 @@
 [Back to docs home](../index.md) - [Back to libs](index.md)
-# Lib.dots
+# clone.dots
 
 ### Purpose
 This librairy replicates a dot at identical a certain number of times. You can see this as an arbitrary number of `*`.
