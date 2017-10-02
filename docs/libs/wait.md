@@ -1,4 +1,5 @@
-[Back to docs home](../index.md) - [Back to libs](index.md#Time)
+[Back to docs home](../../index.md) - [Back to libs](index.md#time)
+
 # wait.dots
 
 ### Purpose
@@ -26,4 +27,8 @@ This librairy keeps a dot inside the lib for a certain amount of time. Since eve
 - The waiting time is changed to the following number of the form `22 + 33k` (with k positive integer), thus A dot will always wait at least `B` ticks, but it can be not exactly `B`
 - This doesn't work at all in async mode
 
-[Back to docs home](../index.md) - [Back to libs](index.md#Time)
+### Source 
+The source code is availaible [here](https://github.com/ddorn/asciidots/blob/master/libs/wait.dots)
+. If something doesn't work, do not hesitate to [open an issue](https://github.com/ddorn/asciidots/issues/new?title=Bug%20in%20wait%20librairy:%20).
+
+[Back to docs home](../../index.md) - [Back to libs](index.md#time)
