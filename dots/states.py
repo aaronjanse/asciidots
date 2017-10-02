@@ -90,9 +90,7 @@ class TravelState(State):
             return IdState(self.parent)
         elif char == '$':
             return PrintState(self.parent)
-        elif char in '[]' and self.is_moving_vert():
-            return DeadState(self.parent)
-        elif char in '{}' and self.is_moving_vert():
+        elif char in '[]{}' and self.is_moving_vert():
             return DeadState(self.parent)
         elif char.isSquareOper():
             return OperSquareState(self.parent)
