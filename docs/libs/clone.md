@@ -26,10 +26,16 @@ This librairy replicates a dot at identical a certain number of times. You can s
              |
              &
 
-   
+##### Output
+
+    42
+    42
+    42
+    42
+    42
 
 ### Notes
-- 
--
+- Once the end dot is emmited, you can send other dots in the lib and use it again
+- If the `N` dot is not an integer or is negative, this will generate continuously clones of the dot.
 
 [Back to docs home](../index.md) - [Back to libs](index.md)
