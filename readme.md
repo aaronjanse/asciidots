@@ -3,6 +3,8 @@
 
 [![Join the chat at https://gitter.im/asciidots/Lobby](https://badges.gitter.im/asciidots/Lobby.svg)](https://gitter.im/asciidots/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+[![codebeat badge](https://codebeat.co/badges/7351eeca-cc97-4fb2-9e18-fe3a00217f22)](https://codebeat.co/projects/github-com-aaronduino-asciidots-master)
+
 ```
                    _ _ _____        _       
     /\            (_|_)  __ \      | |      
