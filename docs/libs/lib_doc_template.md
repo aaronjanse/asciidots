@@ -1,4 +1,4 @@
-[Back to docs home](../index.md) - [Back to libs](index.md)
+[Back to docs home](../../index.md) - [Back to libs](index.md)
 # Lib.dots
 
 ### Purpose
@@ -29,4 +29,4 @@ This librairy...
 - 
 -
 
-[Back to docs home](../index.md) - [Back to libs](index.md)
+[Back to docs home](../../index.md) - [Back to libs](index.md)
