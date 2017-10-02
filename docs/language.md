@@ -92,9 +92,6 @@ Here's a fun example of using these special paths. Don't worry—we'll soon be a
 `#` sets the value of the dot to the value after it<br>
 `@` does the same except it sets the _id_ of the dot
 
-The id has nothing to do with the value.  
-Yes this is very confusing (see [open issue about name change suggestions](https://github.com/aaronduino/asciidots/issues/18)).  
-
 The rationale behind having an `id` is so that dots can be differentiated without needing to reserve specific values as having special meaning (ex. saying `-1` that means `null`).  
 The `id` can be set to a special value to differentiate dots.  
 The common use case of this is having the last dot in a stream of dots have a different id than the rest, that way the program knows when the stream has ended.
