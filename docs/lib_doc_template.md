@@ -1,4 +1,4 @@
-[Back to libs](../librairies.md#Time) - [Back to docs home](../index.md) 
+[Back to docs home](../index.md) - [Back to libs](index.md#Time)
 # Wait.dots
 
 ### Purpose
@@ -26,4 +26,4 @@ This librairy...
 - 
 -
 
-[Back to libs](../librairies.md#Time) - [Back to docs home](../index.md) 
+[Back to docs home](../index.md) - [Back to libs](index.md#Time)
