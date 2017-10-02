@@ -1,0 +1,65 @@
+%^X
+%$FAOS
+%$aGDRLCET
+%$g
+%!_storage.dots l  `` For storing the size of the list
+%!_storage.dots q  `` For storing the inner queue
+%!for_in_range.dots f
+%!clone.dots c
+
+  F                                                                                                                        
+ OXA                                                                                                                       
+  S 
+
+              /-a `` Append the value      ``                                set the value at @ with #                                                                                                                                                 
+   /-*--*@{=}*~                            ``                                |                                                                                                                                                                         
+   F |  \#0/ |@                            ``                                v                                                                                                                                                                         
+     |       \/-G `` Get the value         ``                                                                                                                                                                                                          
+     *--*@{=}*~                            ``           append the value --> L <-- insert # at index @                                                                                                                                                 
+     |  \#1/ |@                            ``                                  --> output of func                                                                                                                                                      
+     |       \/-D `` Delete at index       ``                                ^                                                                                                                                                                         
+     *--*@{=}*~                            ``                                |                                                                                                                                                                         
+     |  \#2/ |@                            ``                                func depending on @ (see table)                                                                                                                                           
+     |       \/-R `` Remove the value      ``                                                                                                                                                                                                          
+     *--*@{=}*~                            ``                                                                                                                                                                                                          
+     |  \#3/ |@                            `` function | @ |  # (argument)  | Done |  Doc                                                                                                                                                              
+     |       \/-L `` Get the length        `` ---------+---+----------------+------+-------                                                                                                                                                            
+     *--*@{=}*~                            ``    get   | 1 | index          |  ok  | Get the dot at index                                                                                                                                             
+     |  \#4/ |@                            ``    del   | 2 | index          | nope | Delete the dot at index (all other dots after this one will be push down in the list)                                                                             
+     |       \/-C `` Copy the list         ``  remove  | 3 | value          | nope | Remove the first dot with the value                                                                                                                              
+     *--*@{=}*~                            ``   len    | 4 |                |  ok  | Return the length of the list                                                                                                                                     
+     |  \#5/ |@                            ``   copy   | 5 |                | nope | Return the whole list                                                                                                                                             
+     |       \/-E `` Clear the list        ``   clear  | 6 |                | nope | Remove all dots in the list                                                                                                                                       
+     *--*@{=}*~                            ``   sort   | 7 | reversed (0/1) | nope | Sort the list                                                                                                                                                     
+     |  \#6/ |@                            ``  append  | 0 |                |  ok  | Add the dot at the end of the list, same a sending a dot from the left   39 or 19 if same time                                                               
+     |       \/-T `` Sort the list         ``          |   |                |      |                                                                                                                                                                   
+     \--*@{=}*~                            ``   set    | @ | value          |  ok  | set @ with value #                                                                                                                                                
+        \#7/ |@                                                                                                               
+             \/                                                                                                               
+       `` set the size of the list to 0                                                                            
+      .-#0-\             Ll*O `` Just get the length and put it back then output it                        
+           l               l                                   l                                                   
+                                                           /#1[+]                                                  
+                                                    /l-----*---/                                                   
+                                                    |      |                                                       
+                                                    |      |                                                       
+                           /O                  A->--*-@0-@{+}-\  `` We set the adress of each dot to the pos in the list 
+                       q /-~                   a-/            q  `` And put them in the queue                                              
+         /-----------q-*-~ |                                                                                                
+G--*--#0-f--\          @ | |  `` GET                                                                                         
+   |    /+--+---------{=}/ |                                                                                                 
+   *----c+--*              |                       q                                                                   
+   |     \--+----#1--*-----/         /-------------~                                                                 
+   \---l----*        | l       S     |         /-#1/                                                                                                
+            \--------+-~       *-----/-----q-*-~-\                                                                                                  
+                     \-/       *--#0-f--\    @ @ q                                                                                                  
+                               |    /+--+--@{=}/                                                                                                    
+                               *----c+--*                                                                                                           
+                               |     |  |      l  `` SET                                                                                                   
+                               \---l-+--*------~                                                                                                               
+                                     \-#1------*-O                                                                                
+                                                                                                                             
+                                                                                                                             
+                                                                                                                             
+                                                                                                                             
+                                                                                                                             
