@@ -49,7 +49,6 @@
 
         h1 {
             margin-bottom: 1/20px;
-            /*margin-top: -5px;*/
         }
 
         button {
@@ -59,9 +58,7 @@
         }
 
         #dropdowndiv{
-          /*vertical-align: middle;*/
           width: 250px;
-          /*display: inline;*/
 
           margin-top: 20px;
           margin-bottom: 20px;
@@ -103,10 +100,6 @@
 
     <div id="out" class="well pre-scrollable">$ Output</div>
 
-    <!--<div class="form-group">
-        <input type="text" class="form-control" id="textin" placeholder="Interactive input">
-    </div>-->
-
     Read about AsciiDots <a href="https://github.com/aaronduino/asciidots">on github</a>
 
     <script src="ansi_up.js" type="text/javascript"></script>
@@ -133,15 +126,6 @@
     </script>
 
     <script>
-        // function str2ab(str) {
-        //     var buf = new ArrayBuffer(str.length * 2); // 2 bytes for each char
-        //     var bufView = new Uint16Array(buf);
-        //     for (var i = 0, strLen = str.length; i < strLen; i++) {
-        //         bufView[i] = str.charCodeAt(i);
-        //     }
-        //     return buf;
-        // }
-
         open = false
 
         var websocket_url = ''
@@ -152,7 +136,7 @@
         }
 
         websocket_url += 'asciidots-demo-backend.herokuapp.com'
-        // websocket_url = 'ws://localhost:5000/'
+        websocket_url = 'ws://localhost:5000/'
 
         var socket = new WebSocket(websocket_url)
 
@@ -173,8 +157,6 @@
                 hasSend = true
             }
 
-            // console.log(s.data)
-
             pieces = s.data.split(';')
 
             if (pieces[0] == 'out') {
@@ -186,7 +168,6 @@
 
               // Debug data
               var debug_txt = s.data.split(';start_debug;')[1].split(';end_debug')[0]
-              // console.log((debug_txt))
               var html = ansi_up.ansi_to_html(debug_txt);
 
               document.getElementById('debug_output').innerHTML = html
@@ -195,7 +176,6 @@
               var out_text = s.data.split(';start_debug;')[1].split(';end_debug;')[1]
               out_text = out_text.replace('\n', '')
               document.getElementById("out").textContent += out_text
-              // console.log(s.data);
 
               document.getElementById("out").scrollTop = document.getElementById("out").scrollHeight;
 
@@ -207,7 +187,6 @@
               socket.send(prompt('Please input a value: '));
             } else {
               document.getElementById("out").textContent += s.data
-              // console.log(s.data);
 
               document.getElementById("out").scrollTop = document.getElementById("out").scrollHeight;
             }
@@ -218,26 +197,18 @@
 
             if (open) {
                 arg = document.getElementById("txtarea").value
-                    // data = new Blob(['run;' + arg], {
-                    //     type: 'text/plain'
-                    // })
-                socket.send('run;' + arg); //.split(/\n/));
+                socket.send('run;' + arg);
 
 
                 history.pushState(null, null, '?code='+encodeURIComponent(arg));
             } else {
                 document.getElementById("out").innerHTML = "Not connected...\nThe backend may not have booted up. Please wait ~5 seconds and reload."
             }
-            // alert(document.getElementById("txtarea").value.split(/\n/))
         }
 
         function stop() {
             if (open) {
-                // arg = document.getElementById("txtarea").value
-                // data = new Blob(['stop;'], {
-                //     type: 'text/plain'
-                // })
-                socket.send('stop;'); //.split(/\n/));
+                socket.send('stop;');
             } else {
                 document.getElementById("out").innerHTML = "Not connected..."
             }
@@ -245,8 +216,6 @@
 
         $(document).on('click', '.dropdown-menu li a', function() {
             val = $(this).html()
-
-            // console.log(val == 'Hello World')
 
             $('#selectedbox').val(val)
 
