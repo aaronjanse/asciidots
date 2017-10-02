@@ -38,4 +38,8 @@ This librairy replicates a dot at identical a certain number of times. You can s
 - Once the end dot is emmited, you can send other dots in the lib and use it again
 - If the `N` dot is not an integer or is negative, this will generate continuously clones of the dot.
 
+### Source 
+The source code is availaible [here](https://github.com/ddorn/asciidots/blob/master/libs/clone.dots)
+. If something doesn't work, do not hesitate to [open an issue](https://github.com/ddorn/asciidots/issues/new?title=Bug%20in%20clone%20librairy:%20).
+
 [Back to docs home](../../index.md) - [Back to libs](index.md)
