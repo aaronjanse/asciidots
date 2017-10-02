@@ -1,4 +1,4 @@
-[Back to docs home](../index.md) - [Back to libs](index.md#Loops)
+[Back to docs home](../../index.md) - [Back to libs](index.md#Loops)
 # Wait.dots
 
 ### Purpose
@@ -37,4 +37,4 @@ This is a count to 10 example
 - Once the end dot is emmited, you can send other dots in the lib to use it again
 
 
-[Back to docs home](../index.md) - [Back to libs](index.md#Loops)
+[Back to docs home](../../index.md) - [Back to libs](index.md#Loops)

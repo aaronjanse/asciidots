@@ -1,4 +1,4 @@
-[Back to docs home](../index.md) - [Back to libs](index.md)
+[Back to docs home](../../index.md) - [Back to libs](index.md)
 # clone.dots
 
 ### Purpose
@@ -38,4 +38,4 @@ This librairy replicates a dot at identical a certain number of times. You can s
 - Once the end dot is emmited, you can send other dots in the lib and use it again
 - If the `N` dot is not an integer or is negative, this will generate continuously clones of the dot.
 
-[Back to docs home](../index.md) - [Back to libs](index.md)
+[Back to docs home](../../index.md) - [Back to libs](index.md)

@@ -1,4 +1,4 @@
-[Back to docs home](../index.md) - [Back to libs](index.md#Simple%20operations%20on%20dots)
+[Back to docs home](../../index.md) - [Back to libs](index.md#Simple%20operations%20on%20dots)
 # neg.dots
 
 ### Purpose
@@ -34,4 +34,4 @@ This will output:
     42
 
 
-[Back to docs home](../index.md) - [Back to libs](index.md#Simple%20operations%20on%20dots)
+[Back to docs home](../../index.md) - [Back to libs](index.md#Simple%20operations%20on%20dots)
