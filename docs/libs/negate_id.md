@@ -21,7 +21,7 @@ Since there is no way to set a dot's id to a negative number directly, this libr
     .---@7--n--$@--\
                    |
                    n
-         /--@#-&   |
+         /--$@-&   |
          n         $
          |         @
          \-@$--n---/
