@@ -1,5 +1,5 @@
 [Back to docs home](../index.md) - [Back to libs](index.md#Time)
-# Wait.dots
+# wait.dots
 
 ### Purpose
 This librairy keeps a dot inside the lib for a certain amount of time. Since every dot moves at the same time, it can be usefull to have one dot that waits untill an other completes an operation.
