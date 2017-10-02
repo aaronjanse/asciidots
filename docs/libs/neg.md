@@ -26,7 +26,7 @@ Since there is no way to set a dot's value to a negative number directly, this l
          |         #
          \-#$--n---/
 
-This will output: 
+##### Output
 
     -42
     42
