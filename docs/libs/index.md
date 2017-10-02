@@ -8,7 +8,7 @@ Here is the complete list of the librairies inculded in asciidots grouped by cat
 - **[neg.dots](neg.md)** - Change the value of a dot to the opposite 
 - **[negate_id.dots](negate_id.md)** - Change the id of a dot to the opposite
 - **[val_to_id.dots](val_to_id.md)** - Set the id to the value
-- **[boolean_invert_value.dots](boolean_invert_value.md)**	- Operation NOT on booleans
+- **[bool_not.dots](bool_not.md)**	- Operation NOT on booleans
 
 
 ### Loops
