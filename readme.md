@@ -3,6 +3,8 @@
 
 [![Join the chat at https://gitter.im/asciidots/Lobby](https://badges.gitter.im/asciidots/Lobby.svg)](https://gitter.im/asciidots/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+[![codebeat badge](https://codebeat.co/badges/7351eeca-cc97-4fb2-9e18-fe3a00217f22)](https://codebeat.co/projects/github-com-aaronduino-asciidots-master)
+
 ```
                    _ _ _____        _       
     /\            (_|_)  __ \      | |      
@@ -19,7 +21,7 @@ AsciiDots is an esoteric programming language based on ascii art. In this langua
 
 [![AsciiDots being run in debug mode](https://github.com/aaronduino/asciidots/raw/master/dots_debug.gif "This would be faster when not in debug mode, of course")](https://aaronduino.github.io/asciidots)
 
-### **[Try it online (debugger)](https://aaronduino.github.io/asciidots)**
+### **[Try it online (debugger)](https://aaronduino.github.io/asciidots/demo)**
 ### **[Try it online (tio.run)](https://tio.run/#asciidots)**
 
 ##### Table of Contents  

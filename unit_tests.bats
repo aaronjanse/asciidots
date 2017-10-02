@@ -9,7 +9,7 @@
 @test "use for in range library" {
   run python3 . ./tests/use_for_in_range.dots
   [ "$status" -eq 0 ]
-  [ "$output" = "$(seq 10)" ]
+  [ "$output" = "$(seq 9)" ]
 }
 
 @test "use warps" {
