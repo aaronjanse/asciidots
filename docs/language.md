@@ -99,7 +99,7 @@ The common use case of this is having the last dot in a stream of dots have a di
 This sets the value of the dot to `7`:
 
 ```
-.-#7-& `` We'll actually do things soon
+.-#7-& `` We'll actually do things soon, don't worry
 ```
 
 This sets the id to `8`:
