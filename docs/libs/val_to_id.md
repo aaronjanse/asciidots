@@ -25,8 +25,4 @@ This librairy sets the id of a dot to its value
     666
    
 
-### Notes
-- 
--
-
 [Back to docs home](../../index.md) - [Back to libs](index.md)
