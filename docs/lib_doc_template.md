@@ -1,5 +1,5 @@
-[Back to docs home](../index.md) - [Back to libs](index.md#Time)
-# Wait.dots
+[Back to docs home](../index.md) - [Back to libs](index.md)
+# Lib.dots
 
 ### Purpose
 This librairy...
@@ -18,7 +18,7 @@ This librairy...
 
 ##### Example
 
-    %!wait.dots W
+    %!lib.dots W
 
    
 
@@ -26,4 +26,4 @@ This librairy...
 - 
 -
 
-[Back to docs home](../index.md) - [Back to libs](index.md#Time)
+[Back to docs home](../index.md) - [Back to libs](index.md)
