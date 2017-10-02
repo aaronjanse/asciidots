@@ -28,7 +28,6 @@ This librairy simulate a list to store an arbitrary number of values. Note that 
 |     Copy | 5  |          -          | Return all the dots in the list                       |
 |    Clear | 6  |          -          | Empty the list                                        |
 |     Sort | 7  |          -          | Sort the list                                         |
-|          |    |                     |                                                       |
 
 ###### Set
 A dot comming from the top sets the dot at the index of its id to its value.
@@ -51,13 +50,15 @@ Every function (except append from  the left) outputs a dot, even if there is no
 
 
 ### Notes
+
 ##### Complexity
 It's not a good idea to ask, but the complexity of each function is `O(n)` with `n` the number of elements in the list, except `Length` which is `O(1)` and of course `Sort` which is... too much
+
 ##### Other notes
-- Everything is not already implemented, for now only `Set`, `Get`, `Append` and `Length` wil work. 
-- Using a list is very slow so if you find a way to do without, it is a good idea
-- To use more than one list, you need to us the librairy more than once
-- You can ask an other function while one is still running, but it will be executed only after the first finishes. Alternatively, you can use the [wait](wait.md) librairy.
+- Everything is not already implemented, for now only `Set`, `Get`, `Append` and `Length` will work. 
+- Using a list is very slow, thus if you find a way to do without, it is a good idea.
+- To use more than one list, you need to import the librairy more than once.
+- You can ask an other function while one is still running, but they'll be executed only after the first finishes. Alternatively, you can use the [wait](wait.md) librairy.
 
 
 ### Source 
