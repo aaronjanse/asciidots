@@ -19,7 +19,7 @@ AsciiDots is an esoteric programming language based on ascii art. In this langua
 
 [Read comments on Hacker News](https://news.ycombinator.com/item?id=14947449)
 
-[![AsciiDots being run in debug mode](https://github.com/aaronduino/asciidots/raw/master/dots_debug.gif "This would be faster when not in debug mode, of course")](https://aaronduino.github.io/asciidots)
+[![AsciiDots being run in debug mode](https://github.com/aaronduino/asciidots/raw/master/dots_debug.gif "AsciiDots being run in debug mode")](http://aaronduino.github.io/asciidots/demo.html?code=%20%20%20%20%2F1%23-.%0A%20%20%20%20%7C%0A%20%20%2F-%2B-%24%23%5C%0A%20%20%7C%20%7C%20%20%20%7C%0A%20%5B%2B%5D%3C1%23-*%0A%20%20%7C%20%20%20%20%20%7C%0A%20%20%5C--%3C--%2F%0A%20%20%20%20%20%7C%0A%20%20%20%20%200%0A%20%20%20%20%20%23%0A%20%20%20%20%20%7C%0A%20%20%20%20%20.%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20)
 
 ### **[Try it online (debugger)](https://aaronduino.github.io/asciidots/demo)**
 ### **[Try it online (tio.run)](https://tio.run/#asciidots)**
