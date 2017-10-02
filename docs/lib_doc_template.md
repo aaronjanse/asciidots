@@ -20,6 +20,9 @@ This librairy...
 
     %!lib.dots W
 
+##### Output
+
+    42
    
 
 ### Notes
