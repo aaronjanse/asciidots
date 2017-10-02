@@ -6,7 +6,7 @@
 `` A + B
 ``   C
 
-%^X `` make sure that X doesn't conflict with anything
+%^X
 %$AOBC
 
   C
