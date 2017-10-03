@@ -5,7 +5,7 @@
 
 ### Projects built for AsciiDots:
 
-- [ddorn/AsciidotsDebugger](https://ddorn.github.io/AsciidotsDebugger/w)
+- [ddorn/AsciidotsDebugger](https://ddorn.github.io/AsciidotsDebugger/)
   A wonderful pygame debugger for AsciiDots. Supports zoom, pan, hovering with mouse for dot info, moving backwards through time, and more.
 - [ddorn/vs-asciidots](https://github.com/ddorn/vs-asciidots)
   A Visual Studio syntax highlighter for AsciiDots.
