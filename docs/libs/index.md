@@ -15,8 +15,9 @@ Here is the complete list of the librairies inculded in asciidots grouped by cat
 - **[for_in_range.dots](for_in_range.md)** - Generate a range of numbers between to values
 - **[clone.dots](clone.md)** - Generate the same dot *x* times
 
-### Lists
+### Data structures
 - **[list.dots](list.md)** - Simulate a list with get, set, append, etc methods
+- **[storage.dots](storage.md)** - Simulates a queue that can be used to store a single value
 
 ### Time
 - **[wait.dots](wait.md)** - Make a dot wait
