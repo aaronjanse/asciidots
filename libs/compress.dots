@@ -7,7 +7,7 @@
 ``
 `` f would get dots with the ids: 0, 1, 2, 3, 4, 5, 6
 
-%^X `` make sure that X doesn't conflict with anything
+%^X
 %$L_RB
 
   B
