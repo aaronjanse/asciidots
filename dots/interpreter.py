@@ -10,7 +10,7 @@ class AsciiDotsInterpreter(object):
         """
         Create a new instance of the interpreter to run the program.
 
-        :param dots.environement.Env env: The environement for the program
+        :param dots.environment.Env env: The environment for the program
         :param str program: The code of the program
         :param str program_dir: The path to the program directory
         :param bool run_in_parallel: temporarily, changes the way dots move : one by one or all at the same time

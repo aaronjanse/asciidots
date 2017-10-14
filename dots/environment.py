@@ -5,7 +5,7 @@ class Env(object):
 
     def __init__(self, world=None, dots=None, io=None, interpreter=None):
         """
-        Structure for the for important parts of a dots environement.
+        Structure for the for important parts of a dots environment.
 
         If you don't pass one of the 4 parameters, you need to set them quickly.
 
@@ -19,6 +19,3 @@ class Env(object):
         self.dots = dots
         self.io = io
         self.interpreter = interpreter
-
-
-
