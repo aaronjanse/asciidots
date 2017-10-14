@@ -13,7 +13,7 @@ class World(object):
         """
         Create a new world to do dots races !
 
-        :param dots.environement.Env env: The environement for the program
+        :param dots.environment.Env env: The environment for the program
         :param str world_map: The string representing the world.
         :param str program_dir: The directory of the program
         """

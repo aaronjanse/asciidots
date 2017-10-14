@@ -10,7 +10,7 @@ import time
 
 import click
 
-from dots.environement import Env
+from dots.environment import Env
 from dots.exceptions import DotsExit
 
 if codecs.lookup(locale.getpreferredencoding()).name == 'ascii':
@@ -44,7 +44,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
     def __init__(self, env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit):
         """
 
-        :param dots.environement.Env env: The env of the interpreter
+        :param dots.environment.Env env: The env of the interpreter
         :param int ticks: The max number of ticks for the program
         :param bool silent: True to turn off all outputs
         :param bool debug: True to show the execution of the program
@@ -244,7 +244,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                 # The line pos. NB: This is different to y because we can skip lines)
                 display_y += 1
 
-            # we print the output part
+            # print the output part
             if self.compat_debug:
                 print('\n' + self.compat_logging_buffer, end='', flush=True)
 

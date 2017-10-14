@@ -9,7 +9,7 @@ class Dot:
         """
         The base unit of and ascii dot code : the dot.
 
-        :param dots.environement.Env env: The environement for the program
+        :param dots.environment.Env env: The environment for the program
         :param dots.vector.Pos pos: The position of the dot in the map
         :param float id_: the id of the dot
         :param float value: its value

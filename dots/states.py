@@ -177,7 +177,10 @@ class ValueState(State):
             else:
                 self.parent.value = self.parent.value * 10 + int(char)
         elif char == '?':
-            self.parent.value = int(self.env.io.get_input())
+            try:
+                self.parent.value = int(self.env.io.get_input())
+            except ValueError:
+                self.parent.value = 0
 
         self.move_parent()
 
@@ -217,7 +220,10 @@ class IdState(State):
             else:
                 self.parent.id = self.parent.id * 10 + int(char)
         elif char == '?':
-            self.parent.id = int(self.env.io.get_input())
+            try:
+                self.parent.id = int(self.env.io.get_input())
+            except ValueError:
+                self.parent.id = 0
         else:
             pass
 

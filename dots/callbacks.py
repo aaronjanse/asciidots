@@ -4,7 +4,7 @@ class IOCallbacksStorage(object):
         """
         The base interface for inputs and outputs for a asciidots program.
 
-        :type env: dots.environement.Env
+        :type env: dots.environment.Env
         """
         self.env = env
         self.env.io = self
