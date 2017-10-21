@@ -102,3 +102,6 @@ ddorn
 
 # MacOS
 */.DS_Store
+
+# asciidots workspace
+workspace/
