@@ -82,19 +82,28 @@ Code-golfed counter (15 bytes) by @ddorn:
 
 ## Installing
 
-Clone the repo...
+**Using pip** (recommended):
+
+```
+pip3 install asciidots
+```
+
+**From source**:
 
 ```
 git clone https://github.com/aaronduino/asciidots
+pip3 install -r requirements.txt
 ```
 
-...install click...
-
+Run it from source using:
 ```
-pip3 install click
+python3 __main__.py [arguments]
 ```
 
-...and run as shown in the next section:
+or alias it to `asciidots` using:
+```
+echo "alias asciidots='python3 $(pwd)/__main__.sh'" >> ~/.bash_profile
+```
 
 ## Using the Interpreter
 The interpreter for this language is the `__main__.py` file. It requires Python 3, and can be run from the terminal using the `python3` command. The first argument is the `dots` file that you wish the interpreter to run.
@@ -102,7 +111,7 @@ The interpreter for this language is the `__main__.py` file. It requires Python 
 Here's an example of running the counter sample program (the working directory is the dots repo folder):
 
 ```bash
-$ python3 __main__.py ./samples/counter.dots
+$ asciidots ./samples/counter.dots
 ```
 
 Here is the list of available flags:
@@ -124,10 +133,10 @@ Some extra flags when debugging:
 -l [line-count]   When not in compatibility mode, reserve the specified number of the lines for displaying the program
 ```
 
-This is how one might debug a program for 300 ticks while running it automatically with a delay of 0.05 seconds:
+This is how one might debug the program found at `samples/counter.dots` for 300 ticks, while running it automatically with a delay of 0.05 seconds per tick:
 
 ```bash
-$ python3 __main__.py ./samples/counter.dots -t 300 -d -a 0.05
+$ asciidots samples/counter.dots -t 300 -d -a 0.05
 ```
 
 ## Program Syntax
