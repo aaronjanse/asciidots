@@ -105,3 +105,6 @@ ddorn
 
 # asciidots workspace
 workspace/
+
+# todolist file
+.todos.json
