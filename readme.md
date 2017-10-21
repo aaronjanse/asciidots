@@ -463,43 +463,6 @@ A-*----@{+}-#0-B
   \------/
 ```
 
-**Old Notation (Do not use!)**:
-The inputs/outputs for a library with the inputs/outputs like this (A is from the left, B from the top, etc):
-
-```
-   B
- A + C
-   D
-```
-
-... Would be defined in the library's code like this:
-
-```
-%+ABCD
-```
-
-Note that letters other than those shown here may be used.
-
-Unused inputs are replaced with an underscore (`_`). So, if the upper input/output is unused, the definition would look like this (note the underscore):
-
-```
-%+A_CD
-```
-
-The letters defined then work like warps in the rest of the code. Remember that direction is preserved!
-
-Here's the code for a library that accepts a dot coming from the left, sets its value to its id, and then outputs it to the right:
-```
-%+A_B_
-
-`` Set id to zero, then add the value to the id (which is 0)
-
-A-*-@0-@{+}-B
-  |      |
-  \------/
-```
-
-
 ## Interpretation
 Each tick, the dots will travel along the lines until they hit a charter that acts as a function of multiple dots (i.e. an operation character or a `~` character). The dot will stop if it
 goes on a path that it has already traversed in the same tick
