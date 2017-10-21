@@ -84,6 +84,9 @@ celerybeat-schedule
 venv/
 ENV/
 
+# virtualenv - pypi testing
+venv_pypi/
+
 # Spyder project settings
 .spyderproject
 
