@@ -77,6 +77,7 @@ class State(object):
 
 
 class TravelState(State):
+    # codebeat:disable[BLOCK_NESTING]
     def next(self, char):
         if char == ' ':
             return DeadState(self.parent)
@@ -107,6 +108,7 @@ class TravelState(State):
         else:
             return self
 
+    # codebeat:disable[BLOCK_NESTING]
     def run(self, char):
         if char == '\\':
             self.change_parent_dir_with_func(lambda dir: Pos(dir.y, dir.x))
