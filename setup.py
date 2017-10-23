@@ -1,6 +1,6 @@
 # based on https://github.com/pypa/sampleproject/blob/master/setup.py
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 from codecs import open
 from os import path
@@ -14,7 +14,7 @@ dots_libs = ['/'.join(path.split('/')[-2:]) for path in dots_libs]
 
 setup(
     name='asciidots',
-    version='1.0.9',
+    version='1.0.10',
     description='Interpreter for the AsciiDots esolang.',
     long_description=read_rst('README.rst'),
     url='https://github.com/aaronduino/asciidots',
@@ -40,11 +40,10 @@ setup(
     ],
     keywords=
     'asciidots esolang esoteric ascii dataflow language programming fun',
-    packages=['dots'],
-    scripts=['interpret.py'],
+    packages=find_packages(),
     package_data={'dots': dots_libs},
     install_requires=['Click'],
     entry_points='''
         [console_scripts]
-        asciidots=interpret:main
+        asciidots=dots.__main__:main
     ''', )
