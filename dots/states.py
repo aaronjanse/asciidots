@@ -77,6 +77,7 @@ class State(object):
 
 
 class TravelState(State):
+    # codebeat:disable[BLOCK_NESTING]
     def next(self, char):
         if char == ' ':
             return DeadState(self.parent)
@@ -107,6 +108,7 @@ class TravelState(State):
         else:
             return self
 
+    # codebeat:disable[BLOCK_NESTING]
     def run(self, char):
         if char == '\\':
             self.change_parent_dir_with_func(lambda dir: Pos(dir.y, dir.x))
@@ -116,28 +118,22 @@ class TravelState(State):
             self.set_parent_direction(RIGHT)
         elif char == ')':
             self.set_parent_direction(LEFT)
-        elif char == '>':
-            if self.is_moving_vert():
-                self.set_parent_direction(RIGHT)
-        elif char == '<':
-            if self.is_moving_vert():
-                self.set_parent_direction(LEFT)
-        elif char == '^':
-            if self.is_moving_horiz():
-                self.set_parent_direction(UP)
-        elif char == 'v':
-            if self.is_moving_horiz():
-                self.set_parent_direction(DOWN)
+        elif char == '>' and self.is_moving_vert():
+            self.set_parent_direction(RIGHT)
+        elif char == '<' and self.is_moving_vert():
+            self.set_parent_direction(LEFT)
+        elif char == '^' and self.is_moving_horiz():
+            self.set_parent_direction(UP)
+        elif char == 'v' and self.is_moving_horiz():
+            self.set_parent_direction(DOWN)
         elif char == '*':
             for dir in DIRECTIONS:
-
                 if self.parent.dir in (dir, -dir):
                     continue
 
                 next_pos = self.parent.pos + dir
 
                 if self.env.world.does_loc_exist(next_pos) and self.env.world.get_char_at(next_pos) != ' ':
-
                     new_dot = self.parent.copy()
                     new_dot.dir = dir
                     new_dot.move()
@@ -150,8 +146,6 @@ class TravelState(State):
                 self.parent.stack.append(self.parent.pos)
 
             self.parent.pos = char.get_dest_loc()
-        else:
-            pass
 
         self.move_parent()
 

@@ -176,8 +176,14 @@ class World(object):
         if os.path.isfile(path_for_inside_program_dir):
             return path_for_inside_program_dir
         else:  # if not, look in the libs folder
-            interpreter_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-            return os.path.join(interpreter_dir, "libs", filename)
+            current_dir = '/'.join(os.path.realpath(__file__).split('/')[:-1])
+            path_for_inside_module = os.path.join(current_dir, 'libs', filename)
+
+            if os.path.isfile(path_for_inside_module):
+                return path_for_inside_module
+            else:
+                interpreter_dir = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+                return os.path.join(interpreter_dir, "libs", filename)
 
     # ✓✓
     @staticmethod

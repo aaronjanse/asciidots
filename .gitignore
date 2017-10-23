@@ -84,6 +84,9 @@ celerybeat-schedule
 venv/
 ENV/
 
+# virtualenv - pypi testing
+venv_pypi/
+
 # Spyder project settings
 .spyderproject
 
@@ -99,3 +102,9 @@ ddorn
 
 # MacOS
 */.DS_Store
+
+# asciidots workspace
+workspace/
+
+# todolist file
+.todos.json
