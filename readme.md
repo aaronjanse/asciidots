@@ -486,6 +486,12 @@ A-*----@{+}-#0-B
   \------/
 ```
 
+#### Location of Library Source Files
+The source files for libraries are searched for in the following directories (in order):
+1. The directory of the asciidots file being interpreted
+2. The implementation's `dots/libs/` directory
+3. The implementation's `libs/` directory (for backwards compatibility)
+
 ## Interpretation
 Each tick, the dots will travel along the lines until they hit a charter that acts as a function of multiple dots (i.e. an operation character or a `~` character). The dot will stop if it
 goes on a path that it has already traversed in the same tick
