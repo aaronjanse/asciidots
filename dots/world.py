@@ -181,7 +181,7 @@ class World(object):
             if os.path.isfile(path):
                 return path
         
-        raise RuntimeError(f'Native library "{filename}" cannot be found')
+        raise RuntimeError('Native library "{}" cannot be found'.format(filename))
 
     # ✓✓
     @staticmethod
