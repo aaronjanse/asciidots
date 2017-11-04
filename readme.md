@@ -88,6 +88,19 @@ Code-golfed counter (15 bytes) by @ddorn:
 pip install asciidots
 ```
 
+**Using Docker** (also recommended):  
+(from @francois2metz's repo [francois2metz/docker-asciidots](https://github.com/francois2metz/docker-asciidots))
+
+Run sample program from this repo:
+```
+docker run -ti --rm francois2/asciidots asciidots/samples/hello_world.dots
+```
+
+Run local file `test.dots`:
+```
+docker run -ti --rm -v $PWD:/data francois2/asciidots /data/test.dots
+```
+
 **From source**:
 
 ```
