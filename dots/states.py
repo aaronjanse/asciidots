@@ -145,7 +145,11 @@ class TravelState(State):
             if char.isSingletonLibWarp():
                 self.parent.stack.append(self.parent.pos)
 
-            self.parent.pos = char.get_dest_loc()
+            char_dest_loc = char.get_dest_loc()
+            if char_dest_loc is not None:
+                self.parent.pos = char.get_dest_loc()
+            else:
+                raise RuntimeError('Warp "{}" has no destination'.format(char))
 
         self.move_parent()
 

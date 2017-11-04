@@ -63,6 +63,16 @@ class OperChar(Char):
                 'L': (lambda x, y: x <= y)
             }
 
+            unicode_substitutions = {
+                '÷': '/',
+                '≠': '!',
+                '≤': 'L',
+                '≥': 'G'
+            }
+
+            if self in unicode_substitutions:
+                raise RuntimeError('Unicode operator used. Operator "{}" should be replaced with "{}".'.format(self, unicode_substitutions[self]))
+
             self.func = function_dict[self]
 
         return self.func(x, y)
