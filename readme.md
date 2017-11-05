@@ -85,28 +85,42 @@ Code-golfed counter (15 bytes) by @ddorn:
 **Using pip** (recommended):
 
 ```
-pip3 install asciidots
+pip install asciidots
+```
+
+**Using Docker** (also recommended):  
+(from @francois2metz's repo [francois2metz/docker-asciidots](https://github.com/francois2metz/docker-asciidots))
+
+Run sample program from this repo:
+```
+docker run -ti --rm francois2/asciidots asciidots/samples/hello_world.dots
+```
+
+Run local file `test.dots`:
+```
+docker run -ti --rm -v $PWD:/data francois2/asciidots /data/test.dots
 ```
 
 **From source**:
 
 ```
 git clone https://github.com/aaronduino/asciidots
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 Run it from source using:
 ```
-python3 __main__.py [arguments]
+python __main__.py [arguments]
 ```
 
 or alias it to `asciidots` using:
 ```
-echo "alias asciidots='python3 $(pwd)/__main__.sh'" >> ~/.bash_profile
+echo "alias asciidots='python $(pwd)/__main__.sh'" >> ~/.bash_profile
+source ~/.bash_profile
 ```
 
 ## Using the Interpreter
-The interpreter for this language is the `__main__.py` file. It requires Python 3, and can be run from the terminal using the `python3` command. The first argument is the `dots` file that you wish the interpreter to run.
+The interpreter for this language is the `__main__.py` file. It requires Python 3, and can be run from the terminal using the `python` command. The first argument is the `dots` file that you wish the interpreter to run.
 
 Here's an example of running the counter sample program (the working directory is the dots repo folder):
 
@@ -472,6 +486,12 @@ A-*----@{+}-#0-B
   \------/
 ```
 
+#### Location of Library Source Files
+The source files for libraries are searched for in the following directories (in order):
+1. The directory of the asciidots file being interpreted
+2. The implementation's `dots/libs/` directory
+3. The implementation's `libs/` directory (for backwards compatibility)
+
 ## Interpretation
 Each tick, the dots will travel along the lines until they hit a charter that acts as a function of multiple dots (i.e. an operation character or a `~` character). The dot will stop if it
 goes on a path that it has already traversed in the same tick
@@ -608,7 +628,7 @@ And a game!
 #         |           /#1\-~--+[+]|
 6         |          /*-{-}*  | | |
 4  /2#\   |     /----~-----+--+-+-+-#7-$a_#-$"I won! Good game!"-&
-|/{÷}-*---*     *----/     |/-~-/ |
+|/{/}-*---*     *----/     |/-~-/ |
 ||    |/--+-----+------\   \+-/   |
 \>----~#  #     \-?#-*-+----/     |
       |1  1  /$""-$#-/ |          |

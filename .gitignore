@@ -108,3 +108,5 @@ workspace/
 
 # todolist file
 .todos.json
+
+.mypy_cache/

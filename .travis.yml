@@ -16,4 +16,4 @@ install:
   - sudo apt-get install -qq bats
   - pip3 install click
 script:
-  - bats ./unit_tests.bats
+  - bats ./tests.bats
