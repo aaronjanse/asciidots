@@ -88,7 +88,19 @@ Code-golfed counter (15 bytes) by @ddorn:
 pip install asciidots
 ```
 
-**Using Docker** (also recommended):  
+**Using Docker Hub**:  
+
+Run sample program from this repo:
+```
+docker run -ti --rm aaronduino/asciidots asciidots/samples/hello_world.dots
+```
+
+Run local file `test.dots`:
+```
+docker run -ti --rm -v $PWD:/data aaronduino/asciidots /data/test.dots
+```
+
+**Using Local Dockerfile**:  
 
 Build the image:
 ```
