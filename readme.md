@@ -89,16 +89,20 @@ pip install asciidots
 ```
 
 **Using Docker** (also recommended):  
-(from @francois2metz's repo [francois2metz/docker-asciidots](https://github.com/francois2metz/docker-asciidots))
+
+Build the image:
+```
+docker build -t asciidots .
+```
 
 Run sample program from this repo:
 ```
-docker run -ti --rm francois2/asciidots asciidots/samples/hello_world.dots
+docker run -ti --rm asciidots samples/hello_world.dots
 ```
 
 Run local file `test.dots`:
 ```
-docker run -ti --rm -v $PWD:/data francois2/asciidots /data/test.dots
+docker run -ti --rm -v $PWD:/data asciidots /data/test.dots
 ```
 
 **From source**:
