@@ -88,7 +88,7 @@ Code-golfed counter (15 bytes) by @ddorn:
 pip install asciidots
 ```
 
-**Using Docker Hub (recommended)**:
+**Using Docker Hub** (recommended):
 
 Run sample program from this repo:
 ```
