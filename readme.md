@@ -104,7 +104,7 @@ docker run -ti --rm -v $PWD:/data aaronduino/asciidots /data/test.dots
 
 Build the image:
 ```
-docker build -t asciidots .
+docker build -t asciidots ./docker
 ```
 
 Run sample program from this repo:
