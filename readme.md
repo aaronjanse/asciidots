@@ -92,7 +92,7 @@ pip install asciidots
 
 Run sample program from this repo:
 ```
-docker run -ti --rm aaronduino/asciidots asciidots/samples/hello_world.dots
+docker run -ti --rm aaronduino/asciidots samples/hello_world.dots
 ```
 
 Run local file `test.dots`:
