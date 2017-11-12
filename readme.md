@@ -24,11 +24,29 @@ AsciiDots is an esoteric programming language based on ascii art. In this langua
 ### **[Try it online (debugger)](https://aaronduino.github.io/asciidots/demo)**
 ### **[Try it online (tio.run)](https://tio.run/#asciidots)**
 
-##### Table of Contents  
-[Samples](#samples)<br>
-[Using the Interpreter](#using-the-interpreter)<br>
-[Program Syntax](#program-syntax)<br>
-[More Examples](#examples)
+**Table of Contents**
+
+- [Samples](#samples)
+- [Installing](#installing)
+- [Using the Interpreter](#using-the-interpreter)
+- [Program Syntax](#program-syntax)
+  - [Basics](#basics)
+  - [Starting a program](#starting-a-program)
+  - [Ending a program](#ending-a-program)
+  - [Comments](#comments)
+  - [Paths](#paths)
+    - [Special Paths](#special-paths)
+  - [IDs and Values](#ids-and-values)
+  - [Interactive Console](#interactive-console)
+  - [Control Flow](#control-flow)
+  - [Operations](#operations)
+  - [Warps](#warps)
+- [Libraries](#libraries)
+    - [Using Libraries](#using-libraries)
+    - [Creating Libraries](#creating-libraries)
+    - [Location of Library Source Files](#location-of-library-source-files)
+- [Interpretation](#interpretation)
+- [Examples](#examples)
 
 ## Samples
 
