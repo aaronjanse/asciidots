@@ -58,3 +58,8 @@
   [ "$status" -eq 0 ]
   [ "$output" = "1" ]
 }
+
+@test "ascii input" {
+  result=$(echo "END" | python3 . tests/ascii_input.dots)
+  [ "$result" = "Success!" ]
+}
