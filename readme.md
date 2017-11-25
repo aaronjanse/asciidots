@@ -431,6 +431,8 @@ These are some simple chars to delete dots of specific values:
 `:` - deletes dots traveling over it with a value of `0`  
 `;` - deletes dots traveling over it with a value of `1`
 
+They may be preceded by a `@` to filter a dots by their id instead.
+
 ### Warps
 A warp is a character that teleports, or 'warps', a dot to the other occurrence of
 the same letter in the program.

@@ -216,6 +216,16 @@ class IdState(State):
             return OperCurlyState(self.parent, id_mode=True)
         elif char == '~':
             return TildeState(self.parent, id_mode=True)
+        elif char == ':':
+            if self.parent.id == 0:
+                return DeadState(self.parent)
+            else:
+                return self
+        elif char == ';':
+            if self.parent.id == 1:
+                return DeadState(self.parent)
+            else:
+                return self
         else:
             return autodetect_next_state(self.parent, char)
 
