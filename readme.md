@@ -345,6 +345,7 @@ And this prints '%' using the ascii code 37:
 ```
 
 `?` is input from the console. It prompts the user for a value, and pauses until a value is entered in. It only runs after a `#` or `@` symbol<br>
+If preceded by an `a`, it returns the ascii code for the next char in stdin, returning -1 upon EOF.
 
 
 ```

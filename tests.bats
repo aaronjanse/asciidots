@@ -68,3 +68,8 @@
   result=$(echo "END" | python3 . tests/filter_chars.dots)
   [ "$result" = "0011" ]
 }
+
+@test "eof" {
+  result=$(echo "hi" | python3 . tests/eof.dots | wc -l | tr -d ' ')
+  [ "$result" = "5" ]
+}

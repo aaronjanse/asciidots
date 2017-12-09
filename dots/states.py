@@ -183,10 +183,10 @@ class ValueState(State):
         elif char == '?':
             try:
                 val = self.env.io.get_input(ascii_char=self.asciiMode)
-                if len(val) > 0:
-                    self.parent.value = ord(val) if self.asciiMode else int(val)
+                if self.asciiMode:
+                    self.parent.value = ord(val) if len(val) > 0 else -1
                 else:
-                    self.parent.value = 0
+                    self.parent.value = int(val)
             except ValueError:
                 self.parent.value = 0
 
@@ -243,7 +243,10 @@ class IdState(State):
         elif char == '?':
             try:
                 val = self.env.io.get_input(ascii_char=self.asciiMode)
-                self.parent.id = ord(val) if self.asciiMode else int(val)
+                if self.asciiMode:
+                    self.parent.id = ord(val) if len(val) > 0 else -1
+                else:
+                    self.parent.id = int(val)
             except ValueError:
                 self.parent.id = 0
         else:
