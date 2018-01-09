@@ -141,7 +141,7 @@ class TravelState(State):
                     self.env.dots.append(new_dot)
         elif isinstance(char, SingletonLibInnerWarpChar):
             if len(self.parent.stack) == 0:
-                raise RuntimeError('Dot tried to exit library it never entered.\nThis is likely caused by a dot spawned inside a library trying to teleport out.')
+                raise RuntimeError('Dot tried to exit library it never entered.\nThis is likely caused by a dot spawned inside a library trying to teleport out.\n' + str(self.parent))
 
             self.parent.pos = self.parent.stack.pop()
         elif char.isWarp():

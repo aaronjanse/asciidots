@@ -19,6 +19,7 @@ class Dot:
         """
 
         self.pos = pos
+        self.spawn_pos = pos
 
         self.env = env
         self.id = id_ or 0
@@ -28,7 +29,7 @@ class Dot:
         self.stack = stack or []
 
     def __repr__(self):
-        return '<Dot pos={pos}, id={id}, value={value}, dir={dir}, stack={stack}>'.format(**self.__dict__)
+        return '<Dot spawn_pos={spawn_pos} pos={pos}, id={id}, value={value}, dir={dir}, stack={stack}>'.format(**self.__dict__)
 
     def move(self):
         """Move the dot according to its direction."""
