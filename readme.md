@@ -101,7 +101,7 @@ Code-golfed counter (15 bytes) by @ddorn:
 ## Installing
 Note: asciidots is available online via [it's website](https://aaronduino.github.io/asciidots/demo) and [Try it Online (tio.run)](https://tio.run/#asciidots)
 
-**Using pip** (recommended):
+**Using pip (python 3)** (recommended):
 
 ```
 pip install asciidots
