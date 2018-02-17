@@ -1,0 +1,53 @@
+#txtarea {
+    height: 225px;
+}
+
+#out {
+    height: 180px;
+}
+
+#debug_output {
+    max-height: none;
+    color: #fff;
+}
+
+#out, #debug_output {
+    white-space: pre;
+}
+
+#txtarea, #out, #debug_output {
+    font-family: monospace;
+}
+
+body {
+    margin: 20px;
+}
+
+h1,
+button {
+    display: inline;
+    vertical-align: middle;
+    margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+h1 {
+    margin-bottom: 1/20px;
+}
+
+button {
+    margin-left: 30px;
+    margin-bottom: 10px;
+    margin-top: 12px;
+}
+
+#dropdowndiv{
+  width: 250px;
+
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+#dropdowndiv button {
+  margin: 0;
+}
