@@ -4,7 +4,7 @@ Welcome to AsciiDots!
 
 ## Installation
 
-**Using pip** (recommended):
+**Using pip (python 3)** (recommended):
 
 ```
 pip install asciidots
@@ -49,23 +49,20 @@ _Download_:
 With Git:
 
 ```
-git clone https://github.com/aaronduino/asciidots.git
+git clone https://github.com/aaronduino/asciidots
 ```
 
 Without git:
 
 Just download the zip from the Github page, and unzip it
 ![screenshot](download_screenshot.png)
-```
-git clone https://github.com/aaronduino/asciidots
-```
 
 _Install_:
 ```
 pip install -r requirements.txt
 ```
 
-_Run it from source using_:
+_Run it from source using python 3_:
 ```
 python __main__.py [arguments]
 ```
