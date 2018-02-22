@@ -1,4 +1,4 @@
-[Back to docs home](../index.md)
+[Back to docs home](index.md)
 
 # External resources
 
@@ -30,4 +30,4 @@
 
 Feel free to edit this or open an issue if you create a project for/using AsciiDots.
 
-[Back to docs home](../index.md)
+[Back to docs home](index.md)
