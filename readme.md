@@ -11,8 +11,9 @@
 ```
 
 [![codebeat badge](https://codebeat.co/badges/7351eeca-cc97-4fb2-9e18-fe3a00217f22)](https://codebeat.co/projects/github-com-aaronduino-asciidots-master)
-[![Hacker News](https://img.shields.io/badge/comment-on%20HN-ff6600.svg)](https://shields.io/)
 [![Join the chat at https://gitter.im/asciidots/Lobby](https://badges.gitter.im/asciidots/Lobby.svg)](https://gitter.im/asciidots/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
+> Featured on [Hacker News](https://news.ycombinator.com/item?id=14947449), [Motherboard](https://motherboard.vice.com/en_us/article/a33dvb/asciidots-is-the-coolest-looking-programming-language) ([slashdot comments](https://developers.slashdot.org/story/17/08/13/2033239/new-asciidots-programming-language-uses-ascii-art-and-python)), and [i-programmer](http://www.i-programmer.info/news/98-languages/11115-asciidots-a-language-like-a-racetrack.html).
 
 AsciiDots is an esoteric programming language based on ascii art. In this language, _dots_, represented by periods (`.`), travel down ascii art paths and undergo operations.
 
