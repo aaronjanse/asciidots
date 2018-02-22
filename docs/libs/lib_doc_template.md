@@ -1,4 +1,4 @@
-[Back to docs home](../../index.md) - [Back to libs](index.md)
+[Back to docs home](../index.md) - [Back to libs](index.md)
 # [name].dots
 
 ### Purpose
@@ -34,4 +34,4 @@ The source code is availaible [here](https://github.com/ddorn/asciidots/blob/mas
 . If something doesn't work, do not hesitate to [open an issue](https://github.com/ddorn/asciidots/issues/new?title=Bug%20in%20[name]%20librairy:%20).
 
 
-[Back to docs home](../../index.md) - [Back to libs](index.md)
+[Back to docs home](../index.md) - [Back to libs](index.md)

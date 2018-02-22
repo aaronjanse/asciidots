@@ -1,4 +1,4 @@
-[Back to docs home](../../index.md)
+[Back to docs home](../index.md)
 
 # Asciidots - Librairies
 
@@ -26,4 +26,4 @@ Here is the complete list of the librairies inculded in asciidots grouped by cat
 - **[compress.dots](compress.md)** - Compress dots so they go in the same path
 - **[decompress.dots](decompress.md)** - Separate dots that go in the same path
 
-[Back to docs home](../../index.md)
+[Back to docs home](../index.md)
