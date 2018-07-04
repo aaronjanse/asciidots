@@ -138,7 +138,5 @@ class Dot:
                 return direction
 
         # If we get here without returning, the dot can't find a direction to go!
-        self.env.io.on_error("dot cannot determine location...\nx: {}, y: {}".format(*self.pos))
-
         self.state = DeadState(self)
         return Pos(0, 0)
