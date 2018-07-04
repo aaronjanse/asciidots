@@ -69,6 +69,7 @@ python __main__.py [arguments]
 
 or alias it to `asciidots` using:
 ```
+# on Ubuntu, replace `.bash_profile` with `.bashrc`
 echo "alias asciidots='python $(pwd)/__main__.py'" >> ~/.bash_profile
 source ~/.bash_profile
 ```
