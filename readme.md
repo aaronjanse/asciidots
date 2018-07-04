@@ -119,22 +119,22 @@ docker run -ti --rm -v $PWD:/data asciidots /data/test.dots
 
 ```
 git clone https://github.com/aaronduino/asciidots
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 Run it from source using:
 ```
-python __main__.py [arguments]
+python3 __main__.py [arguments]
 ```
 
 or alias it to `asciidots` using:
 ```
-echo "alias asciidots='python $(pwd)/__main__.sh'" >> ~/.bash_profile
+echo "alias asciidots='python3 $(pwd)/__main__.sh'" >> ~/.bash_profile
 source ~/.bash_profile
 ```
 
 ## Using the Interpreter
-The interpreter for this language is the `__main__.py` file. It requires Python 3, and can be run from the terminal using the `python` command. The first argument is the `dots` file that you wish the interpreter to run.
+The interpreter for this language is the `__main__.py` file. It requires Python 3, and can be run from the terminal using the `python3` command. The first argument is the `dots` file that you wish the interpreter to run.
 
 Here's an example of running the counter sample program (the working directory is the dots repo folder):
 
