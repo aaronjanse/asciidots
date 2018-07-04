@@ -353,6 +353,16 @@ class World(object):
         for raw_line in raw_map.split('\n'):
             # removing the comments
             line = raw_line.partition('``')[0] + ' '
+            # remove inline comments
+            new_line = ''
+            inside_comment = False
+            for char in line:
+                if char == '`':
+                    inside_comment = not inside_comment
+                    new_line += ' '
+                else:
+                    new_line += ' ' if inside_comment else char
+            line = new_line
             # Convert the str to a list of Char
             line = [Char(c) for c in line]
             # add aech row to the map
