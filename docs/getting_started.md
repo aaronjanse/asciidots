@@ -69,7 +69,7 @@ python __main__.py [arguments]
 
 or alias it to `asciidots` using:
 ```
-echo "alias asciidots='python $(pwd)/__main__.sh'" >> ~/.bash_profile
+echo "alias asciidots='python $(pwd)/__main__.py'" >> ~/.bash_profile
 source ~/.bash_profile
 ```
 
