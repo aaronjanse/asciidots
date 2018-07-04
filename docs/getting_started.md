@@ -64,13 +64,13 @@ pip install -r requirements.txt
 
 _Run it from source using python 3_:
 ```
-python __main__.py [arguments]
+python3 __main__.py [arguments]
 ```
 
 or alias it to `asciidots` using:
 ```
 # on Ubuntu, replace `.bash_profile` with `.bashrc`
-echo "alias asciidots='python $(pwd)/__main__.py'" >> ~/.bash_profile
+echo "alias asciidots='python3 $(pwd)/__main__.py'" >> ~/.bash_profile
 source ~/.bash_profile
 ```
 
