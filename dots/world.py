@@ -185,16 +185,16 @@ class World(object):
 
     # ✓✓
     @staticmethod
-    def _get_lib_files_by_alias(map):
+    def _get_lib_files_by_alias(map_):
         """
         Get the librairy files by alias char defined.
 
-        :param List[List[Char]] map: The map to import
+        :param List[List[Char]] map_: The map to import
         """
 
         filename_by_alias = {}
 
-        for row in map:
+        for row in map_:
             # get back the string from the Char array and remove the trailling white spaces
             line = ''.join(row).rstrip()
 
