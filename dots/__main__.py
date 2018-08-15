@@ -314,7 +314,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 @click.option('--silent', '-s', is_flag=True, help='No printing, for benchmarking.')
 @click.option('--compat_debug', '-w', is_flag=True, help='Force the debug rendering without ncurses.')
 @click.option('--debug_lines', '-l', default=default_debug_lines, help='The size of the debug view.')
-@click.option('--is_async', '-y', is_flag=True, help='Only one dot moves at a time. Easier to debug.')
+@click.option('is_async', '--async', '-y', is_flag=True, help='Only one dot moves at a time. Easier to debug.')
 def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit, is_async):
     global interpreter
 
