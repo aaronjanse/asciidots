@@ -61,7 +61,7 @@ class AsciiDotsInterpreter(object):
             return
 
         with self:
-            while not self.needs_shutdown and len(self.env.dots) > 0:
+            while not self.needs_shutdown and len(self.env.dots) > 0 and not all(dot.state.isWaiting for dot in self.env.dots):
 
                 if self.run_in_parallel:
                     self.parallel_tick()
