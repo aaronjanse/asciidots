@@ -19,6 +19,7 @@ class Dot:
         """
 
         self.pos = pos
+        self.spawn_pos = pos
 
         self.env = env
         self.id = id_ or 0
@@ -28,7 +29,7 @@ class Dot:
         self.stack = stack or []
 
     def __repr__(self):
-        return '<Dot pos={pos}, id={id}, value={value}, dir={dir}, stack={stack}>'.format(**self.__dict__)
+        return '<Dot spawn_pos={spawn_pos} pos={pos}, id={id}, value={value}, dir={dir}, stack={stack}>'.format(**self.__dict__)
 
     def move(self):
         """Move the dot according to its direction."""
@@ -137,7 +138,5 @@ class Dot:
                 return direction
 
         # If we get here without returning, the dot can't find a direction to go!
-        self.env.io.on_error("dot cannot determine location...\nx: {}, y: {}".format(*self.pos))
-
         self.state = DeadState(self)
         return Pos(0, 0)

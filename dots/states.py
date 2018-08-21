@@ -140,6 +140,9 @@ class TravelState(State):
 
                     self.env.dots.append(new_dot)
         elif isinstance(char, SingletonLibInnerWarpChar):
+            if len(self.parent.stack) == 0:
+                raise RuntimeError('Dot tried to exit library it never entered.\nThis is likely caused by a dot spawned inside a library trying to teleport out.\n' + str(self.parent))
+
             self.parent.pos = self.parent.stack.pop()
         elif char.isWarp():
             if char.isSingletonLibWarp():
@@ -158,10 +161,11 @@ class ValueState(State):
     def __init__(self, parent):
         super().__init__(parent)
         self.first_digit = True
+        self.asciiMode = False
         self.neg = False
 
     def next(self, char):
-        if char.isdecimal() or char == '?':
+        if char.isdecimal() or char in 'a?':
             return self
         else:
             return autodetect_next_state(self.parent, char)
@@ -174,9 +178,15 @@ class ValueState(State):
                 self.first_digit = False
             else:
                 self.parent.value = self.parent.value * 10 + int(char)
+        elif char == 'a':
+            self.asciiMode = True
         elif char == '?':
             try:
-                self.parent.value = int(self.env.io.get_input())
+                val = self.env.io.get_input(ascii_char=self.asciiMode)
+                if self.asciiMode:
+                    self.parent.value = ord(val) if len(val) > 0 else -1
+                else:
+                    self.parent.value = int(val)
             except ValueError:
                 self.parent.value = 0
 
@@ -187,10 +197,11 @@ class IdState(State):
     def __init__(self, parent):
         super().__init__(parent)
         self.first_digit = True
+        self.asciiMode = False
         self.setting_id = False
 
     def next(self, char):
-        if char.isdecimal() or char == '?':
+        if char.isdecimal() or char in 'a?':
             return self
         elif self.setting_id:
             return autodetect_next_state(self.parent, char)
@@ -205,6 +216,16 @@ class IdState(State):
             return OperCurlyState(self.parent, id_mode=True)
         elif char == '~':
             return TildeState(self.parent, id_mode=True)
+        elif char == ':':
+            if self.parent.id == 0:
+                return DeadState(self.parent)
+            else:
+                return self
+        elif char == ';':
+            if self.parent.id == 1:
+                return DeadState(self.parent)
+            else:
+                return self
         else:
             return autodetect_next_state(self.parent, char)
 
@@ -217,9 +238,15 @@ class IdState(State):
                 self.first_digit = False
             else:
                 self.parent.id = self.parent.id * 10 + int(char)
+        elif char == 'a':
+            self.asciiMode = True
         elif char == '?':
             try:
-                self.parent.id = int(self.env.io.get_input())
+                val = self.env.io.get_input(ascii_char=self.asciiMode)
+                if self.asciiMode:
+                    self.parent.id = ord(val) if len(val) > 0 else -1
+                else:
+                    self.parent.id = int(val)
             except ValueError:
                 self.parent.id = 0
         else:

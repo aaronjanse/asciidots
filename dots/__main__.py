@@ -8,6 +8,8 @@ import signal
 import sys
 import time
 
+from dots.getchar import getch
+
 import click
 
 from dots.environment import Env
@@ -100,17 +102,20 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
             signal.signal(signal.SIGINT, signal_handler)
 
-    def get_input(self):
+    def get_input(self, ascii_char=False):
         """Get an input from the user."""
         if not self.debug or self.compat_debug:
-            if not sys.stdin.isatty():
-                return input('')
+            if ascii_char:
+                return getch()
             else:
-                return input('?: ')
+                if not sys.stdin.isatty():
+                    return input('')
+                else:
+                    return input('?: ')
         else:
-            return self.curses_input(self.stdscr, curses.LINES - 3, 2, '?: ')
+            return self.curses_input(self.stdscr, curses.LINES - 3, 2, '?: ', ascii_char)
 
-    def curses_input(self, stdscr, row, col, prompt_string):
+    def curses_input(self, stdscr, row, col, prompt_string, ascii_mode=False):
         """
         Get an input string with curses.
 
@@ -123,7 +128,11 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         input_val = ""
 
         while len(input_val) <= 0:
-            input_val = stdscr.getstr(row + 1, col, 20)
+            if ascii_mode:
+                input_val = chr(stdscr.getch())
+                break
+            else:
+                input_val = stdscr.getstr(row + 1, col, 20)
 
         return input_val
 
@@ -305,8 +314,8 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 @click.option('--silent', '-s', is_flag=True, help='No printing, for benchmarking.')
 @click.option('--compat_debug', '-w', is_flag=True, help='Force the debug rendering without ncurses.')
 @click.option('--debug_lines', '-l', default=default_debug_lines, help='The size of the debug view.')
-@click.option('--async', '-y', is_flag=True, help='Only one dot moves at a time. Easier to debug.')
-def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit, async):
+@click.option('is_async', '--async', '-y', is_flag=True, help='Only one dot moves at a time. Easier to debug.')
+def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit, is_async):
     global interpreter
 
     if autostep_debug is not False:
@@ -314,7 +323,7 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
 
     compat_debug = compat_debug or compat_debug_default
 
-    run_in_parallel = not async
+    run_in_parallel = not is_async
 
     env = Env()
     env.io = DefaultIOCallbacks(env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)

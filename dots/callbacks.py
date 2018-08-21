@@ -9,7 +9,7 @@ class IOCallbacksStorage(object):
         self.env = env
         self.env.io = self
 
-    def get_input(self):
+    def get_input(self, ascii_char=False):
         """ This function should return an integer from stdin, the user, etc """
         raise Exception('get_input: not implemented')
 
