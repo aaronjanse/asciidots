@@ -48,9 +48,9 @@ def check_output(name, input='', run_in_parallel=True):
 
     with open('test/' + name + '.dots', encoding='utf-8') as file:
         program = file.read()
-    
+    print(program, '---', sep='' )   
     interpreter = AsciiDotsInterpreter(env, program, 'test', run_in_parallel)
-
+    print(interpreter.env.world.map)
     try:
         interpreter.run()
     except DotsExit:
