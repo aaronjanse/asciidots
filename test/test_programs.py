@@ -1,13 +1,16 @@
 import os
+import sys
 import pytest
 
-import dots.callbacks
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from dots import callbacks
 from dots.environment import Env
 from dots.interpreter import AsciiDotsInterpreter
 from dots.exceptions import DotsExit
 
 
-class KeepOutputIOCallbacks(dots.callbacks.IOCallbacksStorage):
+class KeepOutputIOCallbacks(callbacks.IOCallbacksStorage):
     def __init__(self, env, input):
         super().__init__(env)
 
