@@ -1,19 +1,15 @@
 language: python
 python:
-  - "3.3"
   - "3.4"
   - "3.5"
   - "3.5-dev" # 3.5 development branch
   - "3.6"
   - "3.6-dev" # 3.6 development branch
 before_install:
-  - sudo apt-get -y install python3-pip python-dev
-  - sudo add-apt-repository ppa:duggan/bats --yes
   - sudo apt-get update -qq
   - python3 -V
   - pip3 -V
 install:
-  - sudo apt-get install -qq bats
-  - pip3 install click
+  - pip3 install -U click pytest 
 script:
-  - bats ./tests.bats
+  - pytest

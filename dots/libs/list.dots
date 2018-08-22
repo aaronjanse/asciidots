@@ -1,9 +1,6 @@
-`` by @ddorn
-
 %^X
 %$FAOS
 %$aGDRLCET
-%$g
 %!storage.dots l  `` For storing the size of the list
 %!storage.dots q  `` For storing the inner queue
 %!for_in_range.dots f

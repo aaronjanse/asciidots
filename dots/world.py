@@ -39,7 +39,7 @@ class World(object):
     def get_coords_of_dots(self):
         """Yiels the cordinates of every dot char in the world."""
         for y, line in enumerate(self.map):
-            if line[0] == '%':
+            if line and line[0] == '%':
                 continue
 
             for x, char in enumerate(line):
@@ -82,7 +82,7 @@ class World(object):
         singleton_ids = {}
 
         for y, line in enumerate(map):
-            if line[0] == '%':
+            if line and line[0] == '%':
                 continue
 
             for x, char in enumerate(line):
@@ -158,7 +158,7 @@ class World(object):
         is_singleton_dict = self._get_dict_of_is_singleton_for_lib_chars_in(char_obj_array)
 
         for y, line in enumerate(char_obj_array):
-            if line[0] == '%':
+            if line and line[0] == '%':
                 continue
 
             for x, char in enumerate(line):
@@ -234,7 +234,7 @@ class World(object):
     # ✓
     def _connect_warps(self):
         for y, line in enumerate(self.map):
-            if line[0] == '%':
+            if line and line[0] == '%':
                 continue
 
             for x, char in enumerate(line):
@@ -248,7 +248,7 @@ class World(object):
     # ✓
     def _find_companion_warp_char_loc_of(self, orig_char, warp_id, orig_pos: Pos):
         for y, line in enumerate(self.map):
-            if line[0] == '%':
+            if line and line[0] == '%':
                 continue
 
             for x, char in enumerate(line):
@@ -352,7 +352,7 @@ class World(object):
         # for each line
         for raw_line in raw_map.split('\n'):
             # removing the comments
-            line = raw_line.partition('``')[0] + ' '
+            line = raw_line.partition('``')[0]
             # remove inline comments
             new_line = ''
             inside_comment = False

@@ -45,6 +45,7 @@ nosetests.xml
 coverage.xml
 *,cover
 .hypothesis/
+.pytest_cache/
 
 # Translations
 *.mo
@@ -99,6 +100,9 @@ venv_pypi/
 # VS Code
 .vscode/
 ddorn
+
+# Vim
+*.swp
 
 # MacOS
 */.DS_Store
