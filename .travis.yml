@@ -11,6 +11,6 @@ before_install:
   - python3 -V
   - pip3 -V
 install:
-  - pip3 install click
+  - pip3 install -U click pytest 
 script:
   - pytest
