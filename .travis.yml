@@ -11,7 +11,6 @@ before_install:
   - python3 -V
   - pip3 -V
 install:
-  - sudo apt-get install -qq bats
   - pip3 install click
 script:
   - pytest
