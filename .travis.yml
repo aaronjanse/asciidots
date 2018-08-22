@@ -7,8 +7,6 @@ python:
   - "3.6"
   - "3.6-dev" # 3.6 development branch
 before_install:
-  - sudo apt-get -y install python3-pip python-dev
-  - sudo add-apt-repository ppa:duggan/bats --yes
   - sudo apt-get update -qq
   - python3 -V
   - pip3 -V
@@ -16,4 +14,4 @@ install:
   - sudo apt-get install -qq bats
   - pip3 install click
 script:
-  - bats ./tests.bats
+  - pytest
