@@ -37,7 +37,7 @@ This is a count to 10 example
 - Once the end dot is emmited, you can send other dots in the lib to use it again
 
 ### Source
-The source code is availaible [here](https://github.com/ddorn/asciidots/blob/master/libs/for_in_range.dots)
-. If something doesn't work, do not hesitate to [open an issue](https://github.com/ddorn/asciidots/issues/new?title=Bug%20in%20for_in_range%20librairy:%20).
+The source code is availaible [here](https://github.com/aaronduino/asciidots/blob/master/libs/for_in_range.dots)
+. If something doesn't work, do not hesitate to [open an issue](https://github.com/aaronduino/asciidots/issues/new?title=Bug%20in%20for_in_range%20librairy:%20).
 
 [Back to docs home](../index.md) - [Back to libs](index.md#loops)
