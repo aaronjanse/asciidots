@@ -63,8 +63,8 @@ It's not a good idea to ask, but the complexity of each function is `O(n)` with 
 
 
 ### Source 
-The source code is availaible [here](https://github.com/ddorn/asciidots/blob/master/libs/list.dots)
-. If something doesn't work, do not hesitate to [open an issue](https://github.com/ddorn/asciidots/issues/new?title=Bug%20in%20list%20librairy:%20).
+The source code is availaible [here](https://github.com/aaronduino/asciidots/blob/master/dots/libs/list.dots)
+. If something doesn't work, do not hesitate to [open an issue](https://github.com/aaronduino/asciidots/issues/new?title=Bug%20in%20list%20librairy:%20).
 
 
 [Back to docs home](../index.md) - [Back to libs](index.md#data-structures)
