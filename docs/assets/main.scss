@@ -6,6 +6,12 @@
 @import url('https://fonts.googleapis.com/css?family=Overpass');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono');
 
+iframe {
+    width: 100%;
+    height: 75em;
+    border: none;
+}
+
 .main-site-title{
     font-style: italic;
 }
