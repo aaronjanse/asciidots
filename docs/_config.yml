@@ -19,8 +19,8 @@ email: aaron@ajanse.me
 description: ""
 # description: >- # this means to ignore newlines until "baseurl:"
   # My place for posting guides, opinion, and the stories behind my projects.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "https://ajanse.me/asciidots" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/asciidots" # the subpath of your site, e.g. /blog
+url: "https://ajanse.me" # the base hostname & protocol for your site, e.g. http://example.com
 github_username:  aaronduino
 pgp_key: '0xBE6C92145BFF4A34'
 pgp_tag: rsa4096
