@@ -1,4 +1,13 @@
-## Using the Interpreter
+---
+layout: page
+permalink: /interpreter/
+title: Interpreter Documentation
+---
+
+This page documents usage of the official asciidots interpreter.
+
+---
+
 The first argument of the interpreter script is the `dots` file that you wish to run.
 
 Here's an example of running the counter sample program (the working directory is the dots repo folder):
@@ -31,7 +40,3 @@ This is how one might debug a program for 300 ticks while running it automatical
 ```bash
 $ asciidots samples/counter.dots -t 300 -d -a 0.05
 ```
-
----
-
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.

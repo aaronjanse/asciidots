@@ -1,0 +1,3 @@
+---
+BUNDLE_PATH: "vendor"
+BUNDLE_NO_INSTALL: "true"

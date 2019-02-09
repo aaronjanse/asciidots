@@ -1,6 +1,8 @@
-[Back to docs home](../index.md) - [Back to libs](index.md#time)
-
-# wait.dots
+---
+layout: post
+permalink: /libs/wait/
+title: wait.dots
+---
 
 ### Purpose
 This librairy keeps a dot inside the lib for a certain amount of time. Since every dot moves at the same time, it can be usefull to have one dot that waits untill an other completes an operation.
@@ -29,6 +31,4 @@ This librairy keeps a dot inside the lib for a certain amount of time. Since eve
 
 ### Source 
 The source code is availaible [here](https://github.com/aaronduino/asciidots/blob/master/dots/libs/wait.dots)
-. If something doesn't work, do not hesitate to [open an issue](https://github.com/aaronduino/asciidots/issues/new?title=Bug%20in%20wait%20librairy:%20).
-
-[Back to docs home](../index.md) - [Back to libs](index.md#time)
+. If something doesn't work, do not hesitate to [open an issue](https://github.com/aaronduino/asciidots/issues/new?title=Bug%20in%20wait%20library:%20).

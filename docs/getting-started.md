@@ -1,16 +1,20 @@
-# Getting Started
+---
+layout: post
+permalink: /getting-started/
+title: Getting Started
+---
 
 Welcome to AsciiDots!
 
 ## Installation
 
-**Using pip (python 3)** (recommended):
+#### Using pip (python 3) (recommended):
 
 ```
 pip install asciidots
 ```
 
-**Using Docker Hub** (recommended):
+#### Using Docker Hub (recommended):
 
 Run sample program from this repo:
 ```
@@ -22,7 +26,7 @@ Run local file `test.dots`:
 docker run -ti --rm -v $PWD:/data aaronduino/asciidots /data/test.dots
 ```
 
-**Using Local Dockerfile**:  
+#### Using Local Dockerfile:  
 
 Build the image:
 ```
@@ -39,12 +43,12 @@ Run local file `test.dots`:
 docker run -ti --rm -v $PWD:/data asciidots /data/test.dots
 ```
 
-**From source**:
+#### From source:
 
 Requirements:
 - Python 3
 
-_Download_:
+**Download the source code**:
 
 With Git:
 
@@ -55,14 +59,14 @@ git clone https://github.com/aaronduino/asciidots
 Without git:
 
 Just download the zip from the Github page, and unzip it
-![screenshot](download_screenshot.png)
+![screenshot](/download_screenshot.png)
 
-_Install_:
+**Install**:
 ```
 pip install -r requirements.txt
 ```
 
-_Run it from source using python 3_:
+**Run it from source using python 3**:
 ```
 python3 __main__.py [arguments]
 ```
@@ -98,4 +102,4 @@ $ asciidots samples/find_primes.dots -d -a 0.02
 ```
 
 ## Programming in AsciiDots
-Read the [language guide & docs page](language.html) for a friendly and informative guide to programming in AsciiDots.
+Read the [language guide & docs page](/language) for a friendly and informative guide to programming in AsciiDots.

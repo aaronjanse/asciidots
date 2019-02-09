@@ -1,5 +1,8 @@
-[Back to docs home](../index.md) - [Back to libs](index.md#data-structures)
-# storage.dots
+---
+layout: post
+permalink: /libs/storage/
+title: storage.dots
+---
 
 ### Purpose
 This librairy is a queue. You can use it to store a single dot or more than one. If you want to store a single dot, don't forget to put the dot back once you you it. This stores both values and ids.
@@ -32,7 +35,4 @@ This librairy is a queue. You can use it to store a single dot or more than one.
 
 ### Source 
 The source code is availaible [here](https://github.com/aaronduino/asciidots/blob/master/dots/libs/storage.dots)
-. If something doesn't work, do not hesitate to [open an issue](https://github.com/aaronduino/asciidots/issues/new?title=Bug%20in%20storage%20librairy:%20).
-
-
-[Back to docs home](../index.md) - [Back to libs](index.md#data-structures)
+. If something doesn't work, do not hesitate to [open an issue](https://github.com/aaronduino/asciidots/issues/new?title=Bug%20in%20storage%20library:%20).

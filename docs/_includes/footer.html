@@ -1,0 +1,53 @@
+<footer class="site-footer h-card">
+    <data class="u-url" href="{{ " / " | relative_url }}"></data>
+
+    <div class="wrapper">
+
+        <h2 class="footer-heading"><a href="https://ajanse.me">Aaron Janse</a></h2>
+
+        <div class="footer-col-wrapper">
+            <div class="footer-col" style="width: 55%;">
+                <ul class="contact-list">
+                    <a href="https://github.com/{{ site.github_username| cgi_escape | escape }}"><span class="username">{{ site.github_username| escape }}</span></a> on github
+                    <br>
+                    <a class="u-email" href="mailto:{{ site.email }}">{{ site.email }}</a>
+                    <br>
+                    {%- if site.pgp_key -%}
+                    <a class="pgp-key" href="https://kb.ajanse.me/pgp.txt">
+                        {{ site.pgp_key | escape }}
+                    </a> ({{ site.pgp_tag | escape }})
+                    {%- endif -%}
+                </ul>
+            </div>
+
+            <!-- <div class="footer-col footer-col-2">
+                {%- include social.html -%}
+            </div> -->
+
+            <div class="footer-col footer-col-2" style="width: 40%;">
+                <p>This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.</p>
+            </div>
+        </div>
+
+    </div>
+</footer>
+<script>
+    document.onreadystatechange = function () {
+        if (this.readyState === "complete" && document.querySelector('.post')) {
+            document.querySelectorAll('h1:not(.p-name):not(.post-title), h2:not(.footer-heading):not(.page-heading), h3, h4, h5, h6').forEach(element => {
+                const depth = parseInt(element.tagName[1])
+
+                var anchor = document.createElement('a')
+                anchor.className = 'anchor-link'
+                anchor.href = '#' + element.id
+                // anchor.style.marginLeft = `-1ch`;                
+                // anchor.style.marginRight = `1ch`; 
+                anchor.style.float = "left";             
+                anchor.style.paddingRight = "4px";             
+                anchor.style.marginLeft = "-20px";             
+                anchor.innerHTML = `<svg class="octicon octicon-link" viewBox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg>`
+                element.innerHTML = anchor.outerHTML + element.innerHTML
+            })
+        }
+    }
+</script>

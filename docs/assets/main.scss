@@ -1,0 +1,200 @@
+---
+---
+
+@import "minima";
+@import url('https://fonts.googleapis.com/css?family=Overpass+Mono:300,400,600');
+@import url('https://fonts.googleapis.com/css?family=Overpass');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Mono');
+
+.main-site-title{
+    font-style: italic;
+}
+
+.title-slash:hover {
+    text-decoration: none;
+}
+
+.trigger {
+    margin-bottom: 1rem;
+    margin-left: 7em;
+}
+
+.footer-heading>a {
+    color: inherit;
+}
+
+.demo-link {
+    text-decoration: underline;
+}
+
+* {
+    font-family: 'Overpass Mono', monospace;
+}
+
+.pgp-key {
+    font-family: 'Source Code Pro', monospace !important;
+}
+
+.contact-list li+li {
+    padding-top: 5px;
+}
+
+.site-header {
+    border: none;
+}
+
+p,
+p > a,
+p > strong,
+li > strong,
+p > em,
+small > em,
+dt-published,
+li {
+    font-family: 'Overpass', monospace;
+}
+
+.post-link {
+    font-family: 'Ubuntu Mono', monospace;
+}
+
+.rss-subscribe {
+    font-style: italic;
+}
+
+ul {
+    list-style-type: square;
+}
+
+strong {
+    font-weight: 600;
+}
+
+p a {
+    font-size: 0.9em;
+}
+
+hr {
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.site-title {
+    letter-spacing: inherit;
+    font-size: inherit;
+}
+
+.site-nav {
+    float: inherit;
+    margin-left: 11em;
+}
+
+.anchor-link>* {
+    color: #424242;
+    font-weight: 300;
+    display: none;
+}
+
+*:hover>.anchor-link>* {
+    display: inline;
+    text-decoration: none;
+    font-weight: 400;
+}
+
+.post-content h2 {
+    font-weight: bolder;
+    font-size: 1.5rem;
+    margin-top: 2em;
+}
+
+.post-content h3 {
+    font-weight: bolder;
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+.post-content h4 {
+    font-weight: bolder;
+    font-size: 1rem;
+    margin-top: 1.5rem;
+}
+
+@media only screen and (min-width: 780px) {
+    .trigger {
+        position: relative;
+        right: 50px;
+    }
+}
+
+@media screen and (max-width: 770px) {
+    .site-nav {
+        position: absolute;
+        top: 9px;
+        right: 15px;
+        background-color: #fdfdfd;
+        border: 1px solid #e8e8e8;
+        border-radius: 5px;
+        text-align: right;
+    }
+    .site-nav label[for="nav-trigger"] {
+        display: block;
+        float: right;
+        width: 36px;
+        height: 36px;
+        z-index: 2;
+        cursor: pointer;
+    }
+    .site-nav .menu-icon {
+        display: block;
+        float: right;
+        width: 36px;
+        height: 26px;
+        line-height: 0;
+        padding-top: 10px;
+        text-align: center;
+    }
+    .site-nav .menu-icon>svg {
+        fill: #424242;
+    }
+    .site-nav input~.trigger {
+        clear: both;
+        display: none;
+    }
+    .site-nav input:checked~.trigger {
+        display: block;
+        padding-bottom: 5px;
+    }
+    .site-nav .page-link {
+        display: block;
+        padding: 5px 10px;
+        margin-left: 20px;
+    }
+    .site-nav .page-link:not(:last-child) {
+        margin-right: 0;
+    }
+}
+
+#sidebar {
+    position: absolute;
+    left: 40px;
+    white-space: pre;
+    line-height: 1.5rem;
+}
+
+.page-content {
+    padding-top: 0;
+}
+
+.post-list-heading {
+    display: none;
+}
+
+.post-title {
+    letter-spacing: 0;
+    font-size: 32px;
+    line-height: inherit;
+}

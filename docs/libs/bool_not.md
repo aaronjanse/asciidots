@@ -1,6 +1,9 @@
-[Back to docs home](../index.md) - [Back to libs](index.md#simple-operations-on-dots)
+---
+layout: post
+permalink: /libs/bool_not/
+title: bool_not.dots
+---
 
-# bool_not.dots
 
 ### Purpose
 Since there is no unary operators in asciidots, this librairy operate a NOT oparation on a dots value. 
@@ -31,6 +34,4 @@ Since there is no unary operators in asciidots, this librairy operate a NOT opar
 
 ### Source 
 The source code is availaible [here](https://github.com/aaronduino/asciidots/blob/master/dots/libs/bool_not.dots)
-. If something doesn't work, do not hesitate to [open an issue](https://github.com/aaronduino/asciidots/issues/new?title=Bug%20in%20bool_not%20librairy:%20).
-
-[Back to docs home](../index.md) - [Back to libs](index.md#simple-operations-on-dots)
+. If something doesn't work, do not hesitate to [open an issue](https://github.com/aaronduino/asciidots/issues/new?title=Bug%20in%20bool_not%20library:%20).

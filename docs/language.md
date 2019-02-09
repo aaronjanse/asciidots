@@ -1,12 +1,13 @@
-# AsciiDots - Documentation
+---
+layout: page
+permalink: /language/
+title: Language Documentation
+---
 
 
 AsciiDots is an esoteric programming language based on ascii art. In this language, _dots_, represented by periods (`.`), travel down ascii art paths and undergo operations.
 
-
-## Program Syntax
-
-### Basics
+## Basics
 
 ### Starting a program
 `.` (a period), or `•` (a bullet symbol), signifies the starting location of a *dot*, the name for this language's information-carrying unit. Each dot is initialized with both an [id and value](#ids-and-values) of `0`.
@@ -355,7 +356,3 @@ Each tick, the dots will travel along the lines until they hit a charter that ac
 goes on a path that it has already traversed in the same tick
 
 Due to the fact that dots may be moving backwards down a line, if a number or system value (e.g. `?`) is seen without a preceding `@` or `#`, it will be ignored, along with any `@` or `#` immediately thereafter
-
----
-
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.
