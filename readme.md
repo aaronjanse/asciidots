@@ -24,7 +24,7 @@ AsciiDots is an esoteric programming language based on ascii art. In this langua
 - [Samples](#samples)
 - [Installing](#installing)
 - [Using the Interpreter](#using-the-interpreter)
-- [Documentation](http://ajanse.me/asciidots)
+- [Documentation](https://ajanse.me/asciidots)
 - [Examples](#examples)
 
 ## Samples
@@ -78,7 +78,7 @@ Code-golfed counter (15 bytes) by @ddorn:
 ```
 
 ## Installing
-Note: asciidots is available online via [it's website](https://aaronduino.github.io/asciidots/demo) and [Try it Online (tio.run)](https://tio.run/#asciidots)
+Note: asciidots is available online via [Try it Online (tio.run)](https://tio.run/#asciidots)
 
 **Using pip (python 3)** (recommended):
 
@@ -169,7 +169,7 @@ $ asciidots samples/counter.dots -t 300 -d -a 0.05
 ```
 
 ## Program Syntax
-The documentation has been moved to [its own page](http://ajanse.me/asciidots/language.html)
+The documentation has been moved to [its own page](https://ajanse.me/asciidots/language/)
 
 ## More Examples
 
