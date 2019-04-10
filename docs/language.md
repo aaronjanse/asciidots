@@ -330,7 +330,7 @@ That can be done like so:
 %$X `` X could be replaced with a different character, if so desired
 ```
 
-It is recommended that you create warps for different sids of the char. Just look at the example code for the `val_to_addr.dots` library:
+It is recommended that you create warps for different sides of the char. Just look at the example code for the `val_to_addr.dots` library:
 
 ```
 %^X
