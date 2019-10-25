@@ -68,7 +68,7 @@ function run () {
 
     history.pushState(null, null, '?code=' + encodeURIComponent(arg))
   } else {
-    document.getElementById('out').innerHTML = 'Not connected...\nThe backend may not have booted up. Please wait a few seconds (~5 should work) and reload.'
+    document.getElementById('out').innerHTML = 'Not connected...\nThe backend may not have booted up. Please wait a few seconds (~15 should work) and reload.'
   }
 }
 
