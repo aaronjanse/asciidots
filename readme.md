@@ -78,7 +78,7 @@ Code-golfed counter (15 bytes) by @ddorn:
 ```
 
 ## Installing
-Note: asciidots is available online via [Try it Online (tio.run)](https://tio.run/#asciidots)
+Note: asciidots is available online via [Try it Online (tio.run)](https://tio.run/#asciidots) and the [Interactive Demo (ajanse.me)](https://ajanse.me/asciidots/demo/).
 
 **Using pip (python 3)** (recommended):
 
