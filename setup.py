@@ -14,7 +14,7 @@ dots_libs = ['/'.join(path.split('/')[-2:]) for path in dots_libs]
 
 setup(
     name='asciidots',
-    version='1.3.1',
+    version='1.3.2',
     description='Interpreter for the AsciiDots esolang.',
     long_description=read_rst('README.rst'),
     url='https://github.com/aaronduino/asciidots',
