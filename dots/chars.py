@@ -5,6 +5,9 @@ class Char(str):
     def isDot(self):
         return False
 
+    def isTilde(self):
+        return False
+
     def isOper(self):
         return False
 
@@ -85,6 +88,13 @@ class CurlyOperChar(OperChar):
 
 class SquareOperChar(OperChar):
     def isSquareOper(self):
+        return True
+
+class TildeChar(Char):
+    def __init__(self, inverted):
+        self.inverted = inverted
+
+    def isTilde(self):
         return True
 
 

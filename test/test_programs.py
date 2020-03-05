@@ -113,6 +113,10 @@ def test_dots_timing():
     out = check_output('lock')
     assert out == map_add_newline(1)
 
+def test_dots_tilde():
+    out = check_output('tilde')
+    assert out == map_add_newline("Y")
+
 def test_dots_ascii_input():
     out = check_output('ascii_input', "END\n")
     assert out == map_add_newline('Success!')

@@ -7,5 +7,6 @@ stdenv.mkDerivation rec {
     python35Packages.virtualenv
     python35Packages.pip
     python35Packages.click
+    python35Packages.pytest
   ];
 }

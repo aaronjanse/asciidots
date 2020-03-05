@@ -32,6 +32,8 @@ class World(object):
 
         self._setup_operators()
 
+        self._setup_tildes()
+
         self._connect_warps()
 
         self._update_class_of_dots()
@@ -308,6 +310,25 @@ class World(object):
                         self.map[y][x] = CurlyOperChar(char)
                     elif line[x - 1] == '[' and line[x + 1] == ']':
                         self.map[y][x] = SquareOperChar(char)
+
+    def _setup_tildes(self):
+        for y, line in enumerate(self.map):
+            for x, char in enumerate(line):
+                if char == '~':
+                    inverted = self._is_inversion_char_at(Pos(x,y+1))
+                    self.map[y][x] = TildeChar(inverted)
+
+    def _is_inversion_char_at(self, pos):
+        if not self.does_loc_exist(pos):
+            return False
+
+        if not self.is_char_at(pos, '!'):
+            return False
+
+        if self.map[pos.row][pos.col].isOper():
+            return False
+
+        return True
 
     # ✓
     def _get_warp_chars_list_from(self, char_obj_array):

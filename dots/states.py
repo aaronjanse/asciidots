@@ -83,7 +83,7 @@ class TravelState(State):
             return DeadState(self.parent)
         elif char == '&' and not char.isOper():
             return ExitState(self.parent)
-        elif char == '~':
+        elif char.isTilde():
             return TildeState(self.parent)
         elif char == '#':
             return ValueState(self.parent)
@@ -460,7 +460,7 @@ class TildeState(TwoDotState):
                              id_mode=id_mode)
 
     def do_operation(self, char, self_par, candidate_par, candidate):
-        if candidate_par != 0:
+        if (candidate_par != 0) ^ char.inverted:
             self.set_parent_direction(UP)
 
 
