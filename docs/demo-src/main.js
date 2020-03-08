@@ -1,13 +1,6 @@
 var open = false
 
-var websocketUrl = ''
-if (location.protocol === 'https:') {
-  websocketUrl = 'wss://'
-} else {
-  websocketUrl = 'ws://'
-}
-
-websocketUrl += 'asciidots-demo-backend.herokuapp.com'
+var websocketUrl = 'wss://asciidots-backend.ajanse.me:10083'
 
 const socket = new WebSocket(websocketUrl)
 
@@ -68,7 +61,7 @@ function run () {
 
     history.pushState(null, null, '?code=' + encodeURIComponent(arg))
   } else {
-    document.getElementById('out').innerHTML = 'Not connected...\nThe backend may not have booted up. Please wait a few seconds (~15 should work) and reload.'
+    document.getElementById('out').innerHTML = 'ERROR: backend not connected!'
   }
 }
 
