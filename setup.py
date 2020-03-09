@@ -14,14 +14,14 @@ dots_libs = ['/'.join(path.split('/')[-2:]) for path in dots_libs]
 
 setup(
     name='asciidots',
-    version='1.3.2',
+    version='1.3.3',
     description='Interpreter for the AsciiDots esolang.',
     long_description=read_rst('README.rst'),
     url='https://github.com/aaronduino/asciidots',
     author='Aaron Janse',
     author_email='gitduino@gmail.com',
     license='APGL-v3.0',
-    python_requires='>=3',
+    python_requires='>=2.6, <4',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Education',
@@ -32,6 +32,9 @@ setup(
         'Topic :: Software Development :: Interpreters',
         'Operating System :: OS Independent',
         'License :: OSI Approved :: GNU Affero General Public License v3',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.6',
+        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',

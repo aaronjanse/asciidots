@@ -1,12 +1,16 @@
 with import <nixpkgs> {};
-stdenv.mkDerivation rec {
+
+let
+	py = python36;
+	pyPkgs = py.pkgs;
+in stdenv.mkDerivation rec {
   name = "env";
   env = buildEnv { name = name; paths = buildInputs; };
-  buildInputs = [
-    python35
-    python35Packages.virtualenv
-    python35Packages.pip
-    python35Packages.click
-    python35Packages.pytest
+  buildInputs = with pyPkgs; [
+    py
+    virtualenv
+    pip
+    click
+    pytest
   ];
 }

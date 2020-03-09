@@ -1,3 +1,6 @@
+from __future__ import print_function
+
+import io
 import os
 import sys
 import pytest
@@ -12,7 +15,7 @@ from dots.exceptions import DotsExit
 
 class KeepOutputIOCallbacks(callbacks.IOCallbacksStorage):
     def __init__(self, env, input):
-        super().__init__(env)
+        super(KeepOutputIOCallbacks, self).__init__(env)
 
         self.output = []
         self.input = input
@@ -49,7 +52,7 @@ def check_output(name, input='', run_in_parallel=True):
     env = Env()
     env.io = KeepOutputIOCallbacks(env, input)
 
-    with open('test/' + name + '.dots', encoding='utf-8') as file:
+    with io.open('test/' + name + '.dots', encoding='utf-8') as file:
         program = file.read()
     print(program, '---', sep='' )   
     interpreter = AsciiDotsInterpreter(env, program, 'test', run_in_parallel)

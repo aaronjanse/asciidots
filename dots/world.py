@@ -48,14 +48,12 @@ class World(object):
                 if char.isDot():
                     yield Pos(x, y)
 
-    # ✓
-    def get_char_at(self, pos: Pos):
+    def get_char_at(self, pos):
         """Get the Char at the given position."""
         # NOTE: _data_array has to be accesed using y, x due to the way it is created
         return self.map[pos.row][pos.col]
 
-    # ✓
-    def does_loc_exist(self, loc: Pos):
+    def does_loc_exist(self, loc):
         """True if this location exists on the map."""
         return 0 <= loc.row < len(self.map) and 0 <= loc.col < len(self.map[loc.row])
 
@@ -155,7 +153,6 @@ class World(object):
 
         char_obj_array.extend(lib_char_obj_array)
 
-    # ✓
     def _update_class_of_lib_chars(self, char_obj_array, lib_chars):
         is_singleton_dict = self._get_dict_of_is_singleton_for_lib_chars_in(char_obj_array)
 
@@ -170,7 +167,6 @@ class World(object):
                     else:
                         char_obj_array[y][x] = LibWarpChar(char)
 
-    # ✓
     def _get_path_of_lib_file(self, filename):
         dir_paths_to_try = [
             self.program_dir,
@@ -185,7 +181,6 @@ class World(object):
         
         raise RuntimeError('Native library "{}" cannot be found'.format(filename))
 
-    # ✓✓
     @staticmethod
     def _get_lib_files_by_alias(map_):
         """
@@ -212,7 +207,6 @@ class World(object):
 
         return filename_by_alias
 
-    # ✓
     def _get_dict_of_is_singleton_for_lib_chars_in(self, char_obj_array):
         is_singleton_dict = {}
 
@@ -233,7 +227,6 @@ class World(object):
 
         return is_singleton_dict
 
-    # ✓
     def _connect_warps(self):
         for y, line in enumerate(self.map):
             if line and line[0] == '%':
@@ -247,8 +240,7 @@ class World(object):
                     if companion_warp_loc is not None:
                         self.map[y][x].set_dest_loc(companion_warp_loc)
 
-    # ✓
-    def _find_companion_warp_char_loc_of(self, orig_char, warp_id, orig_pos: Pos):
+    def _find_companion_warp_char_loc_of(self, orig_char, warp_id, orig_pos):
         for y, line in enumerate(self.map):
             if line and line[0] == '%':
                 continue
@@ -260,7 +252,6 @@ class World(object):
                             continue
                     return Pos(x, y)
 
-    # ✓
     def _setup_warps_for(self, char_obj_array):
         self._correct_class_of_warp_chars_in(char_obj_array)
 
@@ -278,7 +269,6 @@ class World(object):
 
                     self._worldwide_warp_id_counter += 1
 
-    # ✓
     def _correct_class_of_warp_chars_in(self, char_obj_array):
         warp_list = self._get_warp_chars_list_from(char_obj_array)
 
@@ -301,7 +291,6 @@ class World(object):
                 if char == '.':
                     self.map[y][x] = DotChar(char)
 
-    # ✓
     def _setup_operators(self):
         for y, line in enumerate(self.map):
             for x, char in enumerate(line):
@@ -316,7 +305,8 @@ class World(object):
             for x, char in enumerate(line):
                 if char == '~':
                     inverted = self._is_inversion_char_at(Pos(x,y+1))
-                    self.map[y][x] = TildeChar(inverted)
+                    self.map[y][x] = TildeChar("~")
+                    self.map[y][x].set_inverted(inverted)
 
     def _is_inversion_char_at(self, pos):
         if not self.does_loc_exist(pos):
@@ -330,7 +320,6 @@ class World(object):
 
         return True
 
-    # ✓
     def _get_warp_chars_list_from(self, char_obj_array):
         warp_chars = []
 
@@ -345,21 +334,18 @@ class World(object):
 
         return warp_chars
 
-    # ✓
     def _char_obj_array_iter(self, obj_array):
         for char_list in obj_array:
             for char in char_list:
                 yield char
 
-    # ✓
     def _char_obj_array_iter_with_coords(self, obj_array):
         for y, char_list in enumerate(obj_array):
             for x, char in enumerate(char_list):
                 yield Pos(x, y), char
 
-    # ✓✓
     @staticmethod
-    def map_from_raw(raw_map: str):
+    def map_from_raw(raw_map):
         """
         Convert a code in a string to a usable map.
 

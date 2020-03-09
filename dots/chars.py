@@ -1,6 +1,11 @@
+from __future__ import division
+
 class Char(str):
     def __init__(self, value):
         self.value = value
+
+    def isdecimal(self):
+        return self >= '0' and self <= '9'
 
     def isDot(self):
         return False
@@ -37,7 +42,7 @@ class DotChar(Char):
 
 class OperChar(Char):
     def __init__(self, value):
-        super().__init__(value)
+        super(OperChar, self).__init__(value)
 
         self.func = None
 
@@ -67,10 +72,10 @@ class OperChar(Char):
             }
 
             unicode_substitutions = {
-                '÷': '/',
-                '≠': '!',
-                '≤': 'L',
-                '≥': 'G'
+                '\u00F7': '/',
+                '\u2260': '!',
+                '\u2264': 'L',
+                '\u2265': 'G'
             }
 
             if self in unicode_substitutions:
@@ -91,7 +96,12 @@ class SquareOperChar(OperChar):
         return True
 
 class TildeChar(Char):
-    def __init__(self, inverted):
+    def __init__(self, value):
+        assert value == "~"
+        super(TildeChar, self).__init__(value)
+        self.inverted = False
+
+    def set_inverted(self, inverted):
         self.inverted = inverted
 
     def isTilde(self):
@@ -100,7 +110,7 @@ class TildeChar(Char):
 
 class WarpChar(Char):
     def __init__(self, value):
-        super().__init__(value)
+        super(WarpChar, self).__init__(value)
 
         self._teleporter_id = None
         self._dest_loc = None

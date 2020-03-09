@@ -80,7 +80,7 @@ Code-golfed counter (15 bytes) by @ddorn:
 ## Installing
 Note: asciidots is available online via [Try it Online (tio.run)](https://tio.run/#asciidots) and the [Interactive Demo (ajanse.me)](https://ajanse.me/asciidots/demo/).
 
-**Using pip (python 3)** (recommended):
+**Using pip** (recommended):
 
 ```
 pip install asciidots
@@ -119,25 +119,25 @@ docker run -ti --rm -v $PWD:/data asciidots /data/test.dots
 
 ```
 git clone https://github.com/aaronduino/asciidots
-pip3 install -r requirements.txt
+pip install -r requirements.txt
 # and only if on windows:
 python -m pip install windows-curses
 ```
 
 Run it from source using:
 ```
-python3 __main__.py [arguments]
+python __main__.py [arguments]
 ```
 
 or alias it to `asciidots` using:
 ```
 # on Ubuntu, replace `.bash_profile` with `.bashrc`
-echo "alias asciidots='python3 $(pwd)/__main__.py'" >> ~/.bash_profile
+echo "alias asciidots='python $(pwd)/__main__.py'" >> ~/.bash_profile
 source ~/.bash_profile
 ```
 
 ## Using the Interpreter
-The interpreter for this language is the `__main__.py` file. It requires Python 3, and can be run from the terminal using the `python3` command. The first argument is the `dots` file that you wish the interpreter to run.
+The interpreter for this language is the `__main__.py` file. It can be run from the terminal using the `python` command. The first argument is the `dots` file that you wish the interpreter to run.
 
 Here's an example of running the counter sample program (the working directory is the dots repo folder):
 

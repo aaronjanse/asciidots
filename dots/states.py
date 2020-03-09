@@ -1,3 +1,5 @@
+from __future__ import division
+
 from dots.constants import DIRECTIONS, RIGHT, LEFT, UP, DOWN
 from dots.exceptions import DotsExit
 from dots.vector import Pos
@@ -159,7 +161,7 @@ class TravelState(State):
 
 class ValueState(State):
     def __init__(self, parent):
-        super().__init__(parent)
+        super(ValueState, self).__init__(parent)
         self.first_digit = True
         self.asciiMode = False
         self.neg = False
@@ -195,7 +197,7 @@ class ValueState(State):
 
 class IdState(State):
     def __init__(self, parent):
-        super().__init__(parent)
+        super(IdState, self).__init__(parent)
         self.first_digit = True
         self.asciiMode = False
         self.setting_id = False
@@ -257,7 +259,7 @@ class IdState(State):
 
 class PrintState(State):
     def __init__(self, parent, newline=True):
-        super().__init__(parent)
+        super(PrintState, self).__init__(parent)
         self.newline = newline
         self.asciiMode = False
         self.pendingExit = False
@@ -312,7 +314,7 @@ class PrintState(State):
 
 class PrintDoubleQuoteState(PrintState):
     def __init__(self, parent, newline=True):
-        super().__init__(parent, newline)
+        super(PrintDoubleQuoteState, self).__init__(parent, newline)
         self.text_buffer = ''
 
     def next(self, char):
@@ -359,7 +361,7 @@ class PrintSingleQuoteState(PrintState):
 
 class TwoDotState(State):
     def __init__(self, parent, isMaster, id_mode=None):
-        super().__init__(parent)
+        super(TwoDotState, self).__init__(parent)
 
         if id_mode is None:
             self.id_mode = False

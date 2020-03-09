@@ -8,7 +8,7 @@ Welcome to AsciiDots!
 
 ## Installation
 
-#### Using pip (python 3) (recommended):
+#### Using pip (recommended):
 
 ```
 pip install asciidots
@@ -45,9 +45,6 @@ docker run -ti --rm -v $PWD:/data asciidots /data/test.dots
 
 #### From source:
 
-Requirements:
-- Python 3
-
 **Download the source code**:
 
 With Git:
@@ -68,13 +65,13 @@ pip install -r requirements.txt
 
 **Run it from source using python 3**:
 ```
-python3 __main__.py [arguments]
+python __main__.py [arguments]
 ```
 
 or alias it to `asciidots` using:
 ```
 # on Ubuntu, replace `.bash_profile` with `.bashrc`
-echo "alias asciidots='python3 $(pwd)/__main__.py'" >> ~/.bash_profile
+echo "alias asciidots='python $(pwd)/__main__.py'" >> ~/.bash_profile
 source ~/.bash_profile
 ```
 

@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 # coding=utf-8
 
+from __future__ import print_function
+
 import codecs
 import locale
 import os
 import signal
 import sys
 import time
+
+import io
 
 from dots.getchar import getch
 
@@ -22,6 +26,11 @@ from dots.interpreter import AsciiDotsInterpreter
 from dots.callbacks import IOCallbacksStorage
 
 from dots import terminalsize
+
+try:
+   input = raw_input
+except NameError:
+   pass
 
 try:
     import curses
@@ -55,7 +64,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         :param float autostep_debug: The timebetween automatic ticks. 0 disables the auto ticks.
         :param int output_limit: The max number of outputs for the program
         """
-        super().__init__(env)
+        super(DefaultIOCallbacks, self).__init__(env)
 
         # if it is zero or false, we don't want to stop
         self.ticks_left = ticks or float('inf')
@@ -149,7 +158,8 @@ class DefaultIOCallbacks(IOCallbacksStorage):
             return
 
         if not self.debug:
-            print(value, end='', flush=True)
+            print(value, end='')
+            sys.stdout.flush()
 
         elif self.compat_debug:
             # we add the ouput to the buffer
@@ -242,8 +252,10 @@ class DefaultIOCallbacks(IOCallbacksStorage):
                         self.print_char(char, 2, display_y, x)
                     elif char.isWarp():
                         self.print_char(char, 3, display_y, x)
-                    elif char in '#@~' or char.isOper():
+                    elif char in '#@' or char.isOper():
                         self.print_char(char, 4, display_y, x)
+                    elif char.isTilde():
+                        self.print_char("~", 4, display_y, x)
                     else:
                         self.print_char(char, 0, display_y, x)
 
@@ -255,7 +267,8 @@ class DefaultIOCallbacks(IOCallbacksStorage):
 
             # print the output part
             if self.compat_debug:
-                print('\n' + self.compat_logging_buffer, end='', flush=True)
+                print('\n' + self.compat_logging_buffer, end='')
+                sys.stdout.flush()
 
             if not self.first_tick or True:
                 # step automatically or wait for input
@@ -329,7 +342,7 @@ def main(filename, ticks, silent, debug, compat_debug, debug_lines, autostep_deb
     env.io = DefaultIOCallbacks(env, ticks, silent, debug, compat_debug, debug_lines, autostep_debug, output_limit)
 
     program_dir = os.path.dirname(os.path.abspath(filename))
-    with open(filename, encoding='utf-8') as file:
+    with io.open(filename, encoding='utf-8') as file:
         program = file.read()
 
     interpreter = AsciiDotsInterpreter(env, program, program_dir, run_in_parallel)
