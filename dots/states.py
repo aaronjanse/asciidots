@@ -286,6 +286,8 @@ class PrintState(State):
             self.asciiMode = True
         elif char == '#':
             data = self.parent.value
+            if data % 1 == 0:
+                data = int(data)
 
             if self.asciiMode:
                 data = chr(data)
@@ -297,6 +299,8 @@ class PrintState(State):
             self.pendingExit = True
         elif char == '@':
             data = self.parent.id
+            if data % 1 == 0:
+                data = int(data)
 
             if self.asciiMode:
                 data = chr(data)
