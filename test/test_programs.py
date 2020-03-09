@@ -128,6 +128,10 @@ def test_dots_filter_chars():
     out = check_output('filter_chars', "END\n")
     assert out == [0, 0, 1, 1]
 
+def test_dots_id_mode_persistence():
+    out = check_output('id_mode_persistence')
+    assert out == map_add_newline("Y")
+
 def test_dots_eof():
     out = check_output('eof', "hi\n")
     assert len(out) == 5

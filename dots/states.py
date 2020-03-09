@@ -222,12 +222,12 @@ class IdState(State):
             if self.parent.id == 0:
                 return DeadState(self.parent)
             else:
-                return self
+                return TravelState(self.parent)
         elif char == ';':
             if self.parent.id == 1:
                 return DeadState(self.parent)
             else:
-                return self
+                return TravelState(self.parent)
         else:
             return autodetect_next_state(self.parent, char)
 
