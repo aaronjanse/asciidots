@@ -241,6 +241,27 @@ Add two user inputted values together then output the sum:
 .-#?--/
 ```
 
+Operations can also be done using dots' ids by putting an `@` immediately before the operation. If the `@` is located on the path of the dot that goes straight through the operation, the result of the operation is stored in that dot's id.
+
+Some examples:
+
+```
+.-#1-{+}-$# `` prints "3"
+      @
+.-@2--/
+```
+
+```
+.-@3-@{+}-$@ `` prints "5"
+       @
+.-@2---/
+```
+
+```
+.-@3-@{+}-$@ `` prints "4"
+       |
+.-#1---/
+```
 
 ### Filters
 These are some simple chars to delete dots of specific values:  
