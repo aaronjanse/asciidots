@@ -37,6 +37,6 @@ Since there is no way to set a dot's value to a negative number directly, this l
     42
 
 ### Source 
-The source code is availaible [here](https://github.com/aaronduino/asciidots/blob/master/dots/libs/neg.dots)
-. If something doesn't work, do not hesitate to [open an issue](https://github.com/aaronduino/asciidots/issues/new?title=Bug%20in%20neg%20library:%20).
+The source code is availaible [here](https://github.com/aaronjanse/asciidots/blob/master/dots/libs/neg.dots)
+. If something doesn't work, do not hesitate to [open an issue](https://github.com/aaronjanse/asciidots/issues/new?title=Bug%20in%20neg%20library:%20).
 

@@ -118,7 +118,7 @@ docker run -ti --rm -v $PWD:/data asciidots /data/test.dots
 **From source**:
 
 ```
-git clone https://github.com/aaronduino/asciidots
+git clone https://github.com/aaronjanse/asciidots
 pip install -r requirements.txt
 # and only if on windows:
 python -m pip install windows-curses

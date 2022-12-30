@@ -1,3 +1,3 @@
 I have tried for hours to get README.rst to work.
 
-Just read it at https://github.com/aaronduino/asciidots/
+Just read it at https://github.com/aaronjanse/asciidots/

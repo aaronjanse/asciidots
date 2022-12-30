@@ -50,7 +50,7 @@ docker run -ti --rm -v $PWD:/data asciidots /data/test.dots
 With Git:
 
 ```
-git clone https://github.com/aaronduino/asciidots
+git clone https://github.com/aaronjanse/asciidots
 ```
 
 Without git:
@@ -82,7 +82,7 @@ You can simply run a program with:
 $ asciidots [asciidots file to run]
 ```
 
-You can read more about running AsciiDots programs on the [interpreter guide](interpreter.html)
+You can read more about running AsciiDots programs on the [interpreter guide](interpreter)
 
 ## Quick sample programs to try out
 
@@ -99,4 +99,4 @@ $ asciidots samples/find_primes.dots -d -a 0.02
 ```
 
 ## Programming in AsciiDots
-Read the [language guide & docs page](/language) for a friendly and informative guide to programming in AsciiDots.
+Read the [language guide & docs page](language) for a friendly and informative guide to programming in AsciiDots.

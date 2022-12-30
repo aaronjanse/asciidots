@@ -24,7 +24,7 @@ Projects built for AsciiDots:
 AsciiDots variants:
 - [holtchesley/unicodots](https://github.com/holtchesley/unicodots)
   Unicode version of AsciiDots.
-- [aaronduino/marble-complete](https://github.com/aaronduino/marble-complete)
+- [aaronjanse/marble-complete](https://github.com/aaronjanse/marble-complete)
   Simulate Turing-complete marble towers using modified AsciiDots syntax.
 
 Alternate AsciiDots implementations:

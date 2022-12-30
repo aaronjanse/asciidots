@@ -10,4 +10,4 @@ Run the samples from the original asciidots repository:
 
     docker run -ti --rm aaronduino/asciidots samples/hello_world.dots
 
-[asciidots]: https://github.com/aaronduino/asciidots
+[asciidots]: https://github.com/aaronjanse/asciidots
