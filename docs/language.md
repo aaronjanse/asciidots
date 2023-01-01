@@ -174,7 +174,7 @@ If preceded by an `a`, it returns the ascii code for the next char in stdin, ret
 ```
 
 ### Control Flow
-` ~` (tilde) redirects dots going through it horizontally to the upward path if a dot waiting at the bottom has a value *not* equal to `0`. Otherwise, the dot continues horizontally. If an exclamation point (`!`) is under it, then it redirects the dot upwards only if the value of the dot waiting *is* equal to zero.<br>
+`~` (tilde) redirects dots going through it horizontally to the upward path if a dot waiting at the bottom has a value *not* equal to `0`. Otherwise, the dot continues horizontally. If an exclamation point (`!`) is under it, then it redirects the dot upwards only if the value of the dot waiting *is* equal to zero.<br>
 &nbsp;&nbsp;&nbsp;&nbsp;`!` acts like a pipe. Special function described above
 
 This example prompts for a value then prints to the console whether the user provided value is equal to zero:
