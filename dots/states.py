@@ -185,6 +185,9 @@ class ValueState(State):
         elif char == '?':
             try:
                 val = self.env.io.get_input(ascii_char=self.asciiMode)
+                if val is None:
+                    # Wait until the next tick to ask again
+                    return
                 if self.asciiMode:
                     self.parent.value = ord(val) if len(val) > 0 else -1
                 else:
