@@ -1,0 +1,18 @@
+services:
+  jekyll:
+    image: bretfisher/jekyll-serve
+    volumes:
+      - .:/site
+    ports:
+      - '4000:4000'
+
+    networks:
+      - caddy
+    labels:
+      caddy: asciidots-preview.ajanse.me
+      caddy.reverse_proxy: "{{upstreams 4000}}"
+      caddy.import: auth
+
+networks:
+  caddy:
+    external: true

@@ -4,6 +4,8 @@ permalink: /libs/{{name}}/
 title: {{name}}.dots
 ---
 
+[Go Back](../../libraries)
+
 ### Purpose
 This librairy...
 

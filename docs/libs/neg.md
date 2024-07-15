@@ -4,6 +4,8 @@ permalink: /libs/neg/
 title: neg.dots
 ---
 
+[Go Back](../../libraries)
+
 ### Purpose
 Since there is no way to set a dot's value to a negative number directly, this librairy is a shortcut to changes the value of a dot to its opposite.
 

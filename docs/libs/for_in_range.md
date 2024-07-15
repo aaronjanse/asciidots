@@ -4,6 +4,8 @@ permalink: /libs/for_in_range/
 title: for_in_range.dots
 ---
 
+[Go Back](../)
+
 ### Purpose
 This librairy generates a range of one-spaced values between two integers. It is similar to the range function of python, the first value is included but the last one is not.
 

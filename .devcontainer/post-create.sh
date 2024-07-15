@@ -1,0 +1,2 @@
+cd docs
+bundle install

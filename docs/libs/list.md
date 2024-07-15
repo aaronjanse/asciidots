@@ -4,6 +4,8 @@ permalink: /libs/list/
 title: list.dots
 ---
 
+[Go Back](../../libraries)
+
 ### Purpose
 This librairy simulate a list to store an arbitrary number of values. Note that the ids are not preserved.
 

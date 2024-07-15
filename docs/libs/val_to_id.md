@@ -4,6 +4,8 @@ permalink: /libs/val_to_id/
 title: val_to_id.dots
 ---
 
+[Go Back](../../libraries)
+
 ### Purpose
 This librairy sets the id of a dot to its value
 

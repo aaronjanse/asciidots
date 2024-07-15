@@ -4,6 +4,8 @@ permalink: /libs/storage/
 title: storage.dots
 ---
 
+[Go Back](../../libraries)
+
 ### Purpose
 This librairy is a queue. You can use it to store a single dot or more than one. If you want to store a single dot, don't forget to put the dot back once you you it. This stores both values and ids.
 

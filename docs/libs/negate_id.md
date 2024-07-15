@@ -4,6 +4,8 @@ permalink: /libs/negate_id/
 title: negate_id.dots
 ---
 
+[Go Back](../../libraries)
+
 ### Purpose
 Since there is no way to set a dot's id to a negative number directly, this librairy is a shortcut to changes the id of a dot to its opposite.
 

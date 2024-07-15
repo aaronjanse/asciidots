@@ -1,5 +1,5 @@
 # AsciiDots - Esoteric Language
-> The esolang inspired by ascii art
+> An esolang inspired by ascii art
 ```
                    _ _ _____        _       
     /\            (_|_)  __ \      | |      
@@ -10,14 +10,13 @@
 
 ```
 
-[![codebeat badge](https://codebeat.co/badges/7351eeca-cc97-4fb2-9e18-fe3a00217f22)](https://codebeat.co/projects/github-com-aaronduino-asciidots-master)
-[![Join the chat at https://gitter.im/asciidots/Lobby](https://badges.gitter.im/asciidots/Lobby.svg)](https://gitter.im/asciidots/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 > Featured on [Hacker News](https://news.ycombinator.com/item?id=14947449), [Motherboard](https://motherboard.vice.com/en_us/article/a33dvb/asciidots-is-the-coolest-looking-programming-language) ([slashdot comments](https://developers.slashdot.org/story/17/08/13/2033239/new-asciidots-programming-language-uses-ascii-art-and-python)), and [i-programmer](http://www.i-programmer.info/news/98-languages/11115-asciidots-a-language-like-a-racetrack.html).
 
 AsciiDots is an esoteric programming language based on ascii art. In this language, _dots_, represented by periods (`.`), travel down ascii art paths and undergo operations.
 
-[![AsciiDots being run in debug mode](./dots_debug.gif "AsciiDots being run in debug mode")](http://aaronduino.github.io/asciidots/demo.html?code=%20%20%20%20%2F1%23-.%0A%20%20%20%20%7C%0A%20%20%2F-%2B-%24%23%5C%0A%20%20%7C%20%7C%20%20%20%7C%0A%20%5B%2B%5D%3C1%23-*%0A%20%20%7C%20%20%20%20%20%7C%0A%20%20%5C--%3C--%2F%0A%20%20%20%20%20%7C%0A%20%20%20%20%200%0A%20%20%20%20%20%23%0A%20%20%20%20%20%7C%0A%20%20%20%20%20.%0A%20%20%20%20%20%20%20%20%20%20%20%20%20%20)
+See its [documentation and online demo](https://ajanse.me/asciidots) to learn more.
+
+[![AsciiDots counter example](./dots_debug.gif)](https://ajanse.me/asciidots/?code=ICAgICAvMSMtLgogICAgIHwKICAgLy0rLSQjXAogICB8IHwgICB8CiAgWytdPDEjLSoKICAgfCAgICAgfAogICBcLS08LS0vCiAgICAgIHwKICAgICAgMAogICAgICAjCiAgICAgIHwKICAgICAgLg==)
 
 **Table of Contents**
 
@@ -78,15 +77,17 @@ Code-golfed counter (15 bytes) by @ddorn:
 ```
 
 ## Installing
-Note: asciidots is available online via [Try it Online (tio.run)](https://tio.run/#asciidots) and the [Interactive Demo (ajanse.me)](https://ajanse.me/asciidots/demo/).
 
-**Using pip** (recommended):
+> [!NOTE]  
+> The easiest way to try asciidots is through its [online demo](https://ajanse.me/asciidots) or [Try it Online (tio.run)](https://tio.run/#asciidots)
+
+**Using pip**:
 
 ```
 pip install asciidots
 ```
 
-**Using Docker Hub** (recommended):
+**Using Docker Hub**:
 
 Run sample program from this repo:
 ```
@@ -96,23 +97,6 @@ docker run -ti --rm aaronduino/asciidots samples/hello_world.dots
 Run local file `test.dots`:
 ```
 docker run -ti --rm -v $PWD:/data aaronduino/asciidots /data/test.dots
-```
-
-**Using Local Dockerfile**:  
-
-Build the image:
-```
-docker build -t asciidots ./docker
-```
-
-Run sample program from this repo:
-```
-docker run -ti --rm asciidots samples/hello_world.dots
-```
-
-Run local file `test.dots`:
-```
-docker run -ti --rm -v $PWD:/data asciidots /data/test.dots
 ```
 
 **From source**:
@@ -169,9 +153,6 @@ This is how one might debug the program found at `samples/counter.dots` for 300 
 ```bash
 $ asciidots samples/counter.dots -t 300 -d -a 0.05
 ```
-
-## Program Syntax
-The documentation has been moved to [its own page](https://ajanse.me/asciidots/language/)
 
 ## More Examples
 

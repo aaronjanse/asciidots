@@ -4,6 +4,8 @@ permalink: /libs/wait/
 title: wait.dots
 ---
 
+[Go Back](../../libraries)
+
 ### Purpose
 This librairy keeps a dot inside the lib for a certain amount of time. Since every dot moves at the same time, it can be usefull to have one dot that waits untill an other completes an operation.
 

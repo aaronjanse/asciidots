@@ -21,15 +21,10 @@ description: ""
   # My place for posting guides, opinion, and the stories behind my projects.
 baseurl: "/asciidots" # the subpath of your site, e.g. /blog
 url: "https://ajanse.me" # the base hostname & protocol for your site, e.g. http://example.com
-github_username:  aaronjanse
-pgp_key: '0xBE6C92145BFF4A34'
-pgp_tag: rsa4096
 
 # Build settings
 markdown: kramdown
 theme: minima
-plugins:
-  - jekyll-feed
 
 # Custom settings
 permalink: /:categories/:title

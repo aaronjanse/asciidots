@@ -4,6 +4,7 @@ permalink: /libs/bool_not/
 title: bool_not.dots
 ---
 
+[Go Back](../../libraries)
 
 ### Purpose
 Since there is no unary operators in asciidots, this librairy operate a NOT oparation on a dots value. 

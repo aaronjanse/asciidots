@@ -4,6 +4,8 @@ permalink: /libs/clone/
 title: clone.dots
 ---
 
+[Go Back](../../libraries)
+
 ### Purpose
 This librairy replicates a dot at identical a certain number of times. You can see this as an arbitrary number of `*`.
 
