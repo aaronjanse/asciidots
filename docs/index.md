@@ -125,7 +125,7 @@ Here are the new characters introduced:
 
 * `+` allows paths to cross without interacting
 * `(` and `)` set the direction of a dot to right or left (respectively)
-* `<` `>` `^` `)` are arrows that set the direction of a dot that pass through it perpendicularly. If a dot passes through parallel to the arrow, its direction is unchanged.
+* `<` `>` `^` `v` are arrows that set the direction of a dot that pass through it perpendicularly. If a dot passes through parallel to the arrow, its direction is unchanged.
 
 <br/>
 
