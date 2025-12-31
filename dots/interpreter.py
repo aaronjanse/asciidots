@@ -13,7 +13,7 @@ class AsciiDotsInterpreter(object):
         :param dots.environment.Env env: The environment for the program
         :param str program: The code of the program
         :param str program_dir: The path to the program directory
-        :param bool run_in_parallel: temporarily, changes the way dots move : one by one or all at the same time
+        :param bool run_in_parallel: Temporarily, changes the way dots move : one by one or all at the same time
         """
 
         self.env = env

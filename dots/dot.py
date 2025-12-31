@@ -7,12 +7,12 @@ from .states import *
 class Dot:
     def __init__(self, env, pos, id_=None, value=None, direction=None, state=None, stack=None):
         """
-        The base unit of and ascii dot code : the dot.
+        The base unit of an ascii dot code : the dot.
 
         :param dots.environment.Env env: The environment for the program
         :param dots.vector.Pos pos: The position of the dot in the map
-        :param float id_: the id of the dot
-        :param float value: its value
+        :param float id_: The id of the dot
+        :param float value: Its value
         :param dots.vector.Pos direction: The direction of the dot
         :param state: Its actual state
         :param list stack:
@@ -48,7 +48,7 @@ class Dot:
         """
         Update the dot to its next state.
 
-        :param bool run_until_waiting: if false, the dot will perform only one tick, else it will run untill waiting
+        :param bool run_until_waiting: if false, the dot will perform only one tick, else it will run until waiting
         """
 
         past_locations = []
@@ -118,7 +118,7 @@ class Dot:
             self.state = DeadState(self)
 
     def _calculate_direction(self):
-        """Calculate the inial direction of a just created dot."""
+        """Calculate the initial direction of a just created dot."""
         valid_chars = r'\/*^v><+'
 
         for direction in DIRECTIONS:

@@ -26,7 +26,7 @@ def autodetect_next_state(dot, char):
 class State(object):
     def __init__(self, parent):
         """
-        Describe the state of a dot with functions to get to the next state ofthe state machine.
+        Describe the state of a dot with functions to get to the next state of the state machine.
 
         :param dots.dot.Dot parent:
         """

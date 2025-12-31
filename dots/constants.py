@@ -1,6 +1,6 @@
 """
 Here are defined the constants of the language.
-You will alos find shortcuts for repetitive values in the code like UP and DOWN.
+You will also find shortcuts for repetitive values in the code like UP and DOWN.
 """
 
 from dots.vector import Pos

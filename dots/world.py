@@ -13,9 +13,9 @@ class World(object):
         """
         Create a new world to do dots races !
 
-        :param dots.environment.Env env: The environment for the program
+        :param dots.environment.Env env: The environment for the program.
         :param str world_map: The string representing the world.
-        :param str program_dir: The directory of the program
+        :param str program_dir: The directory of the program.
         """
 
         self.env = env
@@ -39,7 +39,7 @@ class World(object):
         self._update_class_of_dots()
 
     def get_coords_of_dots(self):
-        """Yiels the cordinates of every dot char in the world."""
+        """Yields the coordinates of every dot char in the world."""
         for y, line in enumerate(self.map):
             if line and line[0] == '%':
                 continue
@@ -58,7 +58,7 @@ class World(object):
         return 0 <= loc.row < len(self.map) and 0 <= loc.col < len(self.map[loc.row])
 
     def is_char_at(self, pos, char):
-        """True iff the pos exists and is the char is the same."""
+        """True iff the pos exists and the char is the same."""
         if not self.does_loc_exist(pos):
             return False
         return self.get_char_at(pos) == char
@@ -184,7 +184,7 @@ class World(object):
     @staticmethod
     def _get_lib_files_by_alias(map_):
         """
-        Get the librairy files by alias char defined.
+        Get the library files by alias char defined.
 
         :param List[List[Char]] map_: The map to import
         """

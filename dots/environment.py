@@ -1,6 +1,6 @@
 class Env(object):
     """
-    A container for all the importants parts of an Asciidots program.
+    A container for all the important parts of an Asciidots program.
     """
 
     def __init__(self, world=None, dots=None, io=None, interpreter=None):
