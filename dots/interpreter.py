@@ -71,7 +71,7 @@ class AsciiDotsInterpreter(object):
             raise DotsExit
 
     def parallel_tick(self):
-        """Simulate a tick in parallele mode"""
+        """Simulate a tick in parallel mode"""
 
         dots = self.env.dots[:]
         for dot in dots:
