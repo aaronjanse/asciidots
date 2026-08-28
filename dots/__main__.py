@@ -128,7 +128,7 @@ class DefaultIOCallbacks(IOCallbacksStorage):
         """
         Get an input string with curses.
 
-        Row and col are the start position ot the prompt_string.
+        Row and col are the start position of the prompt_string.
         """
         curses.echo()
         stdscr.addstr(row, col, str(prompt_string), curses.A_REVERSE)

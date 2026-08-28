@@ -25,7 +25,7 @@ class IOCallbacksStorage(object):
         raise Exception('on_finish: not implemented')
 
     def on_error(self, error_text):
-        """ This function is pretty self explanatory; it catches errors with the AsciiDot program that occur during interpretetion """
+        """ This function is pretty self explanatory; it catches errors with the AsciiDot program that occur during interpretation """
         raise Exception('on_error: not implemented')
 
     def on_microtick(self, dot):
