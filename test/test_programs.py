@@ -135,3 +135,21 @@ def test_dots_id_mode_persistence():
 def test_dots_eof():
     out = check_output('eof', "hi\n")
     assert len(out) == 5
+
+
+def test_negative_ticks_rejected():
+    """Negative --ticks must be a usage error, not a silently ignored limit."""
+    from click.testing import CliRunner
+    from dots.__main__ import main
+    result = CliRunner().invoke(main, ['--ticks', '-1', 'no_such_file.dots'])
+    assert result.exit_code == 2
+    assert 'Invalid value' in result.output
+
+
+def test_negative_output_limit_rejected():
+    """Negative --output_limit must be a usage error, not a silently ignored limit."""
+    from click.testing import CliRunner
+    from dots.__main__ import main
+    result = CliRunner().invoke(main, ['--output_limit', '-2', 'no_such_file.dots'])
+    assert result.exit_code == 2
+    assert 'Invalid value' in result.output
